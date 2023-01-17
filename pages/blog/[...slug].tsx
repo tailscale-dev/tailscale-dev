@@ -4,7 +4,7 @@ import { getAllSlugs, getPostData } from '../../lib/md';
 import { PostData } from '../../lib/md';
 
 export async function getStaticPaths() {
-  const paths = getAllSlugs('posts');
+  const paths = getAllSlugs('blog');
   return {
     paths,
     fallback: false,
@@ -12,7 +12,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }: { params: { slug: string } }) {
-  const data = await getPostData('posts', params.slug);
+  const data = await getPostData('blog', params.slug);
 
   return {
     props: {

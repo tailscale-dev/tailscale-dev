@@ -8,14 +8,14 @@ export default function Articles({ posts }: { posts: PostData[] }) {
     <>
       <ListLayout
         items={posts}
-        title="Posts"
+        title="Blog"
       />
     </>
   )
 }
 
 export async function getStaticProps() {
-  const posts = getAllFilesFrontMatter('posts', '/posts');
+  const posts = getAllFilesFrontMatter('blog', '/blog');
   return {
     props: {
       posts,
