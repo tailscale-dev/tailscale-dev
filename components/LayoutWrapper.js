@@ -10,7 +10,7 @@ export default function LayoutWrapper({ children }) {
             <Link href="/">
               <div className="flex items-center justify-between">
                 <div className="hidden h-6 text-2xl sm:block">
-                  Tailscale Dev Community
+                  Tailscale Community
                 </div>
               </div>
             </Link>

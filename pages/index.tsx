@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Tailscale Dev Community</title>
+        <title>Tailscale Community</title>
       </Head>
       <div className="flex flex-row">
         <main className="w-full sm:w-2/3 md:w-3/4 pt-1 px-2">
