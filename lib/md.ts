@@ -11,7 +11,7 @@ export interface FrontmatterData {
   link?: string;
   date: string;
   location?: string;
-  summary?: string;
+  preview?: string;
   tags?: string[];
 }
 

@@ -5,7 +5,7 @@ interface Link {
   title: string;
   url: string;
   date: string;
-  summary: string;
+  preview: string;
   tags: string[];
 }
 
