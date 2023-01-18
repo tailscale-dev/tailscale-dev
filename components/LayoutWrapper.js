@@ -7,7 +7,7 @@ import { ThemeSwitch } from './ThemeSwitch'
 export default function LayoutWrapper({ children }) {
   return (
     <div>
-      <div className="overflow-hidden bg-black text-white">
+      <div className="overflow-hidden bg-gray-900 text-white">
         <div className="container">
           <header className="flex items-center justify-between py-10 font-bold">
             <div>
@@ -30,7 +30,6 @@ export default function LayoutWrapper({ children }) {
                     {link.title}
                   </Link>
                 ))}
-                <ThemeSwitch />
               </div>
             </div>
           </header>
@@ -45,6 +44,9 @@ export default function LayoutWrapper({ children }) {
                 <li className="footer-column-heading">Learn</li>
                 <li className="mb-1"><a href="/learn/generate-ssh-keys/" className="footer-column-link">SSH Keys</a></li>
               </ul> */}
+              <div className="w-1/2 md:w-auto">
+                <span>Theme</span> <ThemeSwitch />
+              </div>
             </div>
             <div className="max-w-xs mr-auto">
               <a className="inline-block mb-5" href="/" aria-label="Tailscale">

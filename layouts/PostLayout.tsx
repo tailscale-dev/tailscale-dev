@@ -15,7 +15,7 @@ export default function PostLayout({ data }: { data: PostData }) {
       
       <MDXRemote {...data.content} />
 
-      <a href={`https://github.com/tailscale-dev/edit/main${data.repoPath}`} target='_blank'>Improve this page</a>
+      <a href={`https://github.com/tailscale-dev/tailscale-dev/edit/main${data.repoPath}`} target='_blank'>Improve this page</a>
     </>
   )
 };
