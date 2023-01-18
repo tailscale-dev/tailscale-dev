@@ -2,52 +2,53 @@
   {
     "title": "Trying Tailscale.",
     "link": "https://lethain.com/trying-tailscale/",
-    "summary": "CTO of Calm [Will Larson](https://twitter.com/lethain) writes some notes about setting up Tailscale and golink from scratch. \"Overall, I think Tailscale is a delightful experience. It was quick to install, the UI was intuitive,  the right documentation was almost always one click away.\"\n",
+    "preview": "CTO of Calm [Will Larson](https://twitter.com/lethain) writes some notes about setting up Tailscale and golink from scratch. \"Overall, I think Tailscale is a delightful experience. It was quick to install, the UI was intuitive,  the right documentation was almost always one click away.\"",
     "date": "2023-01-01",
-    "tags": ["golink"]
+    "tags": [
+      "golink",
+      "in the wild"
+    ]
   },
   {
     "title": "Installing Ubuntu over 17000 KM distance using MAAS, VxLAN and Tailscale",
     "link": "https://medium.com/@antongslismith/bare-metal-cloud-provisioning-from-gcp-de4b65747de",
-    "summary": "Medium user [Anton Gisli Smith](https://medium.com/@antongslismith) describes how he spent a lot of time figuring out how to give people an easy and awesome experience, as fast as possible: \"Whilst I’ve set up many a WireGuard network (by hand), I wondered if by now there was better tooling. Well, Tailscale is that better tooling. VERY GOOD TOOLING indeed.\"\n",
+    "preview": "Medium user [Anton Gisli Smith](https://medium.com/@antongslismith) describes how he spent a lot of time figuring out how to give people an easy and awesome experience, as fast as possible: \"Whilst I’ve set up many a WireGuard network (by hand), I wondered if by now there was better tooling. Well, Tailscale is that better tooling. VERY GOOD TOOLING indeed.\"",
     "date": "2022-12-01"
   },
   {
     "title": "Tailscale... and SSH",
     "link": "https://www.zerotofullstack.io/p/tailscale-and-ssh",
-    "summary": "Over on Zero to Full Stack, Twitter user [Zach Silveira](https://twitter.com/zachcodes) writes about Tailscale and SSH, concluding that it's \"super cool for anyone who has a few Linux or other servers lying around.\"\n",
+    "preview": "Over on Zero to Full Stack, Twitter user [Zach Silveira](https://twitter.com/zachcodes) writes about Tailscale and SSH, concluding that it's \"super cool for anyone who has a few Linux or other servers lying around.\"",
     "date": "2022-12-01",
-    "tags": ["ssh"]
+    "tags": [
+      "ssh"
+    ]
   },
   {
     "title": "Running R remotely",
     "link": "https://vuorre.netlify.app/posts/remote-r/",
-    "summary": "Twitter user [Matti Vuorre](https://mobile.twitter.com/vuorre) shares a blog post on running R remotely via Tailscale. \"It really is quite easy, and that’s why I use Tailscale and not some other SSH or VPN-based solution.\"\n",
+    "preview": "Twitter user [Matti Vuorre](https://mobile.twitter.com/vuorre) shares a blog post on running R remotely via Tailscale. \"It really is quite easy, and that’s why I use Tailscale and not some other SSH or VPN-based solution.\"",
     "date": "2022-12-01",
-    "tags": ["ssh"]
+    "tags": [
+      "ssh"
+    ]
   },
   {
     "title": "How can journalists use Tailscale, Larix Broadcaster & OBS for live news? [video]",
     "link": "https://www.youtube.com/watch?v=vKNGaYAe5OA",
-    "summary": "YouTube channel [Thrifty Broadcasts](https://www.youtube.com/@thriftybroadcasts) offers a tutorial on how journalists can use free tools and readily available equipment to remotely contribute audio-visual content to live news.\n",
-    "date": "2022-12-01"
-  },
-  {
-    "title": "Tailscale makes networking easy",
-    "link": null,
-    "summary": "User father.mande shares in the ASUSTOR Community Forum: \"APKG for Tailscale — This APKG is for the native version, no Docker, no container, nothing breaking the security you can expect for a VPN.\"\n",
+    "preview": "YouTube channel [Thrifty Broadcasts](https://www.youtube.com/@thriftybroadcasts) offers a tutorial on how journalists can use free tools and readily available equipment to remotely contribute audio-visual content to live news.",
     "date": "2022-12-01"
   },
   {
     "title": "How to securely access your Synology NAS from anywhere",
     "link": "https://www.androidcentral.com/accessories/how-to-securely-access-your-synology-nas-from-anywhere",
-    "summary": "[Harish Jonnalagadda](https://www.androidcentral.com/author/harish-jonnalagadda) on Android Central lays out why Tailscale is the best way to log in to your Synology NAS from outside your home network.\n",
+    "preview": "[Harish Jonnalagadda](https://www.androidcentral.com/author/harish-jonnalagadda) on Android Central lays out why Tailscale is the best way to log in to your Synology NAS from outside your home network.",
     "date": "2022-12-01"
   },
   {
     "title": "LMS remote access: Safe, secure, and free with Tailscale",
     "link": "https://forums.slimdevices.com/showthread.php?117227-LMS-remote-access-safe-secure-and-free-with-Tailscale-(mesh-VPN)",
-    "summary": "Logitech Squeezebox forum member artatgray recommends Tailscale: \"After not too much effort, I'm able to access my Logitech Media Server remotely, securely and for free over cellular using a VPN.\"\n",
+    "preview": "Logitech Squeezebox forum member artatgray recommends Tailscale: \"After not too much effort, I'm able to access my Logitech Media Server remotely, securely and for free over cellular using a VPN.\"",
     "date": "2022-12-01"
   },
   {
@@ -58,13 +59,13 @@
   {
     "title": "How Fly.io and Tailscale saved Notado",
     "link": "https://notado.substack.com/p/how-flyio-and-tailscale-saved-notado",
-    "summary": "Notado was modified to migrate from DigitalOcean to Fly.io using Tailscale to make private connections from a Fly micro VM to a DigitalOcean-managed Postgres database.\n",
+    "preview": "Notado was modified to migrate from DigitalOcean to Fly.io using Tailscale to make private connections from a Fly micro VM to a DigitalOcean-managed Postgres database.",
     "date": "2022-10-01"
   },
   {
     "title": "Dev onboarding with GitHub Codespaces + Tailscale",
     "link": "https://blog.duolingo.com/developer-onboarding-with-github-codespaces/)",
-    "summary": "Make it easy for new developers to access private resources with Tailscale.\n",
+    "preview": "Make it easy for new developers to access private resources with Tailscale.",
     "date": "2022-10-01"
   },
   {

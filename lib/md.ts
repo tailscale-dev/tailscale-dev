@@ -10,8 +10,10 @@ export interface FrontmatterData {
   title: string;
   link?: string;
   date: string;
+  dateUpdated?: string;
   location?: string;
   preview?: string;
+  lead?: string;
   tags?: string[];
 }
 
