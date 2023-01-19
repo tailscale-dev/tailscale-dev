@@ -49,9 +49,9 @@ export default function LayoutWrapper({ children }) {
               </div>
             </div>
             <div className="max-w-xs mr-auto">
-              <a className="inline-block mb-5" href="/" aria-label="Tailscale">
-                <Image src="/images/tailscale-logo.svg" width="120" height="34" />
-              </a>
+              <Link className="inline-block mb-5" href="/" aria-label="Tailscale">
+                <Image src="/images/tailscale-logo.svg" width="120" height="34" alt="Tailscale logo" />
+              </Link>
               <div className="text-xs text-gray-600">
                 <p className="mb-2">WireGuard is a registered<br /> trademark of Jason A. Donenfeld.</p>
                 <p className="mb-2">&copy; {new Date().getFullYear()} Tailscale Inc.</p>

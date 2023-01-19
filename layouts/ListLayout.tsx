@@ -8,6 +8,10 @@ export default function ListLayout({ items, title }: { items: FrontmatterData[],
     <ul className="">
       {!items.length && 'None found.'}
       {items.map((item, i) => {
+        if (item.link === undefined) {
+           return <></>
+        }
+        const link: string = item.link
         return (
           <li key={i} className="pt-5">
             <Link href={item.link} className="text-2xl">
