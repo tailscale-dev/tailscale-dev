@@ -1,4 +1,3 @@
-
 import PostLayout from '../../layouts/PostLayout';
 import { getAllSlugs, getPostData } from '../../lib/md';
 import { PostData } from '../../lib/md';
@@ -28,5 +27,5 @@ export default function Posts({ data }: { data: PostData }) {
         data={data}
       />
     </>
-  )
+  );
 }

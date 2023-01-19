@@ -9,7 +9,7 @@ export default function ListLayout({ items, title }: { items: FrontmatterData[],
       {!items.length && 'None found.'}
       {items.map((item, i) => {
         if (item.link === undefined) {
-           return <></>
+           return <></>;
         }
         const link: string = item.link
         return (
