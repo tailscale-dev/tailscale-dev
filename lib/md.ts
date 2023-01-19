@@ -15,6 +15,15 @@ export interface FrontmatterData {
   preview?: string;
   lead?: string;
   tags?: string[];
+  hero?: HeroImageMeta;
+}
+
+export interface HeroImageMeta {
+  name: string;
+  desc: string;
+  width: number;
+  height: number;
+  generator: string;
 }
 
 export interface PostData extends FrontmatterData {
