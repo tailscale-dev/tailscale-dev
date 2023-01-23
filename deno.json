@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "jsx": "react",
+        "jsxFactory": "React.createElement",
+        "jsxFragmentFactory": "React.Fragment"
+    },
+    "fmt": {
+        "options": {
+            "indentWidth": 2,
+            "singleQuote": true,
+        }
+    }
+}
