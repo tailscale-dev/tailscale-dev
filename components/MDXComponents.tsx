@@ -3,6 +3,7 @@ import React from 'react'
 import { MDXLayout, ComponentMap } from './mdx-components'
 import { TOCInline } from './TOCInline'
 import { Pre } from './Pre'
+import { NewsletterRepublishing } from './NewsletterRepublishing';
 
 import Image from './Image'
 import CustomLink from './Link'
@@ -15,6 +16,7 @@ export const Wrapper = ({ layout, content, ...rest }: MDXLayout) => {
 export const MDXComponents: ComponentMap = {
   Image,
   TOCInline,
+  NewsletterRepublishing,
   a: CustomLink,
   pre: Pre,
   wrapper: Wrapper,
