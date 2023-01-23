@@ -27,9 +27,16 @@ interface LayoutProps {
   children: ReactNode
 }
 
-export default function PostLayout({ content, authorDetails, next, prev, children }: LayoutProps) {
-  const { filePath, path, date, title, tags } = content
+export default function PostLayout(
+  { content, authorDetails, next, prev, children }: LayoutProps,
+) {
+  const { filePath, path, date, title, tags } = content;
   const basePath = path.split('/')[0]
+
+  const reformatFediverseURL = (author: { fediverse: string }): string => {
+    const [_, domain, user] = author.fediverse.split(/https:\/\/(.+)\/?@(.+)/);
+    return `@${user}@${domain.replace('/', '')}`;
+  };
 
   return (
     <SectionContainer>
@@ -95,7 +102,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                               href={author.fediverse}
                               className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                             >
-                              {author.fediverse.replace(/(https?:\/\/)?/, '')}
+                              {reformatFediverseURL({ fediverse: author.fediverse as string })}
                             </Link>
                           )}
                         </dd>
