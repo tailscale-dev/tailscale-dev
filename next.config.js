@@ -73,6 +73,9 @@ module.exports = () => {
         },
       ]
     },
+    images: {
+      formats: ["image/webp", "image/avif"],
+    },
     webpack: (config, options) => {
       config.module.rules.push({
         test: /\.svg$/,
