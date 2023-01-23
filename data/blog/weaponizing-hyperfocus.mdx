@@ -5,7 +5,6 @@ tags:
  - "devrel"
  - "personal"
 authors: [ "xe" ]
-preview: "Xe's story about how they came to do DevRel and a short history of the team."
 ---
 
 import { HeroImage } from "@/components/HeroImage";
@@ -18,7 +17,7 @@ history of how I started the DevRel practice at Tailscale and how
 working on it has let me use a part of me that I had come to hate as
 an asset instead of an impediment that makes my job easier.
 
-<HeroImage name="teyvat-utopia" desc="landscape, fuji-san, pagodas, space needle" width=1280 height=512 generator="Waifu Diffusion v1.3" />
+<HeroImage name="teyvat-utopia" desc="landscape, fuji-san, pagodas, space needle" width={1280} height={512} generator="Waifu Diffusion v1.3" />
 
 In Spring 2022, I sat down and started to take DevRel seriously at
 Tailscale. I had heard about the practice in the past, but I had never
@@ -56,8 +55,34 @@ world. I managed to expense a scalped Steam Deck off of eBay and wrote
 up [how I figured out how to install Tailscale on
 it](https://tailscale.com/blog/steam-deck/).
 
+One of the primary challenges in starting out with something new like
+this in an existing company is that you need to _define_ what DevRel
+means. You need to have an _idea_ that you can use as the main point
+of alignment so that you and the people following in your footsteps
+can all focus on different aspects of that same idea. When I was
+thinking out what DevRel could mean, one of the topics that kept
+coming back up was the idea of Tailscale being everywhere with you so
+you can get back home. This was the heart of the Steam Deck article,
+among other ones. One of the next ideas I worked under was the idea
+that Tailscale knows who you are, so apps can easily know who you are
+too.
+
+This is the heart of how nearly every one of the Tailscale as an
+authentication factor tricks works. Tailscale already maintains a list
+of IP address to user mappings. In order to connect to a service on
+your tailnet, your machine has to have the right private key. This
+can let you construct an identity factor for authentication.
+nginx-auth and
+[proxy-to-grafana](https://tailscale.com/blog/grafana-auth/) build on
+top of this idea, and that becomes a fundamental building block for
+future work. In one of my own personal projects, I've been able to rip
+out over 150 lines of boring authentication code because it was
+handled for me with Tailscale.
+
 I made a measurable _impact_ with my work and it helped to spread the
-word about Tailscale and it's still paying dividends to this day.
+word about Tailscale and it's still paying dividends to this day. The
+Steam Deck article gets mentioned _in sales calls_. I cannot think of
+a better measure of success than that.
 
 In late 2022 I hit a point where there was enough work to be done that
 I wasn't able to keep up with it. I was writing, hacking, and
@@ -65,11 +90,11 @@ advocating nonstop and I really needed people to help me. This ended
 up with the DevRel team getting formed and my teammates have been a
 blessing, even before things have gotten up to full speed.
 
-At some point in 2022 I ended up coming up with the joke job title of
-"Archmage of Infrastructure" with the intent that I would give people
-a different answer every time they asked for it. For some reason or
-another, the Archmage title stuck and now I'm the first Archmage at
-Tailscale. My life is great.
+At some point in 2022 I ended up coming up with
+the joke job title of "Archmage of Infrastructure" with the intent
+that I would give people a different answer every time they asked for
+it. For some reason or another, the Archmage title stuck and now I'm
+the first Archmage at Tailscale. My life is great.
 
 In the process of doing this, I also had a unique opportunity to
 weaponize something that had previously been a horrible vice: my
