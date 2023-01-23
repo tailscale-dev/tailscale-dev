@@ -1,0 +1,133 @@
+---
+title: "Weaponizing hyperfocus: Becoming the first DevRel at Tailscale"
+date: "2023-01-25"
+tags:
+ - "devrel"
+ - "personal"
+authors: [ "xe" ]
+---
+
+import { HeroImage } from "@/components/HeroImage";
+
+Hello, world! I'm Xe, and I am the first Developer Advocate at
+Tailscale. I'm a [prolific blogger](https://xeiaso.net/blog), VTuber,
+and an avid technologist. I started working on Developer Relations
+(DevRel) at Tailscale in Spring 2022. I wanted to trace over the
+history of how I started the DevRel practice at Tailscale and how
+working on it has let me use a part of me that I had come to hate as
+an asset instead of an impediment that makes my job easier.
+
+<HeroImage name="teyvat-utopia" desc="landscape, fuji-san, pagodas, space needle" width={1280} height={512} generator="Waifu Diffusion v1.3" />
+
+In Spring 2022, I sat down and started to take DevRel seriously at
+Tailscale. I had heard about the practice in the past, but I had never
+done it before. I knew that a lot of it was talking about a product to
+people and finding new and interesting ways to use it, but a lot of
+that seemed too vague to really have any solid place to start from.
+It's like walking into an empty room and having no idea where to start
+decorating.
+
+At some level though, it felt _right_ for me in a way that I have
+difficulty describing. It's the same feeling of it being _right_ that
+I get from working in software in the first place. It felt like the
+type of rabbit-hole you could spend an entire career in. After talking
+it over with some peers, I found out that what I was doing was already
+a split between my normal job and DevRel.. I was talking about
+Tailscale in places. I was figuring out new and interesting ways to
+use Tailscale. I was advocating for developers to build things on top
+of Tailscale. It was working too, so all I had to do was do more of
+it.
+
+I got permission from my manager to get a 50/50 split between what I
+was doing (work on internal tooling that was not sparking joy) and
+this new experimental DevRel thing. I took the leap and I don't think
+I am ever going to look back.
+
+In 2022 I published a lot of projects, tools, and ways to use
+Tailscale that still come up every so often. I made an
+[nginx-auth](https://tailscale.com/blog/tailscale-auth-nginx/) tool
+for a blogpost and it comes up in sales calls every so often. I was
+originally going to make the [GitOps for
+ACLs](https://tailscale.com/blog/gitops-acls/) tool into something for
+a blogpost, but it ended up becoming a fully fledged product feature
+and something that is currently in use by developers all over the
+world. I managed to expense a scalped Steam Deck off of eBay and wrote
+up [how I figured out how to install Tailscale on
+it](https://tailscale.com/blog/steam-deck/).
+
+One of the primary challenges in starting out with something new like
+this in an existing company is that you need to _define_ what DevRel
+means. You need to have an _idea_ that you can use as the main point
+of alignment so that you and the people following in your footsteps
+can all focus on different aspects of that same idea. When I was
+thinking out what DevRel could mean, one of the topics that kept
+coming back up was the idea of Tailscale being everywhere with you so
+you can get back home. This was the heart of the Steam Deck article,
+among other ones. One of the next ideas I worked under was the idea
+that Tailscale knows who you are, so apps can easily know who you are
+too.
+
+This is the heart of how nearly every one of the Tailscale as an
+authentication factor tricks works. Tailscale already maintains a list
+of IP address to user mappings. In order to connect to a service on
+your tailnet, your machine has to have the right private key. This
+can let you construct an identity factor for authentication.
+nginx-auth and
+[proxy-to-grafana](https://tailscale.com/blog/grafana-auth/) build on
+top of this idea, and that becomes a fundamental building block for
+future work. In one of my own personal projects, I've been able to rip
+out over 150 lines of boring authentication code because it was
+handled for me with Tailscale.
+
+I made a measurable _impact_ with my work and it helped to spread the
+word about Tailscale and it's still paying dividends to this day. The
+Steam Deck article gets mentioned _in sales calls_. I cannot think of
+a better measure of success than that.
+
+In late 2022 I hit a point where there was enough work to be done that
+I wasn't able to keep up with it. I was writing, hacking, and
+advocating nonstop and I really needed people to help me. This ended
+up with the DevRel team getting formed and my teammates have been a
+blessing, even before things have gotten up to full speed.
+
+At some point in 2022 I ended up coming up with
+the joke job title of "Archmage of Infrastructure" with the intent
+that I would give people a different answer every time they asked for
+it. For some reason or another, the Archmage title stuck and now I'm
+the first Archmage at Tailscale. My life is great.
+
+In the process of doing this, I also had a unique opportunity to
+weaponize something that had previously been a horrible vice: my
+tendency to hyperfocus on things. This tendency has been my savior and
+my jailor for most of my professional career. The most horrible part
+about it is that I don't have control over what it focuses on. It's
+like [an itch](https://xeiaso.net/blog/the-itch-2020-10-11) that you
+can't ignore because you feel absolutely compelled to scratch and not
+scratching it physically hurts or can be impossible. It's great when
+it focuses on something that is "good" to focus on (such as the
+project I was assigned to), but it was horrific when it focused on
+something that was "bad" to focus on (such as literally anything else
+but the project I was assigned to). This has both saved my ass and
+gotten me into trouble countless times. It's why I've had such a rocky
+career.
+
+Working in DevRel has offered me a chance to be able to weaponize this
+hyperfocus to help meet the needs. I have a few projects going on at
+once that I peck at as reality demands. This gives me the ability to
+wield my hyperfocus to meet my needs rather than being happy when it
+meets the needs of my employer.
+
+This gives me the freedom to focus when I can and to not focus when I
+can't. This is an unparalleled level of inclusivity I have never had
+at any company I have ever worked at and this should be the standard.
+The DevRel team has grown from a single person doing things on the
+side into a team and I want to use this opportunity to help create the
+kind of team that I want to work for. I want to help create a culture
+where things like hyperfocus are seen as _assets_ instead of
+sometimes-useful impediments. I want the DevRel team to be a viral
+force of good, and I feel that one of the ways to start that process
+is to create the kind of team culture that shows their morals rather
+than just writing them on a sheet of paper and saying "hi these things
+exist, please believe us uwu". Actions speak louder than words. I feel
+that this should be DevRel at Tailscale and I am going to do my best
+to help make that happen.
