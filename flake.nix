@@ -9,7 +9,13 @@
       let pkgs = nixpkgs.legacyPackages.${system}; in
       {
         devShells.default = pkgs.mkShell {
-          buildInputs = with pkgs; [ nodejs-18_x nodePackages.pnpm ];
+          buildInputs = with pkgs; [
+            nodejs-18_x
+            yarn
+
+            # XXX(Xe): I need this for formatting code
+            deno
+          ];
         };
       });
 }
