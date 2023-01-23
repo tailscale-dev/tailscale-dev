@@ -1,20 +1,21 @@
+import NextImage, { ImageProps } from 'next/image'
+
+interface HeroImage extends ImageProps {
+  desc: string;
+  generator?: string;
+}
+
 export function HeroImage({
-  name,
+  src,
   desc,
   width,
   height,
   generator,
-}: {
-  name: string;
-  desc: string;
-  width: number;
-  height: number;
-  generator?: string;
-}) {
+}: HeroImage) {
   return (
     <figure className='hero mx-1 my-6'>
-      <img
-        src={`/images/hero/${name}.png`}
+      <NextImage
+        src={src}
         alt={desc}
         width={width}
         height={height}
@@ -30,7 +31,7 @@ export function HeroImage({
             {desc}
           </figcaption>
         )}
-      <meta property='og:image' content={`/images/hero/${name}.png`} />
+      <meta property='og:image' content={`${src}`} />
     </figure>
   )
 }
