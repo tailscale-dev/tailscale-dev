@@ -1,8 +1,9 @@
 /* eslint-disable react/display-name */
-import React from 'react';
-import { ComponentMap, MDXLayout } from './mdx-components';
-import { TOCInline } from './TOCInline';
-import { Pre } from './Pre';
+import React from 'react'
+import { MDXLayout, ComponentMap } from './mdx-components'
+import { TOCInline } from './TOCInline'
+import { Pre } from './Pre'
+import { NewsletterRepublishing } from './NewsletterRepublishing';
 
 import Image from './Image';
 import { HeroImage } from './HeroImage';
@@ -19,6 +20,7 @@ export const MDXComponents: ComponentMap = {
   HeroImage,
   ConvSnippet,
   TOCInline,
+  NewsletterRepublishing,
   a: CustomLink,
   pre: Pre,
   wrapper: Wrapper,
