@@ -1,6 +1,3 @@
 {
-  "recommendations": [
-    "bradlc.vscode-tailwindcss",
-    "unifiedjs.vscode-mdx"
-  ]
+  "recommendations": ["bradlc.vscode-tailwindcss", "unifiedjs.vscode-mdx", "esbenp.prettier-vscode"]
 }

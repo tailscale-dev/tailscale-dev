@@ -8,7 +8,9 @@
     "build": "INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node -r esbuild-register ./scripts/postbuild.mjs",
     "serve": "next start",
     "analyze": "cross-env ANALYZE=true next build",
-    "lint": "next lint --fix --dir pages --dir components --dir lib --dir layouts --dir scripts"
+    "precommit": "lint-staged",
+    "lint": "next lint --fix",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@next/bundle-analyzer": "13.0.2",
@@ -51,11 +53,12 @@
     "esbuild-register": "3.3.3",
     "eslint": "^8.23.0",
     "eslint-config-next": "13.0.2",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-react": "^7.32.1",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "file-loader": "^6.0.0",
     "globby": "11.0.3",
-    "husky": "^8.0.0",
+    "husky": "^8.0.3",
     "js-yaml": "4.1.0",
     "lint-staged": "^13.0.0",
     "prettier": "^2.7.0",
@@ -69,5 +72,8 @@
     "*.+(js|jsx|ts|tsx|json|css|md|mdx)": [
       "prettier --write"
     ]
+  },
+  "engines": {
+    "node": "18.13.0"
   }
 }

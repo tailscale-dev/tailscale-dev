@@ -3,8 +3,8 @@ export const formatDate = (date: string, locale = 'en-US') => {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-  }
-  const now = new Date(date).toLocaleDateString(locale, options)
+  };
+  const now = new Date(date).toLocaleDateString(locale, options);
 
-  return now
-}
+  return now;
+};

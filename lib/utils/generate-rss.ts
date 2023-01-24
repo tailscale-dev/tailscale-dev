@@ -1,18 +1,18 @@
-import { writeFileSync, mkdirSync } from 'fs'
-import path from 'path'
-import GithubSlugger from 'github-slugger'
-import { escape } from './htmlEscaper'
-import type { MDXBlog } from './contentlayer'
-import { getAllTags } from './contentlayer'
+import { writeFileSync, mkdirSync } from 'fs';
+import path from 'path';
+import GithubSlugger from 'github-slugger';
+import { escape } from './htmlEscaper';
+import type { MDXBlog } from './contentlayer';
+import { getAllTags } from './contentlayer';
 
 interface CoreConfig {
-  title: string
-  headerTitle: string
-  description: string
-  language: string
-  siteUrl: string
-  siteRepo: string
-  locale: string
+  title: string;
+  headerTitle: string;
+  description: string;
+  language: string;
+  siteUrl: string;
+  siteRepo: string;
+  locale: string;
 }
 
 const generateRssItem = (config: CoreConfig, post) => `
@@ -24,7 +24,7 @@ const generateRssItem = (config: CoreConfig, post) => `
     <pubDate>${new Date(post.date).toUTCString()}</pubDate>
     ${post.tags && post.tags.map((t) => `<category>${t}</category>`).join('')}
   </item>
-`
+`;
 
 const generateRss = (config: CoreConfig, posts, page = 'feed.xml') => `
   <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -38,28 +38,28 @@ const generateRss = (config: CoreConfig, posts, page = 'feed.xml') => `
       ${posts.map((post) => generateRssItem(config, post)).join('')}
     </channel>
   </rss>
-`
+`;
 
 export async function generateRSS(config: CoreConfig, allBlogs: MDXBlog[]) {
-  const publishPosts = allBlogs.filter((post) => post.draft !== true)
+  const publishPosts = allBlogs.filter((post) => post.draft !== true);
   // RSS for blog post
   if (publishPosts.length > 0) {
-    const rss = generateRss(config, publishPosts)
-    writeFileSync('./public/feed.xml', rss)
+    const rss = generateRss(config, publishPosts);
+    writeFileSync('./public/feed.xml', rss);
   }
 
   // RSS for tags
   // TODO: use AllTags from contentlayer when computed docs is ready
   if (publishPosts.length > 0) {
-    const tags = await getAllTags(publishPosts)
+    const tags = await getAllTags(publishPosts);
     for (const tag of Object.keys(tags)) {
       const filteredPosts = allBlogs.filter((post) =>
         post.tags.map((t) => GithubSlugger.slug(t)).includes(tag)
-      )
-      const rss = generateRss(config, filteredPosts, `tags/${tag}/feed.xml`)
-      const rssPath = path.join('public', 'tags', tag)
-      mkdirSync(rssPath, { recursive: true })
-      writeFileSync(path.join(rssPath, 'feed.xml'), rss)
+      );
+      const rss = generateRss(config, filteredPosts, `tags/${tag}/feed.xml`);
+      const rssPath = path.join('public', 'tags', tag);
+      mkdirSync(rssPath, { recursive: true });
+      writeFileSync(path.join(rssPath, 'feed.xml'), rss);
     }
   }
 }
