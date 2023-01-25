@@ -1,21 +1,21 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 
 const ScrollTop = () => {
-  const [show, setShow] = useState(false)
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     const handleWindowScroll = () => {
-      if (window.scrollY > 50) setShow(true)
-      else setShow(false)
-    }
+      if (window.scrollY > 50) setShow(true);
+      else setShow(false);
+    };
 
-    window.addEventListener('scroll', handleWindowScroll)
-    return () => window.removeEventListener('scroll', handleWindowScroll)
-  }, [])
+    window.addEventListener('scroll', handleWindowScroll);
+    return () => window.removeEventListener('scroll', handleWindowScroll);
+  }, []);
 
   const handleScrollTop = () => {
-    window.scrollTo({ top: 0 })
-  }
+    window.scrollTo({ top: 0 });
+  };
   return (
     <div
       className={`fixed right-8 bottom-8 hidden flex-col gap-3 ${show ? 'md:flex' : 'md:hidden'}`}
@@ -34,7 +34,7 @@ const ScrollTop = () => {
         </svg>
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default ScrollTop
+export default ScrollTop;

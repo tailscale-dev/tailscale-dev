@@ -1,22 +1,23 @@
-import Link from '@/components/Link'
-import { PageSEO } from '@/components/SEO'
-import Card from '@/components/Card'
-import Tag from '@/components/Tag'
-import { siteMetadata } from '@/data/siteMetadata'
-import { formatDate } from '@/lib/utils/formatDate'
-import { sortedBlogPost, allCoreContent } from '@/lib/utils/contentlayer'
-import { InferGetStaticPropsType } from 'next'
-import { allBlogs } from 'contentlayer/generated'
-import type { Blog } from 'contentlayer/generated'
+import React from 'react';
+import Link from '@/components/Link';
+import { PageSEO } from '@/components/SEO';
+import Card from '@/components/Card';
+import Tag from '@/components/Tag';
+import { siteMetadata } from '@/data/siteMetadata';
+import { formatDate } from '@/lib/utils/formatDate';
+import { sortedBlogPost, allCoreContent } from '@/lib/utils/contentlayer';
+import { InferGetStaticPropsType } from 'next';
+import { allBlogs } from 'contentlayer/generated';
+import type { Blog } from 'contentlayer/generated';
 
-const MAX_DISPLAY = 5
+const MAX_DISPLAY = 5;
 
 export const getStaticProps = async () => {
-  const sortedPosts = sortedBlogPost(allBlogs) as Blog[]
-  const posts = allCoreContent(sortedPosts)
+  const sortedPosts = sortedBlogPost(allBlogs) as Blog[];
+  const posts = allCoreContent(sortedPosts);
 
-  return { props: { posts } }
-}
+  return { props: { posts } };
+};
 
 export default function Home({ posts }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
@@ -31,17 +32,14 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
         <ul>
           {!posts.length && 'No posts found.'}
           {posts.slice(0, MAX_DISPLAY).map((frontMatter) => {
-            const { slug, date, title, summary, tags } = frontMatter
+            const { slug, date, title, summary, tags } = frontMatter;
             return (
               <li key={slug} className="py-6">
                 <article>
                   <div className="space-y-6">
                     <div>
                       <h2 className="text-2xl font-bold leading-8 tracking-tight">
-                        <Link
-                          href={`/blog/${slug}`}
-                          className="text-gray-900 dark:text-gray-100"
-                        >
+                        <Link href={`/blog/${slug}`} className="text-gray-900 dark:text-gray-100">
                           {title}
                         </Link>
                       </h2>
@@ -56,7 +54,6 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
                           ))}
                         </span>
                       </div>
-                      
                     </div>
                     <div className="prose max-w-none text-gray-500 dark:text-gray-400">
                       {summary}
@@ -64,7 +61,7 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
                   </div>
                 </article>
               </li>
-            )
+            );
           })}
         </ul>
       </div>
@@ -85,14 +82,16 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
             title="Tailscale SSH"
             description="No need to generate, distribute, and manage SSH keys. Rely on Tailscale to manage access."
             imgSrc=""
-            href="" />
+            href=""
+          />
           <Card
             title="tsnet"
             description="Make your internal services easier to run, access, and secure by transforming them into virtual private services on your tailnet"
             imgSrc=""
-            href="" />
+            href=""
+          />
         </div>
       </div>
     </>
-  )
+  );
 }
