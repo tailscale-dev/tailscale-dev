@@ -5,10 +5,10 @@
 ### <Image />
 
 Properties:
-* src (required)
-* width (required)
-* height (required)
-* alt (required)
-* showCaption
-* link
 
+- src (required)
+- width (required)
+- height (required)
+- alt (required)
+- showCaption
+- link

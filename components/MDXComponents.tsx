@@ -1,13 +1,16 @@
 /* eslint-disable react/display-name */
-import React from 'react'
-import { MDXLayout, ComponentMap } from './mdx-components'
-import { TOCInline } from './TOCInline'
-import { Pre } from './Pre'
+import React from 'react';
+import { MDXLayout, ComponentMap } from './mdx-components';
+import { TOCInline } from './TOCInline';
+import { Pre } from './Pre';
 import { NewsletterRepublishing } from './NewsletterRepublishing';
 
 import Image from './Image';
+<<<<<<< Xe/component-wat
 import { HeroImage } from './HeroImage';
 import { ConvSnippet } from './ConvSnippet';
+=======
+>>>>>>> main
 import CustomLink from './Link';
 
 export const Wrapper = ({ layout, content, ...rest }: MDXLayout) => {

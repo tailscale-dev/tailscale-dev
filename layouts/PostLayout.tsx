@@ -1,37 +1,35 @@
-import { ReactNode } from 'react'
-import { CoreContent } from '@/lib/utils/contentlayer'
-import type { Blog, Authors } from 'contentlayer/generated'
-import Link from '@/components/Link'
-import PageTitle from '@/components/PageTitle'
-import SectionContainer from '@/components/SectionContainer'
-import { BlogSEO } from '@/components/SEO'
-import Image from '@/components/Image'
-import Tag from '@/components/Tag'
-import { siteMetadata } from '@/data/siteMetadata'
-import ScrollTop from '@/components/ScrollTop'
+import React, { ReactNode } from 'react';
+import { CoreContent } from '@/lib/utils/contentlayer';
+import type { Blog, Authors } from 'contentlayer/generated';
+import Link from '@/components/Link';
+import PageTitle from '@/components/PageTitle';
+import SectionContainer from '@/components/SectionContainer';
+import { BlogSEO } from '@/components/SEO';
+import Image from '@/components/Image';
+import Tag from '@/components/Tag';
+import { siteMetadata } from '@/data/siteMetadata';
+import ScrollTop from '@/components/ScrollTop';
 
-const editUrl = (path) => `${siteMetadata.siteRepo}/blob/master/data/${path}`
+const editUrl = (path) => `${siteMetadata.siteRepo}/blob/master/data/${path}`;
 
 const postDateTemplate: Intl.DateTimeFormatOptions = {
   weekday: 'long',
   year: 'numeric',
   month: 'long',
   day: 'numeric',
-}
+};
 
 interface LayoutProps {
-  content: CoreContent<Blog>
-  authorDetails: CoreContent<Authors>[]
-  next?: { path: string; title: string }
-  prev?: { path: string; title: string }
-  children: ReactNode
+  content: CoreContent<Blog>;
+  authorDetails: CoreContent<Authors>[];
+  next?: { path: string; title: string };
+  prev?: { path: string; title: string };
+  children: ReactNode;
 }
 
-export default function PostLayout(
-  { content, authorDetails, next, prev, children }: LayoutProps,
-) {
+export default function PostLayout({ content, authorDetails, next, prev, children }: LayoutProps) {
   const { filePath, path, date, title, tags } = content;
-  const basePath = path.split('/')[0]
+  const basePath = path.split('/')[0];
 
   const reformatFediverseURL = (author: { fediverse: string }): string => {
     const [_, domain, user] = author.fediverse.split(/https:\/\/(.+)\/?@(.+)/);
@@ -213,5 +211,5 @@ export default function PostLayout(
         </div>
       </article>
     </SectionContainer>
-  )
+  );
 }

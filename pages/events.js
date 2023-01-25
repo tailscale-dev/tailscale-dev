@@ -1,11 +1,9 @@
-import ListLayout from '../layouts/ListLayout'
-import { events } from '../data/events'
-import { PageSEO } from '../components/SEO'
-import { siteMetadata } from '@/data/siteMetadata'
-import Link from 'next/link'
-import { formatDate } from '@/lib/utils/formatDate'
-
-
+import React from 'react';
+import { events } from '../data/events';
+import { PageSEO } from '../components/SEO';
+import { siteMetadata } from '@/data/siteMetadata';
+import Link from 'next/link';
+import { formatDate } from '@/lib/utils/formatDate';
 
 export default function Events({ posts }) {
   return (
@@ -20,17 +18,14 @@ export default function Events({ posts }) {
         <ul>
           {!posts.length && 'No events found.'}
           {posts.map((post, i) => {
-            const { date, title, summary, link } = post
+            const { date, title, summary, link } = post;
             return (
               <li key={i} className="py-6">
                 <article>
                   <div className="space-y-6">
                     <div>
                       <h2 className="text-2xl font-bold leading-8 tracking-tight">
-                        <Link
-                          href={link}
-                          className="text-gray-900 dark:text-gray-100"
-                        >
+                        <Link href={link} className="text-gray-900 dark:text-gray-100">
                           {title}
                         </Link>
                       </h2>
@@ -39,7 +34,6 @@ export default function Events({ posts }) {
                         <span className="pr-4">&frasl;&frasl;</span>
                         <time dateTime={date}>{formatDate(date)}</time>
                       </div>
-                      
                     </div>
                     <div className="prose max-w-none text-gray-500 dark:text-gray-400">
                       {summary}
@@ -47,18 +41,18 @@ export default function Events({ posts }) {
                   </div>
                 </article>
               </li>
-            )
+            );
           })}
         </ul>
       </div>
     </>
-  )
+  );
 }
 
 export async function getStaticProps() {
   return {
     props: {
-      posts: events
-    }
-  }
+      posts: events,
+    },
+  };
 }

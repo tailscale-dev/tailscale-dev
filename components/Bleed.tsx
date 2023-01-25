@@ -1,8 +1,8 @@
-import { ReactNode } from 'react'
+import React, { ReactNode } from 'react';
 
 export interface BleedProps {
-  full?: boolean
-  children: ReactNode
+  full?: boolean;
+  children: ReactNode;
 }
 
 export const Bleed = ({ full, children }: BleedProps) => {
@@ -14,5 +14,5 @@ export const Bleed = ({ full, children }: BleedProps) => {
     >
       {children}
     </div>
-  )
-}
+  );
+};

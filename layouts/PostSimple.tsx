@@ -1,23 +1,23 @@
-import { ReactNode } from 'react'
-import { formatDate } from '@/lib/utils/formatDate'
-import { CoreContent } from '@/lib/utils/contentlayer'
-import type { Blog } from 'contentlayer/generated'
-import Link from '@/components/Link'
-import PageTitle from '@/components/PageTitle'
-import SectionContainer from '@/components/SectionContainer'
-import { BlogSEO } from '@/components/SEO'
-import { siteMetadata } from '@/data/siteMetadata'
-import ScrollTop from '@/components/ScrollTop'
+import React, { ReactNode } from 'react';
+import { formatDate } from '@/lib/utils/formatDate';
+import { CoreContent } from '@/lib/utils/contentlayer';
+import type { Blog } from 'contentlayer/generated';
+import Link from '@/components/Link';
+import PageTitle from '@/components/PageTitle';
+import SectionContainer from '@/components/SectionContainer';
+import { BlogSEO } from '@/components/SEO';
+import { siteMetadata } from '@/data/siteMetadata';
+import ScrollTop from '@/components/ScrollTop';
 
 interface LayoutProps {
-  content: CoreContent<Blog>
-  children: ReactNode
-  next?: { path: string; title: string }
-  prev?: { path: string; title: string }
+  content: CoreContent<Blog>;
+  children: ReactNode;
+  next?: { path: string; title: string };
+  prev?: { path: string; title: string };
 }
 
 export default function PostLayout({ content, next, prev, children }: LayoutProps) {
-  const { path, date, title } = content
+  const { path, date, title } = content;
 
   return (
     <SectionContainer>
@@ -74,5 +74,5 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
         </div>
       </article>
     </SectionContainer>
-  )
+  );
 }
