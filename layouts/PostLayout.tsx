@@ -33,16 +33,12 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
 
   const reformatFediverseURL = (author: { fediverse: string }): string => {
     const [_, domain, user] = author.fediverse.split(/https:\/\/(.+)\/?@(.+)/);
-    return `@${user}@${domain.replace("/", "")}`;
+    return `@${user}@${domain.replace('/', '')}`;
   };
 
   return (
     <SectionContainer>
-      <BlogSEO
-        url={`${siteMetadata.siteUrl}/${path}`}
-        authorDetails={authorDetails}
-        {...content}
-      />
+      <BlogSEO url={`${siteMetadata.siteUrl}/${path}`} authorDetails={authorDetails} {...content} />
       <ScrollTop />
       <article>
         <div className="xl:divide-y xl:divide-gray-200 xl:dark:divide-gray-700">
@@ -53,10 +49,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                   <dt className="sr-only">Published on</dt>
                   <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
                     <time dateTime={date}>
-                      {new Date(date).toLocaleDateString(
-                        siteMetadata.locale,
-                        postDateTemplate,
-                      )}
+                      {new Date(date).toLocaleDateString(siteMetadata.locale, postDateTemplate)}
                     </time>
                   </dd>
                 </div>
@@ -72,10 +65,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
               <dd>
                 <ul className="flex justify-center space-x-8 sm:space-x-12 xl:block xl:space-x-0 xl:space-y-8">
                   {authorDetails.map((author) => (
-                    <li
-                      className="flex items-center space-x-2"
-                      key={author.name}
-                    >
+                    <li className="flex items-center space-x-2" key={author.name}>
                       {author.avatar && (
                         <Image
                           src={author.avatar}
@@ -87,17 +77,11 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                       )}
                       <dl className="whitespace-nowrap text-sm font-medium leading-5">
                         <dt className="sr-only">Name</dt>
-                        <dd className="text-gray-900 dark:text-gray-100">
-                          {author.name}
-                        </dd>
+                        <dd className="text-gray-900 dark:text-gray-100">{author.name}</dd>
                         <dt className="sr-only">Title</dt>
-                        <dd className="text-gray-900 dark:text-gray-100">
-                          {author.title}
-                        </dd>
+                        <dd className="text-gray-900 dark:text-gray-100">{author.title}</dd>
                         <dt className="sr-only">Company</dt>
-                        <dd className="text-gray-900 dark:text-gray-100">
-                          {author.company}
-                        </dd>
+                        <dd className="text-gray-900 dark:text-gray-100">{author.company}</dd>
                         <dt className="sr-only">Website</dt>
                         <dd>
                           {author.website && (
@@ -116,7 +100,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                               href={author.fediverse}
                               className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                             >
-                              {reformatFediverseURL(author)}
+                              {reformatFediverseURL({ fediverse: author.fediverse as string })}
                             </Link>
                           )}
                         </dd>
@@ -127,10 +111,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                               href={author.twitter}
                               className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                             >
-                              {author.twitter.replace(
-                                "https://twitter.com/",
-                                "@",
-                              )}
+                              {author.twitter.replace('https://twitter.com/', '@')}
                             </Link>
                           )}
                         </dd>
@@ -141,10 +122,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                               href={author.github}
                               className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                             >
-                              {author.github.replace(
-                                "https://github.com/",
-                                "@",
-                              )}
+                              {author.github.replace('https://github.com/', '@')}
                             </Link>
                           )}
                         </dd>
@@ -168,7 +146,9 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                       Tags
                     </h2>
                     <div className="flex flex-wrap">
-                      {tags.map((tag) => <Tag key={tag} text={tag} />)}
+                      {tags.map((tag) => (
+                        <Tag key={tag} text={tag} />
+                      ))}
                     </div>
                   </div>
                 )}
