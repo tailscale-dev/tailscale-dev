@@ -22,8 +22,8 @@ export const ConvSnippet = ({ name, children }: ConvSnippetProps) => {
   const handle = author.name.split(' ', 1)[0];
 
   return (
-    <div className="flex space-x-4 rounded-lg bg-gray-100 p-4">
-      <div className="flex h-16 w-16 shrink-0 items-center justify-center self-center overflow-hidden rounded-lg bg-gray-200">
+    <div className="flex space-x-4 dark:bg-gray-800 rounded-lg bg-gray-100 p-4">
+      <div className="flex h-16 w-16 shrink-0 items-center justify-center self-center overflow-hidden rounded-lg dark:bg-gray-700 bg-gray-200">
         <Image src={author.avatar} width={64} height={64} alt={`the avatar for ${author.name}`} />
       </div>
       <div className="min-w-0 self-center">
