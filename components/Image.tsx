@@ -1,19 +1,19 @@
 import React from 'react';
 import NextImage, { ImageProps } from 'next/image';
+import Link from 'next/link';
 import Wrapper from './Wrapper';
-import Link from './Link';
 
 interface ImageComponentProps extends ImageProps {
   showCaption?: boolean;
-  link?: string;
+  href?: string;
 }
 
 export default function Image(props: ImageComponentProps) {
   return (
     <>
       <Wrapper
-        condition={props.link}
-        wrapper={(children) => <Link href={props.link}>{children}</Link>}
+        condition={props.href}
+        wrapper={(children) => <Link href={props.href}>{children}</Link>}
       >
         <NextImage {...props} />
       </Wrapper>

@@ -1,3 +1,4 @@
 .contentlayer
 .next
 node_modules
+dist

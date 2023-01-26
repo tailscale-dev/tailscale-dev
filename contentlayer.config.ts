@@ -15,9 +15,9 @@ import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypePrismPlus from 'rehype-prism-plus';
 import rehypePresetMinify from 'rehype-preset-minify';
+import { formatDate } from './lib/utils/formatDate';
 
 const computedFields: ComputedFields = {
-  readingTime: { type: 'json', resolve: (doc) => readingTime(doc.body.raw) },
   slug: {
     type: 'string',
     resolve: (doc) => doc._raw.flattenedPath.replace(/^.+?(\/)/, ''),
@@ -49,7 +49,36 @@ export const Blog = defineDocumentType(() => ({
     layout: { type: 'string' },
     canonicalUrl: { type: 'string' },
   },
-  computedFields,
+  computedFields: {
+    ...computedFields,
+    readingTime: { type: 'json', resolve: (doc) => readingTime(doc.body.raw) },
+
+  },
+}));
+
+export const Events = defineDocumentType(() => ({
+  name: 'Events',
+  filePathPattern: 'events/**/*.mdx',
+  contentType: 'mdx',
+  fields: {
+    title: { type: 'string', required: true },
+    date: { type: 'date', required: true },
+    location: { type: 'string', required: true },
+    displayDate: { type: 'string' },
+    displayTime: { type: 'string' },
+    draft: { type: 'boolean' },
+    summary: { type: 'string' },
+    link: { type: 'string' },
+    layout: { type: 'string' },
+    authors: { type: 'list', of: { type: 'string' } },
+  },
+  computedFields: {
+    displayDate: {
+      type: 'string',
+      resolve: (doc) => (doc.displayDate ? doc.displayDate : formatDate(doc.date)),
+    },
+    ...computedFields,
+  },
 }));
 
 export const Authors = defineDocumentType(() => ({
@@ -73,7 +102,7 @@ export const Authors = defineDocumentType(() => ({
 
 export default makeSource({
   contentDirPath: 'data',
-  documentTypes: [Blog, Authors],
+  documentTypes: [Blog, Authors, Events],
   mdx: {
     cwd: process.cwd(),
     remarkPlugins: [remarkExtractFrontmatter, remarkGfm, remarkCodeTitles, remarkImgToJsx],

@@ -14,6 +14,9 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      sans: ['"Inter"', ...fontFamily.sans],
+      mono: ['"SF Mono", "SFMono-Regular"', ...fontFamily.mono],
+      sansDefault: [...fontFamily.sans],
       spacing: {
         '9/16': '56.25%',
       },

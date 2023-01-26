@@ -7,7 +7,6 @@ import { getAllTags } from './contentlayer';
 
 interface CoreConfig {
   title: string;
-  headerTitle: string;
   description: string;
   language: string;
   siteUrl: string;

@@ -1,6 +1,5 @@
-import Link from '@/components/Link';
+import Link from 'next/link';
 import { PageSEO } from '@/components/SEO';
-import React from 'react';
 
 export default function FourZeroFour() {
   return (
