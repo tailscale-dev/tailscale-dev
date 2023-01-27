@@ -52,7 +52,6 @@ export const Blog = defineDocumentType(() => ({
   computedFields: {
     ...computedFields,
     readingTime: { type: 'json', resolve: (doc) => readingTime(doc.body.raw) },
-
   },
 }));
 

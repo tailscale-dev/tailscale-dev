@@ -6,7 +6,7 @@ import { InferGetStaticPropsType } from 'next';
 import { allEvents, allAuthors } from 'contentlayer/generated';
 import type { Events } from 'contentlayer/generated';
 
-const DEFAULT_LAYOUT = 'PostLayout';
+const DEFAULT_LAYOUT = 'EventLayout';
 
 export async function getStaticPaths() {
   return {
