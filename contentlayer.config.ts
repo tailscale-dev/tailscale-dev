@@ -72,11 +72,11 @@ export const Events = defineDocumentType(() => ({
     authors: { type: 'list', of: { type: 'string' } },
   },
   computedFields: {
+    ...computedFields,
     displayDate: {
       type: 'string',
       resolve: (doc) => (doc.displayDate ? doc.displayDate : formatDate(doc.date)),
     },
-    ...computedFields,
   },
 }));
 
@@ -86,6 +86,7 @@ export const Authors = defineDocumentType(() => ({
   contentType: 'mdx',
   fields: {
     name: { type: 'string', required: true },
+    handle: { type: 'string' },
     avatar: { type: 'string' },
     title: { type: 'string' },
     company: { type: 'string' },
@@ -96,7 +97,13 @@ export const Authors = defineDocumentType(() => ({
     website: { type: 'string' },
     fediverse: { type: 'string' },
   },
-  computedFields,
+  computedFields: {
+    ...computedFields,
+    handle: {
+      type: 'string',
+      resolve: (doc) => (doc.handle ? doc.handle : doc.name.split(' ', 1)[0]),
+    },
+  },
 }));
 
 export default makeSource({
