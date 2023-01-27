@@ -88,12 +88,12 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                   <dd className="col-span-3">{content.location}</dd>
                 </div>
 
-                { content.displayTime &&
+                {content.displayTime && (
                   <div className="grid grid-cols-4 gap-4 px-4 py-5">
-                  <dt>Time</dt>
-                  <dd className="col-span-3">{content.displayTime}</dd>
-                </div>
-                }
+                    <dt>Time</dt>
+                    <dd className="col-span-3">{content.displayTime}</dd>
+                  </div>
+                )}
 
                 <div className="grid grid-cols-4 gap-4 px-4 py-5">
                   <dt>Additional Details</dt>
