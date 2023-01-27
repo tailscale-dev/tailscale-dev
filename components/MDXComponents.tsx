@@ -1,12 +1,13 @@
 /* eslint-disable react/display-name */
 import React from 'react';
 import { ComponentMap, MDXLayout } from './mdx-components';
-import { TOCInline } from './TOCInline';
-import { Pre } from './Pre';
-
-import Image from './Image';
 import { HeroImage } from './HeroImage';
 import { ConvSnippet } from './ConvSnippet';
+import { TOCInline } from './TOCInline';
+import { Pre } from './Pre';
+import { NewsletterRepublishing } from './NewsletterRepublishing';
+
+import Image from './Image';
 import CustomLink from './Link';
 
 export const Wrapper = ({ layout, content, ...rest }: MDXLayout) => {
@@ -19,6 +20,7 @@ export const MDXComponents: ComponentMap = {
   HeroImage,
   ConvSnippet,
   TOCInline,
+  NewsletterRepublishing,
   a: CustomLink,
   pre: Pre,
   wrapper: Wrapper,

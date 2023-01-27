@@ -8,5 +8,4 @@ module.exports.siteMetadata = {
   image: '/static/images/avatar.png',
   socialBanner: '/static/images/twitter-card.png',
   locale: 'en-US',
-}
-
+};

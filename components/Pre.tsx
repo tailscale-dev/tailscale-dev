@@ -1,24 +1,24 @@
-import { useState, useRef, ReactNode } from 'react'
+import React, { useState, useRef, ReactNode } from 'react';
 
 export const Pre = ({ children }: { children: ReactNode }) => {
-  const textInput = useRef(null)
-  const [hovered, setHovered] = useState(false)
-  const [copied, setCopied] = useState(false)
+  const textInput = useRef(null);
+  const [hovered, setHovered] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const onEnter = () => {
-    setHovered(true)
-  }
+    setHovered(true);
+  };
   const onExit = () => {
-    setHovered(false)
-    setCopied(false)
-  }
+    setHovered(false);
+    setCopied(false);
+  };
   const onCopy = () => {
-    setCopied(true)
-    navigator.clipboard.writeText(textInput.current.textContent)
+    setCopied(true);
+    navigator.clipboard.writeText(textInput.current.textContent);
     setTimeout(() => {
-      setCopied(false)
-    }, 2000)
-  }
+      setCopied(false);
+    }, 2000);
+  };
 
   return (
     <div ref={textInput} onMouseEnter={onEnter} onMouseLeave={onExit} className="relative">
@@ -64,5 +64,5 @@ export const Pre = ({ children }: { children: ReactNode }) => {
 
       <pre>{children}</pre>
     </div>
-  )
-}
+  );
+};
