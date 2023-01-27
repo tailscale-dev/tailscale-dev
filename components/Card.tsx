@@ -1,6 +1,6 @@
 import React from 'react';
-import Image from './Image';
-import Link from './Link';
+import Image from 'next/image';
+import Link from 'next/link';
 
 const Card = ({ title, description, imgSrc, href }) => (
   <div className="md max-w-[544px] p-4 md:w-1/2">

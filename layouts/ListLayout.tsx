@@ -3,8 +3,8 @@ import { useRouter } from 'next/router';
 import { formatDate } from '@/lib/utils/formatDate';
 import { CoreContent } from '@/lib/utils/contentlayer';
 import type { Blog } from 'contentlayer/generated';
-import Link from '@/components/Link';
-import Tag from '@/components/Tag';
+import Link from 'next/link';
+import { ListItem } from '@/components/ListItem';
 
 interface PaginationProps {
   totalPages: number;
@@ -77,7 +77,7 @@ export default function ListLayout({
     <>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
         <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-          <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
+          <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-4xl md:leading-14">
             {title}
           </h1>
           <div className="relative max-w-lg">
@@ -109,38 +109,17 @@ export default function ListLayout({
         </div>
         <ul>
           {!filteredBlogPosts.length && 'No posts found.'}
-          {displayPosts.map((post) => {
-            const { slug, date, title, summary, tags } = post;
-            return (
-              <li key={slug} className="py-6">
-                <article>
-                  <div className="space-y-6">
-                    <div>
-                      <h2 className="text-2xl font-bold leading-8 tracking-tight">
-                        <Link href={`/blog/${slug}`} className="text-gray-900 dark:text-gray-100">
-                          {title}
-                        </Link>
-                      </h2>
-
-                      <div className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-                        <span className="pr-4">&frasl;&frasl;</span>
-                        <time dateTime={date}>{formatDate(date)}</time>
-                        <span className="px-4">{` • `}</span>
-                        <span>
-                          {tags.map((tag) => (
-                            <Tag key={tag} text={tag} />
-                          ))}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="prose max-w-none text-gray-500 dark:text-gray-400">
-                      {summary}
-                    </div>
-                  </div>
-                </article>
-              </li>
-            );
-          })}
+          {displayPosts.map((post) => (
+            <ListItem
+              key={post.slug}
+              title={post.title}
+              slug={post.slug}
+              path={post.path}
+              tags={post.tags}
+              summary={post.summary}
+              date={formatDate(post.date)}
+            />
+          ))}
         </ul>
       </div>
       {pagination && pagination.totalPages > 1 && !searchValue && (

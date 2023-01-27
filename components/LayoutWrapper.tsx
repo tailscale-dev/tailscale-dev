@@ -1,12 +1,12 @@
 import { Inter } from '@next/font/google';
 import { siteMetadata } from '@/data/siteMetadata';
 import { headerNavLinks } from '@/data/headerNavLinks';
-import Link from './Link';
+import Link from 'next/link';
 import SectionContainer from './SectionContainer';
 import Footer from './Footer';
 import MobileNav from './MobileNav';
 import ThemeSwitch from './ThemeSwitch';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;

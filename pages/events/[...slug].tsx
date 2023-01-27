@@ -1,24 +1,23 @@
-import React from 'react';
 import { MDXLayoutRenderer } from '@/components/mdx-components';
 import PageTitle from '@/components/PageTitle';
 import { MDXComponents } from '@/components/MDXComponents';
-import { sortedBlogPost, coreContent } from '@/lib/utils/contentlayer';
+import { sortedEvents, coreContent } from '@/lib/utils/contentlayer';
 import { InferGetStaticPropsType } from 'next';
-import { allBlogs, allAuthors } from 'contentlayer/generated';
-import type { Blog } from 'contentlayer/generated';
+import { allEvents, allAuthors } from 'contentlayer/generated';
+import type { Events } from 'contentlayer/generated';
 
-const DEFAULT_LAYOUT = 'PostLayout';
+const DEFAULT_LAYOUT = 'EventLayout';
 
 export async function getStaticPaths() {
   return {
-    paths: allBlogs.map((p) => ({ params: { slug: p.slug.split('/') } })),
+    paths: allEvents.map((p) => ({ params: { slug: p.slug.split('/') } })),
     fallback: false,
   };
 }
 
 export const getStaticProps = async ({ params }) => {
   const slug = (params.slug as string[]).join('/');
-  const sortedPosts = sortedBlogPost(allBlogs) as Blog[];
+  const sortedPosts = sortedEvents(allEvents) as Events[];
   const postIndex = sortedPosts.findIndex((p) => p.slug === slug);
   const prevContent = sortedPosts[postIndex + 1] || null;
   const prev = prevContent ? coreContent(prevContent) : null;
@@ -41,7 +40,7 @@ export const getStaticProps = async ({ params }) => {
   };
 };
 
-export default function BlogPostPage({
+export default function EventPostPage({
   post,
   authorDetails,
   prev,

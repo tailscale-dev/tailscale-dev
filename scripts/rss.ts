@@ -1,5 +1,5 @@
-import { generateRSS } from 'pliny/utils/generate-rss.js';
-import { siteMetadata } from '../data/siteMetadata.js';
+import { generateRSS } from '../lib/utils/generate-rss';
+import { siteMetadata } from '../data/siteMetadata';
 import { allBlogs } from '../.contentlayer/generated/index.mjs';
 
 const rss = () => {

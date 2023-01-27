@@ -24,6 +24,10 @@ export function sortedBlogPost(allBlogs: MDXDocumentDate[]) {
   return allBlogs.sort((a, b) => dateSortDesc(a.date, b.date));
 }
 
+export function sortedEvents(allEvents: MDXDocumentDate[]) {
+  return allEvents.sort((a, b) => dateSortDesc(a.date, b.date));
+}
+
 type ConvertUndefined<T> = OrNull<{
   [K in keyof T as undefined extends T[K] ? K : never]-?: T[K];
 }>;

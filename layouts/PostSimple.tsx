@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { formatDate } from '@/lib/utils/formatDate';
 import { CoreContent } from '@/lib/utils/contentlayer';
 import type { Blog } from 'contentlayer/generated';
-import Link from '@/components/Link';
+import Link from 'next/link';
 import PageTitle from '@/components/PageTitle';
 import SectionContainer from '@/components/SectionContainer';
 import { BlogSEO } from '@/components/SEO';
