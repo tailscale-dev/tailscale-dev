@@ -12,10 +12,10 @@
           buildInputs = with pkgs; [
             nodejs-18_x
             yarn
-
-            # XXX(Xe): I need this for formatting code
-            deno
           ];
+          shellHook = ''
+            export PATH="$PATH":$(pwd)/node_modules/.bin
+          '';
         };
       });
 }

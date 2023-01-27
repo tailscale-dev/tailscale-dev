@@ -31,6 +31,11 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
   const { filePath, path, date, title, tags } = content;
   const basePath = path.split('/')[0];
 
+  const reformatFediverseURL = (author: { fediverse: string }): string => {
+    const [_, domain, user] = author.fediverse.split(/https:\/\/(.+)\/?@(.+)/);
+    return `@${user}@${domain.replace('/', '')}`;
+  };
+
   return (
     <SectionContainer>
       <BlogSEO url={`${siteMetadata.siteUrl}/${path}`} authorDetails={authorDetails} {...content} />
@@ -73,6 +78,32 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                       <dl className="whitespace-nowrap text-sm font-medium leading-5">
                         <dt className="sr-only">Name</dt>
                         <dd className="text-gray-900 dark:text-gray-100">{author.name}</dd>
+                        <dt className="sr-only">Title</dt>
+                        <dd className="text-gray-900 dark:text-gray-100">{author.title}</dd>
+                        <dt className="sr-only">Company</dt>
+                        <dd className="text-gray-900 dark:text-gray-100">{author.company}</dd>
+                        <dt className="sr-only">Website</dt>
+                        <dd>
+                          {author.website && (
+                            <Link
+                              href={author.website}
+                              className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                            >
+                              {author.website.replace(/(https?:\/\/)?/, '')}
+                            </Link>
+                          )}
+                        </dd>
+                        <dt className="sr-only">Fediverse</dt>
+                        <dd>
+                          {author.fediverse && (
+                            <Link
+                              href={author.fediverse}
+                              className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                            >
+                              {reformatFediverseURL({ fediverse: author.fediverse as string })}
+                            </Link>
+                          )}
+                        </dd>
                         <dt className="sr-only">Twitter</dt>
                         <dd>
                           {author.twitter && (
@@ -81,6 +112,17 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                               className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                             >
                               {author.twitter.replace('https://twitter.com/', '@')}
+                            </Link>
+                          )}
+                        </dd>
+                        <dt className="sr-only">Github</dt>
+                        <dd>
+                          {author.github && (
+                            <Link
+                              href={author.github}
+                              className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                            >
+                              {author.github.replace('https://github.com/', '@')}
                             </Link>
                           )}
                         </dd>
