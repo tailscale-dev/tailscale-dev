@@ -4,7 +4,7 @@ import type { Events, Authors } from 'contentlayer/generated';
 import Link from 'next/link';
 import PageTitle from '@/components/PageTitle';
 import SectionContainer from '@/components/SectionContainer';
-import { BlogSEO } from '@/components/SEO';
+import { PageSEO } from '@/components/SEO';
 import Image from '@/components/Image';
 import { siteMetadata } from '@/data/siteMetadata';
 import ScrollTop from '@/components/ScrollTop';
@@ -26,7 +26,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
 
   return (
     <SectionContainer>
-      <BlogSEO url={`${siteMetadata.siteUrl}/${path}`} {...content} />
+      <PageSEO title={title} description={content.summary} {...content} />
       <ScrollTop />
       <article>
         <div className="xl:divide-y xl:divide-gray-200 xl:dark:divide-gray-700">

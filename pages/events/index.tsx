@@ -40,6 +40,7 @@ export default function EventPage({ events }: InferGetStaticPropsType<typeof get
             <ListItem
               key={event.slug}
               title={event.title}
+              slug={event.slug}
               path={event.path}
               location={event.location}
               summary={event.summary}
