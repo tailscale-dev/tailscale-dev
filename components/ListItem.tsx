@@ -11,7 +11,7 @@ interface ListItemProps {
   tags?: string[];
 }
 
-export function ListItem({ slug, title, date, location, path, tags=[], summary }: ListItemProps) {
+export function ListItem({ slug, title, date, location, path, tags = [], summary }: ListItemProps) {
   return (
     <li key={slug} className="py-6">
       <article>
@@ -26,7 +26,7 @@ export function ListItem({ slug, title, date, location, path, tags=[], summary }
             <div className="font-mono text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
               <span className="pr-4">&frasl;&frasl;</span>
               <time dateTime={date}>{date}</time>
-              { tags && tags.length > 0 &&
+              {tags && tags.length > 0 && (
                 <>
                   <span className="px-4">{` • `}</span>
                   <span>
@@ -35,13 +35,13 @@ export function ListItem({ slug, title, date, location, path, tags=[], summary }
                     ))}
                   </span>
                 </>
-              }
-              { location &&
+              )}
+              {location && (
                 <>
                   <span className="px-4">{` • `}</span>
                   <span>{location}</span>
                 </>
-              }
+              )}
             </div>
           </div>
           <div className="prose max-w-none text-gray-500 dark:text-gray-400">{summary}</div>

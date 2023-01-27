@@ -83,24 +83,24 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
             </dl>
             <div className="divide-y divide-gray-200 dark:divide-gray-700 xl:col-span-3 xl:row-span-2 xl:pb-0">
               <dl>
-                <div className="px-4 py-5 grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-4 gap-4 px-4 py-5">
                   <dt>Location</dt>
                   <dd className="col-span-3">{content.location}</dd>
                 </div>
 
-                <div className="px-4 py-5 grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-4 gap-4 px-4 py-5">
                   <dt>Time</dt>
                   <dd className="col-span-3">{content.displayTime}</dd>
                 </div>
 
-                <div className="px-4 py-5 grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-4 gap-4 px-4 py-5">
                   <dt>Additional Details</dt>
-                  <dd className="col-span-3"><ExternalLink href={content.link}>{content.link}</ExternalLink></dd>
+                  <dd className="col-span-3">
+                    <ExternalLink href={content.link}>{content.link}</ExternalLink>
+                  </dd>
                 </div>
               </dl>
-              <div className="prose max-w-none pt-10 pb-8 dark:prose-dark">
-                {children}
-              </div>
+              <div className="prose max-w-none pt-10 pb-8 dark:prose-dark">{children}</div>
               <div className="pt-6 pb-6 text-sm text-gray-700 dark:text-gray-300">
                 <Link href={editUrl(filePath)}>Improve this page</Link>
               </div>
