@@ -24,7 +24,7 @@ export function sortedBlogPost(allBlogs: MDXDocumentDate[]) {
   return allBlogs.sort((a, b) => dateSortDesc(a.date, b.date));
 }
 
-export function sortedEvents(allEvents: MDXDocumentDate[]) {
+export function sortedEventPosts(allEvents: MDXDocumentDate[]) {
   return allEvents.sort((a, b) => dateSortDesc(a.date, b.date));
 }
 

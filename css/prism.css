@@ -14,11 +14,6 @@
   @apply mt-0 rounded-t-none;
 }
 
-/* Code block styles */
-.code-highlight {
-  @apply float-left min-w-full;
-}
-
 .code-line {
   @apply -mx-4 block border-l-4 border-transparent pl-4 pr-4;
 }
@@ -28,11 +23,11 @@
 }
 
 .code-line.deleted {
-  @apply bg-red-500 bg-opacity-20;
+  @apply bg-red-400 bg-opacity-20;
 }
 
 .highlight-line {
-  @apply -mx-4 border-l-4 border-primary-500 bg-gray-700 bg-opacity-50;
+  @apply -mx-4 border-l-4 border-gray-100 bg-gray-700 bg-opacity-50;
 }
 
 .line-number::before {

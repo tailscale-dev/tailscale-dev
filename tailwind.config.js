@@ -1,6 +1,6 @@
 // @ts-check
 const { fontFamily } = require('tailwindcss/defaultTheme');
-const colors = require('tailwindcss/colors');
+const plugin = require('tailwindcss/plugin');
 
 /** @type {import("tailwindcss/types").Config } */
 module.exports = {
@@ -13,158 +13,77 @@ module.exports = {
   ],
   darkMode: 'class',
   theme: {
-    extend: {
+    fontFamily: {
       sans: ['"Inter"', ...fontFamily.sans],
       mono: ['"SF Mono", "SFMono-Regular"', ...fontFamily.mono],
       sansDefault: [...fontFamily.sans],
-      spacing: {
-        '9/16': '56.25%',
+    },
+    colors: {
+      blue: {
+        50: 'rgba(228, 233, 240, 0.15)',
+        100: 'rgba(220, 233, 242, 0.6)',
+        200: 'rgba(43, 123, 185, 0.15)',
+        300: '#80bdff',
+        500: '#4a7ddd',
+        600: '#4D78C8',
+        700: '#496495',
+        800: '#2A4067',
       },
-      lineHeight: {
-        11: '2.75rem',
-        12: '3rem',
-        13: '3.25rem',
-        14: '3.5rem',
+      orange: {
+        600: '#CA6940',
+        700: '#C65835',
       },
-      fontFamily: {
-        sans: ['Inter', ...fontFamily.sans],
+      yellow: {
+        50: '#f8e5b9',
+        100: 'hsla(48, 100%, 50%, 0.4)',
+        600: '#762b0b',
+        700: '#CCA000',
       },
-      colors: {
-        primary: colors.teal,
-        gray: colors.neutral,
+      green: {
+        500: '#41a663',
+        700: '#487961',
+        800: '#385A4A',
       },
-      typography: (theme) => ({
-        DEFAULT: {
-          css: {
-            color: theme('colors.gray.700'),
-            a: {
-              color: theme('colors.primary.500'),
-              '&:hover': {
-                color: `${theme('colors.primary.600')} !important`,
-              },
-              code: { color: theme('colors.primary.400') },
-            },
-            h1: {
-              fontWeight: '700',
-              letterSpacing: theme('letterSpacing.tight'),
-              color: theme('colors.gray.900'),
-            },
-            h2: {
-              fontWeight: '700',
-              letterSpacing: theme('letterSpacing.tight'),
-              color: theme('colors.gray.900'),
-            },
-            h3: {
-              fontWeight: '600',
-              color: theme('colors.gray.900'),
-            },
-            'h4,h5,h6': {
-              color: theme('colors.gray.900'),
-            },
-            pre: {
-              backgroundColor: theme('colors.gray.800'),
-            },
-            code: {
-              color: theme('colors.pink.500'),
-              backgroundColor: theme('colors.gray.100'),
-              paddingLeft: '4px',
-              paddingRight: '4px',
-              paddingTop: '2px',
-              paddingBottom: '2px',
-              borderRadius: '0.25rem',
-            },
-            'code::before': {
-              content: 'none',
-            },
-            'code::after': {
-              content: 'none',
-            },
-            details: {
-              backgroundColor: theme('colors.gray.100'),
-              paddingLeft: '4px',
-              paddingRight: '4px',
-              paddingTop: '2px',
-              paddingBottom: '2px',
-              borderRadius: '0.25rem',
-            },
-            hr: { borderColor: theme('colors.gray.200') },
-            'ol li::marker': {
-              fontWeight: '600',
-              color: theme('colors.gray.500'),
-            },
-            'ul li::marker': {
-              backgroundColor: theme('colors.gray.500'),
-            },
-            strong: { color: theme('colors.gray.600') },
-            blockquote: {
-              color: theme('colors.gray.900'),
-              borderLeftColor: theme('colors.gray.200'),
-            },
-          },
-        },
-        dark: {
-          css: {
-            color: theme('colors.gray.300'),
-            a: {
-              color: theme('colors.primary.500'),
-              '&:hover': {
-                color: `${theme('colors.primary.400')} !important`,
-              },
-              code: { color: theme('colors.primary.400') },
-            },
-            h1: {
-              fontWeight: '700',
-              letterSpacing: theme('letterSpacing.tight'),
-              color: theme('colors.gray.100'),
-            },
-            h2: {
-              fontWeight: '700',
-              letterSpacing: theme('letterSpacing.tight'),
-              color: theme('colors.gray.100'),
-            },
-            h3: {
-              fontWeight: '600',
-              color: theme('colors.gray.100'),
-            },
-            'h4,h5,h6': {
-              color: theme('colors.gray.100'),
-            },
-            pre: {
-              backgroundColor: theme('colors.gray.800'),
-            },
-            code: {
-              backgroundColor: theme('colors.gray.800'),
-            },
-            details: {
-              backgroundColor: theme('colors.gray.800'),
-            },
-            hr: { borderColor: theme('colors.gray.700') },
-            'ol li::marker': {
-              fontWeight: '600',
-              color: theme('colors.gray.400'),
-            },
-            'ul li::marker': {
-              backgroundColor: theme('colors.gray.400'),
-            },
-            strong: { color: theme('colors.gray.100') },
-            thead: {
-              th: {
-                color: theme('colors.gray.100'),
-              },
-            },
-            tbody: {
-              tr: {
-                borderBottomColor: theme('colors.gray.700'),
-              },
-            },
-            blockquote: {
-              color: theme('colors.gray.100'),
-              borderLeftColor: theme('colors.gray.700'),
-            },
-          },
-        },
-      }),
+      gray: {
+        50: '#faf9f8',
+        100: '#f6f4f2',
+        200: '#E6E4E2',
+        300: '#D6D2CC',
+        400: '#B6B0AD',
+        500: '#9F9995',
+        600: '#666361',
+        700: '#474645',
+        800: '#343433',
+        900: '#242424',
+      },
+      red: {
+        400: '#c65835',
+      },
+      white: '#fff',
+      transparent: 'transparent',
+      current: 'currentColor',
+    },
+    stroke: ({ theme }) => ({
+      current: 'currentColor',
+      'gray-500': theme('colors.gray.500'),
+      'blue-500': theme('colors.blue.500'),
+      'blue-700': theme('colors.blue.700'),
+    }),
+    extend: {
+      fontSize: {
+        tiny: '.7rem',
+      },
+      transitionDuration: {
+        0: '1ms',
+      },
     },
   },
-  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
+  plugins: [
+    require('@tailwindcss/line-clamp'),
+    plugin(function ({ addVariant }) {
+      addVariant('state-open', '&[data-state="open"]');
+      addVariant('state-closed', '&[data-state="closed"]');
+      addVariant('copy-toggle', ['&[data-copy-toggle="true"]', '[data-copy-toggle="true"] &']);
+    }),
+  ],
 };

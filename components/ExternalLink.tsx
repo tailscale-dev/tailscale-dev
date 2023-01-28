@@ -14,12 +14,7 @@ const ExternalLink = React.forwardRef<HTMLAnchorElement, ExternalLinkProps>((pro
     }
   };
 
-  return (
-    <>
-      <a ref={ref} {...rest} target="_blank" rel="noreferrer" onClick={wrappedOnClick} />
-      <span className="pl-2 text-gray-200">&#8599;</span>
-    </>
-  );
+  return <a ref={ref} {...rest} target="_blank" rel="noreferrer" onClick={wrappedOnClick} />;
 });
 
 ExternalLink.displayName = 'ExternalLink';

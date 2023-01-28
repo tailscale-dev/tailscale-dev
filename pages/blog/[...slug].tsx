@@ -1,6 +1,5 @@
 import React from 'react';
 import { MDXLayoutRenderer } from '@/components/mdx-components';
-import PageTitle from '@/components/PageTitle';
 import { MDXComponents } from '@/components/MDXComponents';
 import { sortedBlogPost, coreContent } from '@/lib/utils/contentlayer';
 import { InferGetStaticPropsType } from 'next';
@@ -48,27 +47,14 @@ export default function BlogPostPage({
   next,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <>
-      {'draft' in post && post.draft === true ? (
-        <div className="mt-24 text-center">
-          <PageTitle>
-            Under Construction{' '}
-            <span role="img" aria-label="roadwork sign">
-              🚧
-            </span>
-          </PageTitle>
-        </div>
-      ) : (
-        <MDXLayoutRenderer
-          layout={post.layout || DEFAULT_LAYOUT}
-          content={post}
-          MDXComponents={MDXComponents}
-          toc={post.toc}
-          authorDetails={authorDetails}
-          prev={prev}
-          next={next}
-        />
-      )}
-    </>
+    <MDXLayoutRenderer
+      layout={post.layout || DEFAULT_LAYOUT}
+      content={post}
+      MDXComponents={MDXComponents}
+      toc={post.toc}
+      authorDetails={authorDetails}
+      prev={prev}
+      next={next}
+    />
   );
 }
