@@ -5,10 +5,6 @@ kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
 
-[build]
-  [build.args]
-    NEXT_PUBLIC_EXAMPLE = "Value goes here"
-
 [env]
   PORT = "3000"
 
@@ -25,9 +21,10 @@ processes = []
   processes = ["app"]
   protocol = "tcp"
   script_checks = []
+
   [services.concurrency]
-    hard_limit = 25
-    soft_limit = 20
+    hard_limit = 50
+    soft_limit = 40
     type = "connections"
 
   [[services.ports]]
