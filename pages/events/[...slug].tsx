@@ -1,7 +1,7 @@
 import { MDXLayoutRenderer } from '@/components/mdx-components';
 import PageTitle from '@/components/PageTitle';
 import { MDXComponents } from '@/components/MDXComponents';
-import { sortedEvents, coreContent } from '@/lib/utils/contentlayer';
+import { sortedEventPosts, coreContent } from '@/lib/utils/contentlayer';
 import { InferGetStaticPropsType } from 'next';
 import { allEvents, allAuthors } from 'contentlayer/generated';
 import type { Events } from 'contentlayer/generated';
@@ -17,7 +17,7 @@ export async function getStaticPaths() {
 
 export const getStaticProps = async ({ params }) => {
   const slug = (params.slug as string[]).join('/');
-  const sortedPosts = sortedEvents(allEvents) as Events[];
+  const sortedPosts = sortedEventPosts(allEvents) as Events[];
   const postIndex = sortedPosts.findIndex((p) => p.slug === slug);
   const prevContent = sortedPosts[postIndex + 1] || null;
   const prev = prevContent ? coreContent(prevContent) : null;

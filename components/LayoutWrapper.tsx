@@ -1,12 +1,12 @@
+import React from 'react';
 import { Inter } from '@next/font/google';
-import { siteMetadata } from '@/data/siteMetadata';
 import { headerNavLinks } from '@/data/headerNavLinks';
 import Link from 'next/link';
-import SectionContainer from './SectionContainer';
 import Footer from './Footer';
-import MobileNav from './MobileNav';
 import ThemeSwitch from './ThemeSwitch';
 import { ReactNode } from 'react';
+import { TailscaleLogo } from '@/components/TailscaleLogo';
+import MobileNav from './MobileNav';
 
 interface Props {
   children: ReactNode;
@@ -18,38 +18,57 @@ const inter = Inter({
 
 const LayoutWrapper = ({ children }: Props) => {
   return (
-    <SectionContainer>
-      <div className={`${inter.className} flex h-screen flex-col justify-between font-sans`}>
-        <header className="flex items-center justify-between py-10">
-          <div>
-            <Link href="/" aria-label={siteMetadata.title}>
-              <div className="flex items-center justify-between">
-                <div className="hidden h-6 text-3xl font-semibold sm:block">
-                  Tailscale Community
-                </div>
-              </div>
+    <>
+      <nav className={`${inter.className} SiteNavigation bg-gray-900 text-gray-100`}>
+        <div className="container flex items-center justify-between py-4 md:pt-0">
+          <div className="flex items-center ">
+            <Link className="mr-5 block md:pt-7" href="/" aria-label="Tailscale">
+              <TailscaleLogo />
+              <span className="pl-2 font-mono tracking-wider">
+                <span className="pr-2 text-gray-700">~$</span>community
+              </span>
             </Link>
-          </div>
-          <div className="flex items-center text-base leading-5">
-            <div className="hidden sm:block">
+            <ul className="relative hidden pt-8 md:flex">
               {headerNavLinks.map((link) => (
-                <Link
-                  key={link.title}
-                  href={link.href}
-                  className="p-1 font-medium text-gray-900 dark:text-gray-100 sm:p-4"
-                >
-                  {link.title}
-                </Link>
+                <li key={link.title}>
+                  <Link
+                    key={link.title}
+                    href={link.href}
+                    className="px-3 font-medium  transition-colors duration-200 hover:text-gray-600"
+                  >
+                    <span>{link.title}</span>
+                    {link.href.startsWith('http') && (
+                      <span className="pl-1 text-gray-300">&#8599;</span>
+                    )}
+                  </Link>
+                </li>
               ))}
-            </div>
-            <ThemeSwitch />
-            <MobileNav />
+            </ul>
           </div>
-        </header>
-        <main className="mb-auto">{children}</main>
-        <Footer />
-      </div>
-    </SectionContainer>
+          <div className="ml-auto hidden pt-8 md:block">
+            <ul className="flex items-center">
+              <li>
+                <ThemeSwitch />
+              </li>
+              <li className="ml-1 md:ml-4">
+                <Link
+                  href="https://login.tailscale.com/start"
+                  data-track="Get Started Clicked"
+                  className="button border-gray-100 border-opacity-20 font-medium  transition duration-150 ease-in-out hover:border-opacity-40"
+                  target="_blank"
+                  rel="noreferer noopener noreferrer"
+                >
+                  <span>Use Tailscale</span>
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <MobileNav />
+        </div>
+      </nav>
+      {children}
+      <Footer />
+    </>
   );
 };
 

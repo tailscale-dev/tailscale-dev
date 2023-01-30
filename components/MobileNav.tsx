@@ -28,7 +28,7 @@ const MobileNav = () => {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
-          className="text-gray-900 dark:text-gray-100"
+          className="text-gray-100"
         >
           <path
             fillRule="evenodd"
@@ -38,13 +38,13 @@ const MobileNav = () => {
         </svg>
       </button>
       <div
-        className={`fixed top-0 left-0 z-10 h-full w-full transform bg-gray-200 opacity-95 duration-300 ease-in-out dark:bg-gray-800 ${
+        className={`fixed top-0 left-0 z-10 h-full w-full transform bg-gray-900 opacity-95 duration-300 ease-in-out ${
           navShow ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
         <div className="flex justify-end">
           <button
-            className="mr-5 mt-11 h-8 w-8 rounded"
+            className="mr-5 mt-7 h-8 w-8 rounded"
             aria-label="Toggle Menu"
             onClick={onToggleNav}
           >
@@ -52,7 +52,7 @@ const MobileNav = () => {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
               fill="currentColor"
-              className="text-gray-900 dark:text-gray-100"
+              className="text-gray-100"
             >
               <path
                 fillRule="evenodd"
@@ -67,13 +67,24 @@ const MobileNav = () => {
             <div key={link.title} className="px-12 py-4">
               <Link
                 href={link.href}
-                className="text-2xl font-bold tracking-widest text-gray-900 dark:text-gray-100"
+                className="text-2xl font-bold tracking-widest text-gray-100"
                 onClick={onToggleNav}
               >
                 {link.title}
               </Link>
             </div>
           ))}
+          <div className="px-12 py-4">
+            <Link
+              href="https://login.tailscale.com/start"
+              data-track="Get Started Clicked"
+              className="button button-large button-primary block w-full whitespace-nowrap"
+              target="_blank"
+              rel="noreferer noopener noreferrer"
+            >
+              <span>Use Tailscale</span>
+            </Link>
+          </div>
         </nav>
       </div>
     </div>

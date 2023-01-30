@@ -2,28 +2,1333 @@
 @tailwind components;
 @tailwind utilities;
 
-.task-list-item::before {
-  @apply hidden;
+/* Global styles automatically moved into base layer */
+@layer base {
+  @font-face {
+    font-family: 'Inter';
+    font-weight: 100 900;
+    font-display: swap;
+    font-style: normal;
+    src: url('/files/fonts/Inter.var.latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+      U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: 'Inter';
+    font-weight: 100 900;
+    font-display: swap;
+    font-style: italic;
+    src: url('/files/fonts/Inter.var.italic.latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+      U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+
+  html {
+    @apply bg-white font-sans text-sm text-gray-800 antialiased md:text-base;
+    letter-spacing: -0.015em;
+    line-height: 1.4;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply flex h-full flex-col justify-start text-base;
+  }
+
+  hr {
+    @apply border-t border-solid border-gray-100;
+  }
+
+  ::selection {
+    background-color: rgba(97, 122, 255, 0.2);
+  }
+
+  details summary {
+    @apply cursor-pointer;
+  }
+
+  mark {
+    @apply rounded-sm bg-yellow-100;
+    color: inherit;
+  }
 }
 
-.task-list-item {
-  @apply list-none;
+/* Global styles automatically moved into utilities layer */
+@layer utilities {
+  .image-pixelated {
+    image-rendering: pixelated;
+  }
+
+  .fill-none {
+    fill: none;
+  }
+
+  .stroke-round {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .stretched-link::before {
+    @apply absolute top-0 left-0 h-full w-full;
+    content: '';
+  }
+
+  .ff-numeric-alt {
+    font-feature-settings: 'ss01', 'cv01';
+  }
+
+  .f-title {
+    @apply text-3xl font-medium leading-tight tracking-tighter text-gray-900 md:text-4xl;
+  }
+
+  .f-articleTitle {
+    @apply text-3xl font-medium leading-tight tracking-tight sm:text-4xl;
+  }
+
+  .f-subheader {
+    @apply text-xl font-medium leading-tight tracking-tight md:text-3xl;
+  }
+
+  .shadow-blue {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+
+  .container {
+    @apply mx-auto w-full px-4 sm:px-6 md:px-7;
+  }
+
+  .container-wide {
+    @apply mx-auto max-w-7xl px-6;
+  }
+
+  .container-docs {
+    @apply mx-auto max-w-[95rem] px-4 md:px-6;
+  }
+
+  .container-blog {
+    @apply mx-auto w-11/12 max-w-2xl;
+  }
+
+  /**
+  * .hide-search-ui hides UI elements added by browsers to input[type=search]
+  * elements. Tailwind Preflight only handles the first item.
+  */
+  .hide-search-ui::-webkit-search-decoration,
+  .hide-search-ui::-webkit-search-cancel-button,
+  .hide-search-ui::-webkit-search-results-button,
+  .hide-search-ui::-webkit-search-results-decoration {
+    display: none;
+    -webkit-appearance: none;
+  }
 }
 
-.footnotes {
-  @apply mt-12 border-t border-gray-200 pt-8 dark:border-gray-700;
+/* Component styles automatically moved into components layer */
+@layer components {
+  .icon {
+    @apply stroke-round pointer-events-none h-6 w-6 select-none fill-none stroke-current stroke-2;
+  }
+
+  .link {
+    @apply text-blue-500 transition-colors hover:text-blue-700;
+  }
+
+  .link-underline {
+    text-decoration: underline;
+    -webkit-text-decoration-skip: objects;
+  }
+
+  .section-link {
+    @apply inline-block font-medium text-blue-700 transition duration-200 ease-in-out hover:text-blue-800;
+  }
+
+  /***
+  Once JIT is out of preview we can handle pseudoelements with Tailwind
+  like this: `after:content-['\2192']`
+  https://tailwindcss.com/docs/just-in-time-mode#pseudo-element-variants
+  ***/
+  .section-link::after {
+    @apply inline-block transition-transform duration-200 ease-in-out;
+    content: '\2192';
+    margin-left: 0.35rem;
+  }
+
+  .section-link:hover::after {
+    @apply translate-x-1 transform;
+  }
+
+  .button {
+    @apply inline-block cursor-pointer whitespace-nowrap rounded border border-transparent text-center align-middle text-base leading-6 active:text-current;
+    padding: 0.375rem 0.75rem;
+  }
+
+  .button:focus-visible {
+    @apply shadow-blue;
+    outline: 0;
+  }
+
+  .button-large {
+    @apply px-5 py-2 text-lg;
+  }
+
+  .button-primary {
+    @apply bg-blue-500 font-medium text-white transition duration-150 ease-in-out hover:bg-blue-600 active:bg-blue-700 active:text-white disabled:bg-blue-700 disabled:text-white disabled:text-opacity-50;
+  }
+
+  .button-border {
+    @apply border-gray-900 border-opacity-20 font-medium text-gray-600 transition duration-150 ease-in-out hover:border-opacity-40 hover:text-gray-900;
+  }
+
+  .button-shade {
+    @apply bg-gray-800 font-medium text-white transition duration-150 ease-in-out hover:bg-gray-900 active:bg-gray-900 active:text-white disabled:bg-gray-900 disabled:text-white disabled:text-opacity-50;
+  }
+
+  .Tooltip {
+    @apply z-50 max-w-xs rounded-md bg-gray-800 px-3 py-2 text-center text-sm leading-snug text-gray-200;
+  }
+
+  .Tooltip p + p {
+    @apply mt-3;
+  }
+
+  /* Radio button elements */
+  .radio {
+    @apply relative flex appearance-none items-center justify-center rounded-full border border-solid bg-white align-middle transition-colors;
+    border-color: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    width: 18px;
+    height: 18px;
+  }
+
+  .radio::after {
+    @apply block h-2 w-2 scale-75 rounded-full bg-white opacity-0 transition-all;
+    content: '';
+  }
+
+  .radio:enabled:checked {
+    @apply bg-blue-500;
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.08), 0 0 2px rgba(0, 0, 0, 0.08);
+  }
+
+  .radio:checked::after {
+    @apply opacity-100;
+    transform: scale(1);
+  }
+
+  /* Input elements */
+  input.input {
+    @apply outline-none;
+  }
+
+  .input {
+    @apply block rounded border border-gray-300 bg-white bg-clip-padding px-3 py-1 text-base font-normal leading-normal text-gray-900 focus:border-blue-500 focus:outline-none;
+    height: calc(1.5em + 0.75rem + 2px);
+  }
+
+  .input:focus {
+    @apply shadow-blue;
+  }
+
+  /* Select elements */
+  select.select {
+    @apply appearance-none;
+  }
+
+  .select {
+    @apply block rounded border border-gray-200 bg-white bg-clip-padding bg-no-repeat text-base font-normal leading-normal text-gray-900;
+    height: calc(1.5em + 0.75rem + 2px);
+    padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+    background-image: url("data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23666361' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-position: right 0.5rem center;
+  }
+
+  .select:focus {
+    @apply shadow-blue border-blue-300 bg-white text-gray-900;
+  }
+
+  .clamped-paragraphs p {
+    display: inline;
+  }
+
+  /* Tweets */
+  .tweet {
+    border-color: rgb(225, 232, 237);
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .tweet:hover {
+    border-color: rgb(204, 214, 221);
+  }
+
+  .tweet-bird {
+    background-image: url(data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2072%2072%22%3E%3Cpath%20fill%3D%22none%22%20d%3D%22M0%200h72v72H0z%22%2F%3E%3Cpath%20class%3D%22icon%22%20fill%3D%22%231da1f2%22%20d%3D%22M68.812%2015.14c-2.348%201.04-4.87%201.744-7.52%202.06%202.704-1.62%204.78-4.186%205.757-7.243-2.53%201.5-5.33%202.592-8.314%203.176C56.35%2010.59%2052.948%209%2049.182%209c-7.23%200-13.092%205.86-13.092%2013.093%200%201.026.118%202.02.338%202.98C25.543%2024.527%2015.9%2019.318%209.44%2011.396c-1.125%201.936-1.77%204.184-1.77%206.58%200%204.543%202.312%208.552%205.824%2010.9-2.146-.07-4.165-.658-5.93-1.64-.002.056-.002.11-.002.163%200%206.345%204.513%2011.638%2010.504%2012.84-1.1.298-2.256.457-3.45.457-.845%200-1.666-.078-2.464-.23%201.667%205.2%206.5%208.985%2012.23%209.09-4.482%203.51-10.13%205.605-16.26%205.605-1.055%200-2.096-.06-3.122-.184%205.794%203.717%2012.676%205.882%2020.067%205.882%2024.083%200%2037.25-19.95%2037.25-37.25%200-.565-.013-1.133-.038-1.693%202.558-1.847%204.778-4.15%206.532-6.774z%22%2F%3E%3C%2Fsvg%3E);
+  }
+
+  .tweet-verified-badge {
+    width: 1rem;
+    height: 1.1111rem;
+    background-image: url(data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2072%22%3E%3Cpath%20fill%3D%22none%22%20d%3D%22M0%200h64v72H0z%22%2F%3E%3Cpath%20fill%3D%22%231da1f2%22%20d%3D%22M3%2037.315c0%204.125%202.162%207.726%205.363%209.624-.056.467-.09.937-.09%201.42%200%206.103%204.72%2011.045%2010.546%2011.045%201.295%200%202.542-.234%203.687-.686C24.22%2062.4%2027.827%2064.93%2032%2064.93c4.174%200%207.782-2.53%209.49-6.213%201.148.45%202.39.685%203.69.685%205.826%200%2010.546-4.94%2010.546-11.045%200-.483-.037-.953-.093-1.42C58.83%2045.04%2061%2041.44%2061%2037.314c0-4.37-2.42-8.15-5.933-9.946.427-1.203.658-2.5.658-3.865%200-6.104-4.72-11.045-10.545-11.045-1.302%200-2.543.232-3.69.688-1.707-3.685-5.315-6.216-9.49-6.216-4.173%200-7.778%202.53-9.492%206.216-1.146-.455-2.393-.688-3.688-.688-5.827%200-10.545%204.94-10.545%2011.045%200%201.364.23%202.662.656%203.864C5.42%2029.163%203%2032.944%203%2037.314z%22%2F%3E%3Cpath%20fill%3D%22%23FFF%22%20d%3D%22M17.87%2039.08l7.015%206.978c.585.582%201.35.873%202.116.873.77%200%201.542-.294%202.127-.883.344-.346%2015.98-15.974%2015.98-15.974%201.172-1.172%201.172-3.07%200-4.243-1.17-1.17-3.07-1.172-4.242%200l-13.87%2013.863-4.892-4.868c-1.174-1.168-3.074-1.164-4.242.01-1.168%201.176-1.163%203.075.01%204.244z%22%2F%3E%3C%2Fsvg%3E);
+  }
+
+  .tweet a {
+    color: #2b7bb9;
+  }
+
+  .tweet-content {
+    @apply leading-normal text-gray-700;
+    letter-spacing: -0.005em;
+  }
+
+  .tweet-content > img {
+    @apply mt-2 rounded;
+  }
+
+  .tweet-content p + p {
+    @apply mt-4;
+  }
+
+  /* Footer styles */
+
+  .footer-column-heading {
+    @apply mb-6 text-xs font-semibold uppercase tracking-wider text-gray-800 md:block;
+  }
+
+  .footer-column-link {
+    @apply text-gray-600 transition-colors duration-150 hover:text-gray-800;
+  }
+
+  /********************************************************************/
+  /* KB-specific styles */
+  /* These elements are in the #TableOfContents generated by Hugo. */
+
+  .docs-toc a {
+    @apply inline-block py-1 text-gray-600 hover:text-gray-700;
+  }
+  .docs-toc ul {
+    @apply leading-tight;
+  }
+
+  .permalink-icon {
+    @apply ml-1 inline-block h-3.5 w-3.5 bg-cover bg-center bg-no-repeat text-gray-600;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-link-2'%3E%3Cpath d='M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3'%3E%3C/path%3E%3Cline x1='8' y1='12' x2='16' y2='12'%3E%3C/line%3E%3C/svg%3E");
+  }
+
+  /**
+   * .PlatformBox is a platform picking component used in our knowledgebase.
+   */
+
+  .PlatformBox-tabButton {
+    @apply mr-1 cursor-pointer rounded border border-gray-200 bg-none py-0.5
+    px-1.5 text-sm font-medium transition-colors;
+  }
+
+  .PlatformBox-tabButton:hover:not([aria-selected]) {
+    @apply border-gray-100;
+  }
+
+  .PlatformBox-tabButton[aria-selected] {
+    @apply cursor-default border-blue-500 bg-blue-500 text-white;
+  }
+
+  .PlatformBox-tabPanel {
+    min-height: 3rem;
+  }
+
+  /* Platform Picker */
+  .PlatformPicker-scroll {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: auto;
+  }
+
+  .PlatformPicker-scroll::-webkit-scrollbar {
+    display: none;
+  }
+  /********************************************************************/
+
+  /********************************************************************/
+  /* Pricing-specific styles */
+  .pricing-plan {
+    @apply mb-1 flex flex-col rounded-lg border border-gray-200 bg-white p-10 shadow-lg lg:border-0 lg:px-2 lg:py-0 lg:shadow-none;
+  }
+
+  .pricing-table__row {
+    @apply border-b border-gray-100 py-2;
+  }
+
+  .pricing-table__row [data-tooltip] {
+    @apply cursor-help;
+  }
+
+  .pricing-table__group {
+    @apply border-gray-100 pt-8 pb-2;
+  }
+
+  .toggle-icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+  }
+
+  .pricing-feature-block summary::marker,
+  .pricing-feature-block summary::-webkit-details-marker {
+    display: none;
+    content: '';
+  }
+
+  .pricing-feature-block .show-open {
+    display: none;
+  }
+
+  .pricing-feature-block[open] .hide-open {
+    display: none;
+  }
+
+  .pricing-feature-block[open] .show-open {
+    display: inline-block;
+  }
+
+  .checkmark-list li {
+    @apply relative py-1 pl-5;
+  }
+
+  .checkmark-list li::before {
+    @apply absolute left-0 inline-block bg-contain;
+    content: '';
+    top: 0.4em;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='0.9rem' height='0.9rem' viewBox='0 0 24 24' fill='none' stroke-width='2.5px' stroke-linejoin='round' stroke-linecap='round' stroke='%2341a663'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+
+  .checkmark-list li span[data-tooltip] {
+    @apply cursor-help border-b border-dashed border-gray-200;
+  }
+
+  .checkmark-list li a {
+    @apply border-b border-solid border-gray-100 transition-colors hover:border-gray-200;
+  }
+
+  /********************************************************************/
+
+  /********************************************************************/
+  /* Taildrop-specific styles */
+  /**
+  * Feature Card
+  */
+
+  .feature-card-small-container {
+    @apply relative z-10 grid gap-4 md:grid-cols-2 md:gap-6;
+  }
+
+  .feature-card {
+    @apply overflow-hidden rounded-2xl bg-white;
+  }
+
+  .feature-card-large {
+    @apply pt-8 md:pt-16;
+  }
+
+  .feature-card-small .feature-card-text-container {
+    @apply px-5 py-8 md:py-12 lg:px-10;
+  }
+
+  .feature-card .feature-card-heading {
+    @apply mb-1 text-2xl font-medium tracking-tight text-gray-900 md:mb-3 lg:text-3xl;
+  }
+
+  .feature-card-large .feature-card-heading {
+    @apply text-2xl md:text-3xl lg:text-4xl;
+  }
+
+  .feature-card .feature-card-description {
+    @apply leading-6 text-gray-700 lg:text-lg;
+  }
+
+  /**
+  * Floating Shape
+  */
+
+  .floating-shape {
+    @apply absolute w-48 md:w-64;
+  }
+
+  .floating-shape-right {
+    @apply top-0 right-0 -mr-16 md:-mr-24;
+  }
+
+  .floating-shape-left {
+    @apply bottom-0 left-0 -ml-16 md:-ml-24;
+  }
+  /********************************************************************/
+
+  /**
+   * Homepage Network Diagram Slider
+   */
+
+  .network-diagram-slider[data-index='0'] figure[data-index='1'],
+  .network-diagram-slider[data-index='1'] figure[data-index='0'] {
+    @apply opacity-0;
+  }
+
+  .network-diagram-slider[data-index='0'] figure[data-index='0'],
+  .network-diagram-slider[data-index='1'] figure[data-index='1'] {
+    @apply opacity-100;
+  }
+
+  .network-diagram-slider[data-index='0'] .network-diagram-slider__nav-item[data-index='0'] {
+    @apply border-orange-600;
+  }
+
+  .network-diagram-slider[data-index='0'] .network-diagram-slider__nav-item[data-index='0'] h4 {
+    @apply text-orange-600;
+  }
+
+  .network-diagram-slider[data-index='1'] .network-diagram-slider__nav-item[data-index='1'] {
+    @apply border-yellow-700;
+  }
+
+  .network-diagram-slider[data-index='1'] .network-diagram-slider__nav-item[data-index='1'] h4 {
+    @apply text-yellow-700;
+  }
+
+  /**
+   * Homepage SSO Image
+   */
+
+  @media (max-width: 440px) {
+    .dialog {
+      width: 100%;
+    }
+
+    .laptop {
+      @apply py-56;
+    }
+  }
+
+  .taskbar {
+    max-width: 270%;
+  }
+
+  /**
+   * Changelog
+   */
+
+  .changelog-entry {
+    scroll-margin-top: 4rem;
+  }
+
+  .changelog-filter {
+    @apply rounded-full px-3 py-1 text-center transition-colors duration-150 ease-in-out md:text-sm;
+  }
+
+  .changelog-filter:hover {
+    @apply bg-gray-100;
+  }
+
+  .changelog-filter::after {
+    @apply invisible block h-0 font-medium;
+    content: attr(data-content);
+  }
+
+  .changelog-filter.active {
+    @apply bg-blue-200 font-medium text-blue-800;
+  }
+
+  /**
+   * d3-flame-graph styles.
+   */
+
+  .d3-flame-graph rect {
+    stroke: #eeeeee;
+    fill-opacity: 0.8;
+  }
+
+  .d3-flame-graph rect:hover {
+    stroke: #474747;
+    stroke-width: 0.5;
+    cursor: pointer;
+  }
+
+  .d3-flame-graph-label {
+    pointer-events: none;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: 12px;
+    font-family: Inter, sans-serif;
+    margin-left: 4px;
+    margin-right: 4px;
+    line-height: 1.5;
+    padding: 0 0 0;
+    font-weight: 400;
+    color: black;
+    text-align: left;
+  }
+
+  .d3-flame-graph .fade {
+    opacity: 0.6 !important;
+  }
+
+  .d3-flame-graph .title {
+    font-size: 20px;
+    font-family: Verdana;
+  }
+
+  .d3-flame-graph-tip {
+    background-color: black;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px 5px 10px;
+    min-width: 250px;
+    text-align: left;
+    color: white;
+    z-index: 10;
+  }
+}
+/*end components here ***********************************************/
+
+/********************************************************************/
+/* TODO: Move this into another file and import it! */
+/**
+* Markdown
+*
+* Used for rendering blocks of markdown text in a standardized article styling.
+* Supports special formatting such as blockquotes, code blocks, notices,
+* figures, and more, that don't appear elsewhere in the site.
+*/
+.Markdown {
+  letter-spacing: -0.005em;
 }
 
-.data-footnote-backref {
-  @apply no-underline;
+.Markdown h1,
+.Markdown h2,
+.Markdown h3,
+.Markdown h4,
+.Markdown h5,
+.Markdown h6 {
+  @apply font-medium text-gray-800;
+  scroll-margin-top: 4rem;
 }
 
-.csl-entry {
-  @apply my-5;
+.lang-ja .Markdown h1,
+.lang-ja .Markdown h2,
+.lang-ja .Markdown h3,
+.lang-ja .Markdown h4,
+.lang-ja .Markdown h5,
+.lang-ja .Markdown h6 {
+  /**
+   * System Japanese fonts don't often have a medium weight, which results
+   * in a sub-par hierarchy in Markdown. Bump it up to semibold instead.
+   */
+  @apply font-semibold;
 }
 
-/* https://stackoverflow.com/questions/61083813/how-to-avoid-internal-autofill-selected-style-to-be-applied */
-input:-webkit-autofill,
-input:-webkit-autofill:focus {
-  transition: background-color 600000s 0s, color 600000s 0s;
+.Markdown h1:not(:first-child),
+.Markdown h2:not(:first-child),
+.Markdown h3:not(:first-child),
+.Markdown h4:not(:first-child),
+.Markdown h5:not(:first-child),
+.Markdown h6:not(:first-child) {
+  @apply mt-8;
+}
+
+.Markdown h1,
+.Markdown h2 {
+  @apply text-3xl leading-tight;
+  letter-spacing: -0.035em;
+}
+
+.Markdown h3 {
+  @apply text-2xl leading-tight;
+  letter-spacing: -0.01em;
+}
+
+.Markdown h4 {
+  @apply text-xl leading-tight;
+}
+
+.Markdown h5 {
+  @apply text-base;
+}
+
+.Markdown a:not(.header-link) {
+  @apply text-blue-500 transition-colors hover:text-blue-700;
+}
+
+.Markdown p {
+  @apply mt-4;
+}
+
+.Markdown p,
+.Markdown ul,
+.Markdown ol,
+.Markdown table,
+.Markdown .toc,
+.Markdown .note,
+.Markdown .tweet {
+  @apply mt-4;
+}
+
+.Markdown > :first-child {
+  @apply mt-0;
+}
+
+.Markdown strong {
+  @apply font-semibold;
+}
+
+.Markdown li {
+  @apply mt-1.5;
+}
+
+/* the first list-item of non-nested children should not have top margin */
+.Markdown > ul > li:first-child,
+.Markdown > ol > li:first-child {
+  @apply mt-0;
+}
+
+.Markdown ul > li {
+  @apply relative pl-5;
+}
+
+.Markdown ul > li p {
+  @apply mt-3;
+}
+
+.Markdown ul > li::before {
+  @apply absolute top-2.5 left-0.5 h-1.5 w-1.5
+  rounded-full bg-current opacity-40;
+  content: '';
+}
+
+.Markdown ol {
+  counter-reset: listitem;
+}
+
+.Markdown ol > li {
+  @apply relative pl-7;
+}
+
+.Markdown ol > li::before {
+  @apply absolute left-0 top-0.5 box-content
+  h-3 w-5 rounded-full bg-gray-200 py-1 px-0 text-center text-xs
+  font-medium leading-none text-gray-700;
+  counter-increment: listitem;
+  content: counter(listitem);
+}
+
+.Markdown #TableOfContents ul {
+  @apply mt-0;
+}
+
+.Markdown hr {
+  @apply my-8;
+}
+
+.Markdown blockquote:not(.tweet):not(.customer-quote) {
+  @apply my-4 border-l-2 border-gray-200 pl-3 text-gray-800;
+}
+
+.Markdown cite:not(.customer-quote) {
+  @apply mt-1 block text-gray-600;
+}
+
+.Markdown cite:not(.customer-quote)::before {
+  @apply mr-1;
+  content: '—';
+}
+
+.Markdown cite.customer-quote {
+  @apply not-italic;
+}
+
+.Markdown pre,
+.Markdown code {
+  @apply font-mono;
+  font-size: 1.05rem;
+}
+
+.Markdown code {
+  font-size: 0.825em;
+}
+
+.Markdown pre {
+  @apply mt-4 break-normal rounded-md border border-solid border-gray-200 bg-gray-100 leading-normal;
+  word-spacing: normal;
+  tab-size: 2;
+}
+
+.Markdown pre code {
+  @apply block overflow-x-auto px-4 py-3;
+}
+
+.Markdown h1 > code,
+.Markdown h2 > code,
+.Markdown h3 > code,
+.Markdown h4 > code,
+.Markdown h5 > code,
+.Markdown h6 > code,
+.Markdown p > code,
+.Markdown a > code,
+.Markdown li > code,
+.Markdown dt > code,
+.Markdown dd > code,
+.Markdown .note > code {
+  @apply inline-block rounded-md border border-solid border-gray-200
+  bg-gray-100 py-0.5 px-1;
+}
+
+.Markdown figure:not(.customer-quote) {
+  @apply my-6;
+}
+
+.Markdown figure img,
+.Markdown figure svg,
+.Markdown figure video {
+  /* Specifying inline block here because the Tailwind modernizer sets
+  display: block on "replaced content". If we want an image wrapped in a figure
+  with the `text-center` class to work, we'd need this, OR we could use
+  margins to center instead with `mx-auto` here instead of `inline-block` */
+  @apply inline-block rounded-md;
+}
+
+.Markdown figure.bordered img {
+  @apply border border-solid border-gray-100;
+}
+
+.Markdown figcaption {
+  @apply mx-auto mt-2 w-3/4 text-center text-sm text-gray-600;
+}
+
+.Markdown aside {
+  @apply mb-8 text-sm leading-normal text-gray-600;
+}
+
+.Markdown table {
+  @apply border-separate rounded-md border border-t-0 border-solid border-gray-100;
+  border-spacing: 0;
+}
+
+.Markdown table td,
+.Markdown table th {
+  @apply border-0 border-t border-solid border-gray-100 py-2
+  px-2.5;
+}
+
+.Markdown table th {
+  @apply bg-gray-50 text-left text-sm font-normal;
+}
+
+.Markdown table thead th {
+  @apply border-b-0;
+}
+
+.Markdown .note {
+  @apply relative rounded border border-solid border-gray-100 pt-3 pb-2 pr-3 pl-9 text-base leading-normal tracking-tight md:text-sm;
+}
+
+.Markdown .note::before {
+  @apply absolute top-3.5 left-3 inline-block h-4 w-4 bg-contain;
+  content: '';
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23454545' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'%3E%3C/circle%3E%3Cline x1='12' y1='16' x2='12' y2='12'%3E%3C/line%3E%3Cline x1='12' y1='8' x2='12.01' y2='8'%3E%3C/line%3E%3C/svg%3E");
+}
+
+.Markdown .note h1,
+.Markdown .note h2,
+.Markdown .note h3,
+.Markdown .note h4,
+.Markdown .note h5,
+.Markdown .note h6 {
+  @apply mb-1.5 text-base font-medium;
+}
+
+.Markdown .note p {
+  @apply mt-0;
+}
+
+.Markdown .note p + p {
+  @apply mt-4;
+}
+
+.Markdown .fa-icon {
+  @apply mx-0.5 inline-flex h-6 w-6 items-center
+  justify-center rounded-full bg-current p-1.5 text-center text-gray-400;
+}
+
+.Markdown .ArticlePreview {
+  @apply py-3;
+}
+
+.Markdown .ArticlePreview p {
+  @apply mt-1;
+}
+
+.Markdown--legal ol li::before {
+  all: unset;
+}
+
+.Markdown--legal ol {
+  @apply p-0.5;
+}
+
+.Markdown--legal ol > li {
+  @apply list-decimal pl-0.5 text-base;
+}
+
+.Markdown--legal > ol > li {
+  @apply pt-4 font-semibold text-gray-900;
+}
+
+.Markdown--legal ol > li:first-child,
+.Markdown--legal ol > li > p + p {
+  @apply mt-4;
+}
+
+.Markdown--legal > ol > li > p:first-child {
+  @apply font-semibold text-gray-900;
+}
+
+.Markdown--legal > ol > li > p,
+.Markdown--legal > ol > li > ol {
+  @apply text-base font-normal text-gray-700;
+}
+
+.Markdown--legal > ol > li li {
+  list-style: lower-alpha;
+}
+.Markdown--legal > ol > li li li {
+  list-style: lower-roman;
+}
+.Markdown--legal > ol > li li li li {
+  list-style: upper-alpha;
+}
+
+.Markdown .image-wide,
+.Markdown .image-center {
+  @apply text-center;
+}
+
+/* PostPreview is style that applies to the blog index page */
+.PostPreview .Markdown .image-wide,
+.PostPreview .Markdown .image-center {
+  @apply text-left;
+}
+
+.BlogMarkdown > * {
+  @apply mx-auto w-11/12 max-w-2xl;
+}
+
+.BlogMarkdown table {
+  @apply md:mt-8;
+}
+
+.BlogMarkdown h4 + table {
+  @apply md:mt-8;
+}
+
+.BlogMarkdown table + figcaption {
+  @apply md:mt-4;
+}
+
+.BlogMarkdown table + p,
+.BlogMarkdown table + figcaption + p {
+  @apply md:mt-8;
+}
+
+.BlogMarkdown table.wide {
+  @apply md:max-w-4xl;
+}
+
+.BlogMarkdown .image-wide,
+.BlogMarkdown .image-center {
+  @apply md:my-12 md:max-w-3xl;
+}
+
+.BlogMarkdown .image-wide > figcaption,
+.BlogMarkdown .image-center > figcaption {
+  @apply md:mx-16;
+}
+
+.Markdown--changelog h1:not(:first-child),
+.Markdown--changelog h2:not(:first-child),
+.Markdown--changelog h3:not(:first-child),
+.Markdown--changelog h4:not(:first-child),
+.Markdown--changelog h5:not(:first-child),
+.Markdown--changelog h6:not(:first-child) {
+  @apply mt-4;
+}
+
+.Markdown--changelog h4 {
+  @apply text-lg;
+}
+
+.Markdown--changelog h6:not(:first-child) {
+  @apply relative mt-6 mb-2 text-xs uppercase tracking-wider text-gray-600;
+}
+
+.Markdown--changelog ul {
+  @apply mt-0;
+}
+
+.Markdown--changelog ul > li {
+  @apply mt-1 pl-0;
+}
+
+.Markdown--changelog ul > li::before {
+  @apply bg-transparent;
+  content: none;
+}
+
+.Markdown--changelog li[data-change] {
+  @apply pl-16 md:pl-0;
+}
+
+.Markdown--changelog li[data-change]::before {
+  @apply absolute left-0 top-1 h-auto w-16 text-xs font-medium opacity-100 md:-left-16 md:w-12 md:text-right;
+}
+
+.Markdown--changelog li[data-change='new']::before {
+  @apply text-green-500;
+  content: 'New';
+}
+
+.Markdown--changelog ul > li[data-change='changed']::before {
+  @apply text-gray-500;
+  content: 'Changed';
+}
+
+.Markdown--changelog ul > li[data-change='fixed']::before {
+  @apply text-gray-500;
+  content: 'Fixed';
+}
+
+/********************************************************************/
+
+/********************************************************************/
+/* TODO: Move this into another file and import it! */
+/* Chroma styles for syntax highlighting in code blocks.
+
+/* LineTableTD */
+.chroma .lntd {
+  vertical-align: top;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+/* LineTable */
+.chroma .lntable {
+  border-spacing: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  width: auto;
+  overflow: auto;
+  display: block;
+}
+/* LineHighlight */
+.chroma .hl {
+  display: block;
+  width: 100%;
+  background-color: #dce8ff;
+}
+/* LineNumbersTable */
+.chroma .lnt {
+  margin-right: 0.4em;
+  padding: 0 0.4em 0 0.4em;
+  color: #7f7f7f;
+}
+/* LineNumbers */
+.chroma .ln {
+  margin-right: 0.4em;
+  padding: 0 0.4em 0 0.4em;
+  color: #7f7f7f;
+}
+/* Keyword */
+.chroma .k {
+  color: #07a;
+}
+/* KeywordConstant */
+.chroma .kc {
+  color: #905;
+}
+/* KeywordDeclaration */
+.chroma .kd {
+  color: #07a;
+}
+/* KeywordNamespace */
+.chroma .kn {
+  color: #07a;
+}
+/* KeywordPseudo */
+.chroma .kp {
+  color: #07a;
+}
+/* KeywordReserved */
+.chroma .kr {
+  color: #07a;
+}
+/* KeywordType */
+.chroma .kt {
+  color: #690;
+}
+/* Name */
+.chroma .n {
+}
+/* NameAttribute */
+.chroma .na {
+  color: #388038;
+}
+/* NameBuiltin */
+.chroma .nb {
+  color: #dd4a68;
+}
+/* NameBuiltinPseudo */
+.chroma .bp {
+}
+/* NameClass */
+.chroma .nc {
+  color: #287088;
+}
+/* NameConstant */
+.chroma .no {
+  color: #b85820;
+}
+/* NameDecorator */
+.chroma .nd {
+  color: #287088;
+}
+/* NameEntity */
+.chroma .ni {
+  color: #709030;
+}
+/* NameException */
+.chroma .ne {
+  color: #908828;
+}
+
+.chroma .nf, /* NameFunction */
+.chroma .fm /* NameFunctionMagic */ {
+  color: #dd4a68;
+}
+/* NameLabel */
+.chroma .nl {
+  color: #289870;
+}
+/* NameNamespace */
+.chroma .nn {
+  color: #289870;
+}
+/* NameOther */
+.chroma .nx {
+}
+/* NameProperty */
+.chroma .py {
+}
+/* NameTag */
+.chroma .nt {
+  color: #07a;
+}
+/* NameVariable */
+.chroma .nv {
+  color: #b04040;
+}
+/* NameVariableClass */
+.chroma .vc {
+}
+/* NameVariableGlobal */
+.chroma .vg {
+  color: #908828;
+}
+/* NameVariableInstance */
+.chroma .vi {
+}
+/* NameVariableMagic */
+.chroma .vm {
+  color: #b85820;
+}
+/* Literal */
+.chroma .l {
+}
+/* LiteralDate */
+.chroma .ld {
+}
+/* LiteralString */
+.chroma .s {
+  color: #b83838;
+}
+/* LiteralStringAffix */
+.chroma .sa {
+  color: #444444;
+}
+/* LiteralStringBacktick */
+.chroma .sb {
+  color: #b83838;
+}
+/* LiteralStringChar */
+.chroma .sc {
+  color: #a848a8;
+}
+/* LiteralStringDelimiter */
+.chroma .dl {
+  color: #b85820;
+}
+/* LiteralStringDoc */
+.chroma .sd {
+  color: #b85820;
+  font-style: italic;
+}
+/* LiteralStringDouble */
+.chroma .s2 {
+  color: #b83838;
+}
+/* LiteralStringEscape */
+.chroma .se {
+  color: #709030;
+}
+/* LiteralStringHeredoc */
+.chroma .sh {
+  color: #b83838;
+}
+/* LiteralStringInterpol */
+.chroma .si {
+  color: #b83838;
+  text-decoration: underline;
+}
+/* LiteralStringOther */
+.chroma .sx {
+  color: #a848a8;
+}
+/* LiteralStringRegex */
+.chroma .sr {
+  color: #a848a8;
+}
+/* LiteralStringSingle */
+.chroma .s1 {
+  color: #b83838;
+}
+/* LiteralStringSymbol */
+.chroma .ss {
+  color: #b83838;
+}
+/* LiteralNumber */
+.chroma .m {
+  color: #905;
+}
+/* LiteralNumberBin */
+.chroma .mb {
+  color: #905;
+}
+/* LiteralNumberFloat */
+.chroma .mf {
+  color: #905;
+}
+/* LiteralNumberHex */
+.chroma .mh {
+  color: #905;
+}
+/* LiteralNumberInteger */
+.chroma .mi {
+  color: #905;
+}
+/* LiteralNumberIntegerLong */
+.chroma .il {
+  color: #905;
+}
+/* LiteralNumberOct */
+.chroma .mo {
+  color: #905;
+}
+/* Operator */
+.chroma .o {
+  color: #666666;
+}
+/* OperatorWord */
+.chroma .ow {
+  color: #a848a8;
+}
+/* Punctuation */
+.chroma .p {
+  color: #999999;
+}
+
+.chroma .c, /* Comment */
+.chroma .ch, /* CommentHashbang */
+.chroma .cm, /* CommentMultiline */
+.chroma .c1, /* CommentSingle */
+.chroma .cs /* CommentSpecial */,
+.chroma .err /* Error (used for JSON comments) */ {
+  color: #6a6a6a;
+}
+
+.chroma .cp, /* CommentPreproc */
+.chroma .cpf /* CommentPreprocFile */ {
+  color: #289870;
+}
+
+/* Generic */
+.chroma .g {
+}
+/* GenericDeleted */
+.chroma .gd {
+  color: #c02828;
+}
+/* GenericEmph */
+.chroma .ge {
+  font-style: italic;
+}
+/* GenericError */
+.chroma .gr {
+  color: #c02828;
+}
+/* GenericHeading */
+.chroma .gh {
+  color: #666666;
+}
+/* GenericInserted */
+.chroma .gi {
+  color: #388038;
+}
+/* GenericOutput */
+.chroma .go {
+  color: #666666;
+}
+/* GenericPrompt */
+.chroma .gp {
+  color: #444444;
+}
+/* GenericStrong */
+.chroma .gs {
+  font-weight: bold;
+}
+/* GenericSubheading */
+.chroma .gu {
+  color: #444444;
+}
+/* GenericTraceback */
+.chroma .gt {
+  color: #07a;
+}
+/* GenericUnderline */
+.chroma .gl {
+  text-decoration: underline;
+}
+/* TextWhitespace */
+.chroma .w {
+  color: #a89028;
+}
+/********************************************************************/
+
+ul.sentanceCase > li:nth-last-child(n + 4)::after {
+  content: ',';
+}
+
+ul.sentanceCase > li:nth-last-of-type(2)::after {
+  content: ', and ';
+}
+
+ul.sentanceCase > li:first-of-type:nth-last-of-type(2)::after {
+  content: ' and ';
 }
