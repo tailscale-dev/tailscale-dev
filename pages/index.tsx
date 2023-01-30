@@ -31,7 +31,7 @@ export default function Home({ posts, events }: InferGetStaticPropsType<typeof g
         <p className="mx-auto mb-6 max-w-3xl leading-6 sm:mb-8 sm:text-lg md:mb-10 md:text-xl">
           Your laptop can be in Toronto, staging can be in Sunnyvale, production can be in
           us-east-1, and all of that can be accessed from anywhere with an internet connection. Free
-          yourself from the slains and arrows of port forwarding and the fleeting hope that you
+          yourself from the slings and arrows of port forwarding and the fleeting hope that you
           don&apos;t get hacked and just focus on what you do best.
         </p>
       </header>
