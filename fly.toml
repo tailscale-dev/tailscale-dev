@@ -15,6 +15,10 @@ processes = []
 [experimental]
   auto_rollback = true
 
+[mounts]
+  source="next_cache"
+  destination="/app/.next/cache"
+
 [[services]]
   http_checks = []
   internal_port = 3000
