@@ -4,17 +4,17 @@ on:
     paths:
       - .github/workflows/linkchecker.yml
     branches:
-      - "*"
+      - main
   schedule:
-    # Run at minute 0, hour 0 (UTC), Mon-Fri
     - cron: '0 0 * * 1,2,3,4,5'
 jobs:
   linkchecker:
     runs-on: ubuntu-latest
     steps:
       - name: Install linkchecker
-        run: |
-          sudo apt-get update && sudo apt-get install -y python3-pip && pip3 install linkchecker
+        run: >
+          sudo apt-get update && sudo apt-get install -y python3-pip && pip3
+          install linkchecker
       - name: Run linkchecker
         run: |
           linkchecker --ignore-url=^mailto: https://tailscale.dev
