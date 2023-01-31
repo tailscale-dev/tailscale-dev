@@ -14,18 +14,12 @@ export type MDXAuthor = MDXDocument & {
   name: string;
 };
 
-export function dateSortDesc(a: string, b: string) {
-  if (a > b) return -1;
-  if (a < b) return 1;
-  return 0;
-}
-
 export function sortedBlogPost(allBlogs: MDXDocumentDate[]) {
-  return allBlogs.sort((a, b) => dateSortDesc(a.date, b.date));
+  return allBlogs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
 export function sortedEventPosts(allEvents: MDXDocumentDate[]) {
-  return allEvents.sort((a, b) => dateSortDesc(a.date, b.date));
+  return allEvents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 }
 
 type ConvertUndefined<T> = OrNull<{
