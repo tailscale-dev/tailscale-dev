@@ -12,14 +12,16 @@ interface Props {
   children: ReactNode;
 }
 
+// guide: https://nextjs.org/docs/basic-features/font-optimization#with-tailwind-css
 const inter = Inter({
   subsets: ['latin'],
+  variable: '--font-inter',
 });
 
 const LayoutWrapper = ({ children }: Props) => {
   return (
-    <>
-      <nav className={`${inter.className} SiteNavigation bg-gray-900 text-gray-100`}>
+    <div className={`${inter.variable} font-sans`}>
+      <nav className="SiteNavigation bg-gray-900 text-gray-100">
         <div className="container flex items-center justify-between py-4 md:pt-0">
           <div className="flex items-center ">
             <Link className="mr-5 block md:pt-7" href="/" aria-label="Tailscale">
@@ -68,7 +70,7 @@ const LayoutWrapper = ({ children }: Props) => {
       </nav>
       {children}
       <Footer />
-    </>
+    </div>
   );
 };
 
