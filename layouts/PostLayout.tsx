@@ -4,19 +4,13 @@ import type { Blog, Authors } from 'contentlayer/generated';
 import Link from 'next/link';
 import { BlogSEO } from '@/components/SEO';
 import Image from '@/components/Image';
+import { formatDate } from '@/lib/utils/formatDate';
 import Tag from '@/components/Tag';
 import { siteMetadata } from '@/data/siteMetadata';
 import ScrollTop from '@/components/ScrollTop';
 import ExternalLink from '@/components/ExternalLink';
 
 const editUrl = (path) => `${siteMetadata.siteRepo}/blob/master/data/${path}`;
-
-const postDateTemplate: Intl.DateTimeFormatOptions = {
-  weekday: 'long',
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-};
 
 interface LayoutProps {
   content: CoreContent<Blog>;
@@ -56,8 +50,8 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                   ))}
                 </ul>
                 <span className="px-1">on</span>
-                <time dateTime={date}>
-                  {new Date(date).toLocaleDateString(siteMetadata.locale, postDateTemplate)}
+                <time dateTime={date} suppressHydrationWarning>
+                  {formatDate(date)}
                 </time>
               </div>
 

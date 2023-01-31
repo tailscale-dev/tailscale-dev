@@ -23,7 +23,9 @@ export function ListItem({ slug, title, date, location, path, tags = [], summary
 
             <div className="font-mono text-base font-medium leading-6">
               <span className="pr-4">&frasl;&frasl;</span>
-              <time dateTime={date}>{date}</time>
+              <time dateTime={date} suppressHydrationWarning>
+                {date}
+              </time>
               {tags && tags.length > 0 && (
                 <>
                   <span className="px-4">{` • `}</span>

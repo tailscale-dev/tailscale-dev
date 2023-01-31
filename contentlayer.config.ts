@@ -15,7 +15,6 @@ import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypePrismPlus from 'rehype-prism-plus';
 import rehypePresetMinify from 'rehype-preset-minify';
-import { formatDate } from './lib/utils/formatDate';
 
 const computedFields: ComputedFields = {
   slug: {
@@ -75,7 +74,7 @@ export const Events = defineDocumentType(() => ({
     ...computedFields,
     displayDate: {
       type: 'string',
-      resolve: (doc) => (doc.displayDate ? doc.displayDate : formatDate(doc.date)),
+      resolve: (doc) => (doc.displayDate ? doc.displayDate : doc.date),
     },
   },
 }));
