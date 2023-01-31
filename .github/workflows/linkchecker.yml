@@ -1,5 +1,4 @@
 name: Linkchecker
-
 on:
   pull_request:
     paths:
@@ -9,7 +8,6 @@ on:
   schedule:
     # Run at minute 0, hour 0 (UTC), Mon-Fri
     - cron: '0 0 * * 1,2,3,4,5'
-
 jobs:
   linkchecker:
     runs-on: ubuntu-latest
