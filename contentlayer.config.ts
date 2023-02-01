@@ -46,6 +46,7 @@ export const Blog = defineDocumentType(() => ({
     images: { type: 'list', of: { type: 'string' } },
     authors: { type: 'list', of: { type: 'string' } },
     layout: { type: 'string' },
+    draft: { type: 'boolean' },
     canonicalUrl: { type: 'string' },
   },
   computedFields: {
@@ -65,7 +66,7 @@ export const Events = defineDocumentType(() => ({
     summary: { type: 'string', required: true },
     displayDate: { type: 'string' },
     displayTime: { type: 'string' },
-
+    draft: { type: 'boolean' },
     link: { type: 'string' },
     layout: { type: 'string' },
     authors: { type: 'list', of: { type: 'string' } },
