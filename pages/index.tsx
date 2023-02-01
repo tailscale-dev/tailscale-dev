@@ -47,7 +47,7 @@ export default function Home({ posts, events }: InferGetStaticPropsType<typeof g
                 slug={event.slug}
                 path={event.path}
                 summary={event.summary}
-                date={formatDate(event.date)}
+                date={event.displayDate}
               />
             ))}
           </ul>
