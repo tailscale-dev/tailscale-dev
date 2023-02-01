@@ -6,11 +6,13 @@ This site is powered by [Next.js](https://nextjs.org/), [Tailwind CSS](https://t
 
 **Quick start**
 
-Running `tools/yarn install` will install all required dependencies. Once complete, use `tools/yarn dev` to start the development server which defaults to port `3000`.
+Running `tool/yarn install` will install all required dependencies. Once complete, use `tool/yarn dev` to start the development server which defaults to port `3000`.
 
 **Development tools**
 
 Following the [Tailscale OSS](https://github.com/tailscale/tailscale) repository, we use a `./tool` directory to manage tool dependencies. Versions are pinned via `*.rev` files in the projects' root and installed via `./tool/redo.sh` using the `*.cmd.do` files also in the project's root.
+
+Flakes are provided for Nix users, with `nix develop` for the environment.
 
 The following tools are available:
 
@@ -18,7 +20,7 @@ The following tools are available:
 - `./tool/yarn` - [Yarn](https://yarnpkg.com/) package manager
 - `./tool/redo.sh` - [Redo](https://github.com/apenwarr/redo) build/automation tool (for deps)
 
-If avaiable, direnv will place these tools in your PATH per our `.envrc` config. Installation instructions for direnv are available [here](https://direnv.net/docs/installation.html).
+If available, [direnv](https://direnv.net/) will place these tools in your PATH per our `.envrc` config. Installation instructions for direnv are available [here](https://direnv.net/docs/installation.html).
 
 **Code formatting**
 
@@ -30,7 +32,7 @@ A pre-commit hook is added when you run `yarn` for the first time which will ens
 
 All blog posts and events are stored as [MDX](https://mdxjs.com) files under the `data` directory. MDX can be treated like traditional Markdown, with the benefit that it supports JSX, JavaScript expressions, and ESM import and export statements.
 
-Markdown uses the Github style, which is documented [here](https://docs.github.com/get-started/writing-on-github).
+Markdown is of the Github style, which is documented [here](https://docs.github.com/get-started/writing-on-github).
 
 ## Blog Post
 
