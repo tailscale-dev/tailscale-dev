@@ -1,10 +1,5 @@
-export const formatDate = (date: string, locale = 'en-US') => {
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  };
-  const now = new Date(date).toLocaleDateString(locale, options);
+import { format } from 'date-fns';
 
-  return now;
+export const formatDate = (date: string) => {
+  return format(new Date(date), 'LLLL d, yyyy');
 };
