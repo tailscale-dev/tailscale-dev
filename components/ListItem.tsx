@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Tag from '@/components/Tag';
+import { DateDisplay } from '@/components/DateDisplay';
 
 interface ListItemProps {
   slug: string;
@@ -23,9 +24,7 @@ export function ListItem({ slug, title, date, location, path, tags = [], summary
 
             <div className="font-mono text-base font-medium leading-6">
               <span className="pr-4">&frasl;&frasl;</span>
-              <time dateTime={date} suppressHydrationWarning>
-                {date}
-              </time>
+              <DateDisplay dateString={date} />
               {tags && tags.length > 0 && (
                 <>
                   <span className="px-4">{` • `}</span>

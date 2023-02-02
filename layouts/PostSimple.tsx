@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { formatDate } from '@/lib/utils/formatDate';
+import { DateDisplay } from '@/components/DateDisplay';
 import { CoreContent } from '@/lib/utils/contentlayer';
 import type { Blog } from 'contentlayer/generated';
 import Link from 'next/link';
@@ -30,9 +30,7 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
                 <div>
                   <dt className="sr-only">Published on</dt>
                   <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-                    <time dateTime={date} suppressHydrationWarning>
-                      {formatDate(date)}
-                    </time>
+                    <DateDisplay dateString={date} />
                   </dd>
                 </div>
               </dl>

@@ -2,7 +2,6 @@ import React from 'react';
 import Link from 'next/link';
 import { PageSEO } from '@/components/SEO';
 import { siteMetadata } from '@/data/siteMetadata';
-import { formatDate } from '@/lib/utils/formatDate';
 import { sortedBlogPost, allCoreContent, sortedEventPosts } from '@/lib/utils/contentlayer';
 import { InferGetStaticPropsType } from 'next';
 import { allBlogs, allEvents } from 'contentlayer/generated';
@@ -29,10 +28,10 @@ export default function Home({ posts, events }: InferGetStaticPropsType<typeof g
           Tailscale + Your machines = Access from anywhere
         </h1>
         <p className="mx-auto mb-6 max-w-3xl leading-6 sm:mb-8 sm:text-lg md:mb-10 md:text-xl">
-          Your laptop can be in Toronto, staging can be in Sunnyvale, production can be in
-          us-east-1, and all of that can be accessed from anywhere with an internet connection. Free
-          yourself from the slings and arrows of port forwarding and the fleeting hope that you
-          don&apos;t get hacked and just focus on what you do best.
+          Your laptop can be in Toronto, staging can be in Sunnyvale, production can be in{' '}
+          <code>us-east-1</code>, and all of that can be accessed from anywhere with an internet
+          connection. Free yourself from the slings and arrows of port forwarding and the fleeting
+          hope that you don&apos;t get hacked and just focus on what you do best.
         </p>
       </header>
       <main className="container max-w-4xl">
@@ -78,7 +77,7 @@ export default function Home({ posts, events }: InferGetStaticPropsType<typeof g
                 path={post.path}
                 tags={post.tags}
                 summary={post.summary}
-                date={formatDate(post.date)}
+                date={post.date}
               />
             ))}
           </ul>

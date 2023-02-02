@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { formatDate } from '@/lib/utils/formatDate';
 import { CoreContent } from '@/lib/utils/contentlayer';
 import type { Blog } from 'contentlayer/generated';
 import Link from 'next/link';
@@ -122,7 +121,7 @@ export default function ListLayout({
               path={post.path}
               tags={post.tags}
               summary={post.summary}
-              date={formatDate(post.date)}
+              date={post.date}
             />
           ))}
         </ul>
