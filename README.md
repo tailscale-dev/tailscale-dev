@@ -88,7 +88,7 @@ Components are made available globally by defining them in the [ComponentMap](bl
 
 The following JSX components are available to all content types:
 
-### <Image />
+### `<Image />`
 
 Extends [next/image](https://nextjs.org/docs/api-reference/next/image). Only required properties of next/image listed here, for additional options, reference the next/image documentation.
 
@@ -101,7 +101,7 @@ Extends [next/image](https://nextjs.org/docs/api-reference/next/image). Only req
 | showCaption            | boolean | false   | displays the alt text below the image                          |
 | href                   | string  |         | URL or path to navicate to                                     |
 
-### <HeroImage />
+### `<HeroImage />`
 
 | property (\* required) | type   | default | description                                                     |
 | ---------------------- | ------ | ------- | --------------------------------------------------------------- |
@@ -111,7 +111,7 @@ Extends [next/image](https://nextjs.org/docs/api-reference/next/image). Only req
 | height\*               | string |         | rendered height in pixels                                       |
 | generator              | string | false   | what was used to create the image                               |
 
-### <ConvSnippet />
+### `<ConvSnippet />`
 
 | property (\* required) | type      | default | description                       |
 | ---------------------- | --------- | ------- | --------------------------------- |
@@ -119,7 +119,7 @@ Extends [next/image](https://nextjs.org/docs/api-reference/next/image). Only req
 | name\*                 | string    |         | name of the author                |
 | children\*             | ReactNode |         |                                   |
 
-### <TOCInline />
+### `<TOCInline />`
 
 Generates an inline table of contents
 
@@ -132,6 +132,6 @@ Generates an inline table of contents
 | asDisclosure           | boolean       | false   |               |
 | exclude                | string\|array |         |               |
 
-### <NewsletterRepublishing />
+### `<NewsletterRepublishing />`
 
 Displays a notice of a partial re-publishing from our monthly newsletter and provides a link to signup for future newsletters.
