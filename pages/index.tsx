@@ -9,7 +9,8 @@ import { allBlogs, allEvents } from 'contentlayer/generated';
 import type { Blog, Events } from 'contentlayer/generated';
 import { ListItem } from '@/components/ListItem';
 
-const MAX_DISPLAY = 5;
+const MAX_EVENTS_DISPLAY = 3;
+const MAX_POSTS_DISPLAY = 5;
 
 export const getStaticProps = async () => {
   const sortedPosts = sortedBlogPost(allBlogs) as Blog[];
@@ -40,7 +41,7 @@ export default function Home({ posts, events }: InferGetStaticPropsType<typeof g
           <h2 className="pt-6 pb-4 text-3xl font-bold leading-8 tracking-tight">Upcoming Events</h2>
           <ul>
             {!events.length && 'No events found.'}
-            {events.slice(0, MAX_DISPLAY).map((event) => (
+            {events.slice(0, MAX_EVENTS_DISPLAY).map((event) => (
               <ListItem
                 key={event.slug}
                 title={event.title}
@@ -52,12 +53,12 @@ export default function Home({ posts, events }: InferGetStaticPropsType<typeof g
             ))}
           </ul>
         </div>
-        {events.length > MAX_DISPLAY && (
+        {events.length > MAX_EVENTS_DISPLAY && (
           <div className="flex justify-end text-base font-medium leading-6">
             <Link
-              href="/blog"
+              href="/events"
               className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-              aria-label="all posts"
+              aria-label="all events"
             >
               All Events &rarr;
             </Link>
@@ -70,7 +71,7 @@ export default function Home({ posts, events }: InferGetStaticPropsType<typeof g
 
           <ul>
             {!posts.length && 'No posts found.'}
-            {posts.slice(0, MAX_DISPLAY).map((post) => (
+            {posts.slice(0, MAX_POSTS_DISPLAY).map((post) => (
               <ListItem
                 key={post.slug}
                 title={post.title}
@@ -83,7 +84,7 @@ export default function Home({ posts, events }: InferGetStaticPropsType<typeof g
             ))}
           </ul>
         </div>
-        {posts.length > MAX_DISPLAY && (
+        {posts.length > MAX_POSTS_DISPLAY && (
           <div className="flex justify-end text-base font-medium leading-6">
             <Link
               href="/blog"
