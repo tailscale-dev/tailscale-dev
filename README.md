@@ -16,6 +16,7 @@ Flakes are provided for Nix users, with `nix develop` for the environment.
 
 The following tools are available:
 
+- `./tool/go` - [Go](https://golang.org/) for the Go compiler toolchain
 - `./tool/node` - [Node](https://nodejs.org/) for future JavaScript tooling
 - `./tool/yarn` - [Yarn](https://yarnpkg.com/) package manager
 - `./tool/redo.sh` - [Redo](https://github.com/apenwarr/redo) build/automation tool (for deps)

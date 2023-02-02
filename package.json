@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "next dev",
-    "dev": "next dev",
+    "start": "./tool/go run ./cmd/web --dev",
+    "dev": "./tool/go run ./cmd/web --dev",
     "build": "next build && yarn build-postbuild && node dist/postbuild.js",
     "build-postbuild": "esbuild scripts/postbuild.ts --bundle --platform=node --outfile=dist/postbuild.js",
     "serve": "next start",
