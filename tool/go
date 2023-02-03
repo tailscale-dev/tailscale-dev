@@ -25,18 +25,6 @@ if [ -e "${TOOLCHAIN_GO}" ]; then
     esac
 fi
 
-set +u
-if ! [ -z "$IN_NIX_SHELL" ]; then
-    # Using shell.nix, we already have a custom-built Go
-    # toolchain.
-    TOOLCHAIN="$HOME/.cache/tailscale-go-nix"
-    NIX_GO=$(which -a go | grep /nix/store | head -1)
-    NIX_GO_ROOT="${NIX_GO%/bin/go}"
-    rm -rf "$TOOLCHAIN"
-    ln -sf "${NIX_GO_ROOT}" "$TOOLCHAIN"
-fi
-set -u
-
 # This works for linux and darwin, which is sufficient
 # (we do not build tailscale-go for other targets).
 GOOS=$(uname -s | tr A-Z a-z)
@@ -70,14 +58,7 @@ get_cached() {
     rm -f "$archive.new" "$TOOLCHAIN.extracted"
     if [ ! -e "$archive" ]; then
             log "Need to download go '$REV'."
-            if [ "$ARCH" = "amd64" ]; then
-                # For historic reasons, the tailscale/go amd64 release artifacts don't
-                # have the arch in their name.
-                BUILD="$GOOS"
-            else
-                BUILD="$GOOS-$ARCH"
-            fi
-            curl -f -L -o "$archive.new" "https://github.com/tailscale/go/releases/download/build-${REV}/${BUILD}.tar.gz"
+            curl -f -L -o "$archive.new" "https://github.com/tailscale/go/releases/download/build-${REV}/${GOOS}-${ARCH}.tar.gz"
             rm -f "$archive"
             mv "$archive.new" "$archive"
     fi

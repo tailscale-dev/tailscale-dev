@@ -17,10 +17,10 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN yarn build
 
-FROM golang:1.19 AS go
+FROM alpine:3.17 AS go
 WORKDIR /usr/src/tailscale-dev
 
-RUN apt update; apt install -y curl
+RUN apk -U --no-cache add git curl
 
 # build main binary
 COPY . .
