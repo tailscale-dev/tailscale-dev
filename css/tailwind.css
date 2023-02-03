@@ -743,7 +743,7 @@
 }
 
 .Markdown pre code {
-  @apply block overflow-x-auto px-4 py-3;
+  @apply block overflow-x-auto px-4 py-3 dark:bg-gray-800;
 }
 
 .Markdown h1 > code,
@@ -759,7 +759,7 @@
 .Markdown dd > code,
 .Markdown .note > code {
   @apply inline-block rounded-md border border-solid border-gray-200
-  bg-gray-100 py-0.5 px-1;
+  bg-gray-100 py-0.5 px-1 dark:bg-gray-800;
 }
 
 .Markdown figure:not(.customer-quote) {
