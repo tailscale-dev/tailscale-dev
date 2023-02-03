@@ -7,7 +7,6 @@
     "dev": "./tool/go run ./cmd/web --dev",
     "build": "next build && yarn build-postbuild && node dist/postbuild.js",
     "build-postbuild": "esbuild scripts/postbuild.ts --bundle --platform=node --outfile=dist/postbuild.js",
-    "serve": "next start",
     "analyze": "cross-env ANALYZE=true next build",
     "precommit": "lint-staged",
     "lint": "next lint --fix",
