@@ -15,6 +15,9 @@ processes = []
   source="next_cache"
   destination="/app/.next/cache"
 
+[deploy]
+  strategy = "bluegreen"
+
 [[services]]
   http_checks = []
   internal_port = 3000
