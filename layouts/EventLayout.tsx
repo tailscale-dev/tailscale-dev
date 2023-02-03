@@ -6,6 +6,7 @@ import { PageSEO } from '@/components/SEO';
 import { siteMetadata } from '@/data/siteMetadata';
 import ScrollTop from '@/components/ScrollTop';
 import ExternalLink from '@/components/ExternalLink';
+import { DateDisplay } from '@/components/DateDisplay';
 
 const editUrl = (path) => `${siteMetadata.siteRepo}/blob/master/data/${path}`;
 
@@ -29,7 +30,7 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
         <h1 className="text-4xl font-medium leading-tight tracking-tight">{title}</h1>
 
         <div className="mt-6">
-          <time dateTime={content.date}>{content.displayDate}</time>
+          <DateDisplay dateString={content.displayDate} />
         </div>
       </header>
       <main className="container grid grid-cols-3 py-12 md:gap-16">
