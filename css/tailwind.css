@@ -590,8 +590,17 @@
 .Markdown h4,
 .Markdown h5,
 .Markdown h6 {
-  @apply font-medium text-gray-800;
+  @apply font-medium text-gray-900;
   scroll-margin-top: 4rem;
+}
+
+.dark .Markdown h1,
+.dark .Markdown h2,
+.dark .Markdown h3,
+.dark .Markdown h4,
+.dark .Markdown h5,
+.dark .Markdown h6 {
+  @apply text-gray-100;
 }
 
 .lang-ja .Markdown h1,
@@ -635,7 +644,7 @@
   @apply text-base;
 }
 
-.Markdown a:not(.header-link) {
+.Markdown a:not(.header-link, .cta-button) {
   @apply text-blue-500 transition-colors hover:text-blue-700;
 }
 
@@ -1313,3 +1322,17 @@ ul.sentanceCase > li:nth-last-of-type(2)::after {
 ul.sentanceCase > li:first-of-type:nth-last-of-type(2)::after {
   content: ' and ';
 }
+
+/* Custom dot-dev */
+
+.tito-widget {
+  margin: 0 auto;
+}
+
+.cta-button {
+  @apply button;
+  @apply button-primary;
+  @apply text-gray-100 transition-colors hover:text-gray-900;
+}
+
+/********************************************************************/
