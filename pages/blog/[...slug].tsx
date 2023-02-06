@@ -9,6 +9,14 @@ import type { Blog } from 'contentlayer/generated';
 const DEFAULT_LAYOUT = 'PostLayout';
 
 export async function getStaticPaths() {
+  console.log(
+    '>>>>',
+    JSON.stringify(
+      allBlogs.map((p) => ({ params: { slug: p.slug.split('/') } })),
+      null,
+      2
+    )
+  );
   return {
     paths: allBlogs.map((p) => ({ params: { slug: p.slug.split('/') } })),
     fallback: false,

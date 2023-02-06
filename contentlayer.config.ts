@@ -19,7 +19,10 @@ import rehypePresetMinify from 'rehype-preset-minify';
 const computedFields: ComputedFields = {
   slug: {
     type: 'string',
-    resolve: (doc) => doc._raw.flattenedPath.replace(/^.+?(\/)/, ''),
+    resolve: (doc) => {
+      console.log(doc._raw.flattenedPath);
+      return doc._raw.flattenedPath.replace(/^.+?(\/)/, '');
+    },
   },
   path: {
     type: 'string',
@@ -40,6 +43,7 @@ export const Blog = defineDocumentType(() => ({
     title: { type: 'string', required: true },
     date: { type: 'date', required: true },
     summary: { type: 'string', required: true },
+    slug: { type: 'string' },
     tags: { type: 'list', of: { type: 'string' } },
     lastmod: { type: 'date' },
     images: { type: 'list', of: { type: 'string' } },
@@ -51,6 +55,21 @@ export const Blog = defineDocumentType(() => ({
   computedFields: {
     ...computedFields,
     readingTime: { type: 'json', resolve: (doc) => readingTime(doc.body.raw) },
+    slug: {
+      type: 'string',
+      resolve: (doc) => {
+        const date = new Date(doc.date);
+        const day = date.getMonth() + 1;
+        const month = (day < 10 ? '0' : '') + day;
+        const slug = doc.slug
+          ? doc.slug
+          : `${date.getFullYear()}/${month}/${doc.title
+              .replace(/[^\w\s]+/g, '')
+              .replace(/\s+/g, '-')
+              .toLowerCase()}`;
+        return slug;
+      },
+    },
   },
 }));
 
