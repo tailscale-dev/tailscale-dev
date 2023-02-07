@@ -46,6 +46,7 @@ export default function Home({ posts, events }: InferGetStaticPropsType<typeof g
                 title={event.title}
                 slug={event.slug}
                 path={event.path}
+                location={event.location}
                 summary={event.summary}
                 date={event.displayDate}
               />
