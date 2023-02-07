@@ -5,20 +5,21 @@ import { DateDisplay } from '@/components/DateDisplay';
 interface ListItemProps {
   slug: string;
   title: string;
+  path: string;
   date: string;
   summary: string;
   location?: string;
   tags?: string[];
 }
 
-export function ListItem({ slug, title, date, location, tags = [], summary }: ListItemProps) {
+export function ListItem({ slug, title, date, location, path, tags = [], summary }: ListItemProps) {
   return (
     <li key={slug} className="py-6">
       <article>
         <div className="space-y-6 text-gray-900 dark:text-white">
           <div>
             <h2 className="text-2xl font-bold leading-8 tracking-tight">
-              <Link href={`/${slug}`}>{title}</Link>
+              <Link href={`/${path}`}>{title}</Link>
             </h2>
 
             <div className="font-mono text-base font-medium leading-6">

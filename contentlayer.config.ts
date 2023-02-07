@@ -16,13 +16,23 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypePrismPlus from 'rehype-prism-plus';
 import rehypePresetMinify from 'rehype-preset-minify';
 
+function generateSlugFromDoc(doc) {
+  const date = new Date(doc.date);
+  const day = date.getMonth() + 1;
+  const month = (day < 10 ? '0' : '') + day;
+  const slug = doc.slug
+    ? doc.slug
+    : `${date.getFullYear()}/${month}/${doc.title
+        .replace(/[^\w\s]+/g, '')
+        .replace(/\s+/g, '-')
+        .toLowerCase()}`;
+  return slug;
+}
+
 const computedFields: ComputedFields = {
   slug: {
     type: 'string',
-    resolve: (doc) => {
-      console.log(doc._raw.flattenedPath);
-      return doc._raw.flattenedPath.replace(/^.+?(\/)/, '');
-    },
+    resolve: (doc) => doc._raw.flattenedPath.replace(/^.+?(\/)/, ''),
   },
   path: {
     type: 'string',
@@ -57,17 +67,12 @@ export const Blog = defineDocumentType(() => ({
     readingTime: { type: 'json', resolve: (doc) => readingTime(doc.body.raw) },
     slug: {
       type: 'string',
+      resolve: (doc) => generateSlugFromDoc(doc),
+    },
+    path: {
+      type: 'string',
       resolve: (doc) => {
-        const date = new Date(doc.date);
-        const day = date.getMonth() + 1;
-        const month = (day < 10 ? '0' : '') + day;
-        const slug = doc.slug
-          ? doc.slug
-          : `${date.getFullYear()}/${month}/${doc.title
-              .replace(/[^\w\s]+/g, '')
-              .replace(/\s+/g, '-')
-              .toLowerCase()}`;
-        return slug;
+        return `${doc._raw.flattenedPath.replace(/\/.*$/, '')}/${generateSlugFromDoc(doc)}`;
       },
     },
   },

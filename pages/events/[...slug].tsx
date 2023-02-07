@@ -9,10 +9,6 @@ import type { Events } from 'contentlayer/generated';
 const DEFAULT_LAYOUT = 'EventLayout';
 
 export async function getStaticPaths() {
-  console.log(
-    '>>>>>',
-    allEvents.map((p) => ({ params: { slug: p.slug.split('/') } }))
-  );
   return {
     paths: allEvents.map((p) => ({ params: { slug: p.slug.split('/') } })),
     fallback: false,
