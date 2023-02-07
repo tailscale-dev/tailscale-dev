@@ -16,24 +16,7 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypePrismPlus from 'rehype-prism-plus';
 import rehypePresetMinify from 'rehype-preset-minify';
 
-function generateSlugFromDoc(doc) {
-  const date = new Date(doc.date);
-  const day = date.getMonth() + 1;
-  const month = (day < 10 ? '0' : '') + day;
-  const slug = doc.slug
-    ? doc.slug
-    : `${date.getFullYear()}/${month}/${doc.title
-        .replace(/[^\w\s]+/g, '')
-        .replace(/\s+/g, '-')
-        .toLowerCase()}`;
-  return slug;
-}
-
 const computedFields: ComputedFields = {
-  slug: {
-    type: 'string',
-    resolve: (doc) => doc._raw.flattenedPath.replace(/^.+?(\/)/, ''),
-  },
   path: {
     type: 'string',
     resolve: (doc) => doc._raw.flattenedPath,
@@ -53,7 +36,7 @@ export const Blog = defineDocumentType(() => ({
     title: { type: 'string', required: true },
     date: { type: 'date', required: true },
     summary: { type: 'string', required: true },
-    slug: { type: 'string' },
+    slug: { type: 'string', required: true },
     tags: { type: 'list', of: { type: 'string' } },
     lastmod: { type: 'date' },
     images: { type: 'list', of: { type: 'string' } },
@@ -65,14 +48,10 @@ export const Blog = defineDocumentType(() => ({
   computedFields: {
     ...computedFields,
     readingTime: { type: 'json', resolve: (doc) => readingTime(doc.body.raw) },
-    slug: {
-      type: 'string',
-      resolve: (doc) => generateSlugFromDoc(doc),
-    },
     path: {
       type: 'string',
       resolve: (doc) => {
-        return `${doc._raw.flattenedPath.replace(/\/.*$/, '')}/${generateSlugFromDoc(doc)}`;
+        return `${doc._raw.flattenedPath.replace(/\/.*$/, '')}/${doc.slug}`;
       },
     },
   },
@@ -100,6 +79,10 @@ export const Events = defineDocumentType(() => ({
       type: 'string',
       resolve: (doc) => (doc.displayDate ? doc.displayDate : doc.date),
     },
+    slug: {
+      type: 'string',
+      resolve: (doc) => doc._raw.flattenedPath.replace(/^.+?(\/)/, ''),
+    },
   },
 }));
 
@@ -125,6 +108,10 @@ export const Authors = defineDocumentType(() => ({
     handle: {
       type: 'string',
       resolve: (doc) => (doc.handle ? doc.handle : doc.name.split(' ', 1)[0]),
+    },
+    slug: {
+      type: 'string',
+      resolve: (doc) => doc._raw.flattenedPath.replace(/^.+?(\/)/, ''),
     },
   },
 }));

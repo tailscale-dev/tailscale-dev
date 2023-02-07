@@ -41,6 +41,7 @@ Blog posts are located under `data/blog` with the following front matter:
 - **title\*** (string)
 - **date\*** (string, ANSI date)
 - **summary\*** (string)
+- **slug\*** (string, [a-aA-Z0-9-])
 - **tags** (array)
 - **lastmod** (string, ANSI date)
 - **authors** (array): if not specified will use the "default" author (`data/authors/default.mdx`)
