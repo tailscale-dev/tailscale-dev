@@ -1,6 +1,6 @@
 import { siteMetadata } from '@/data/siteMetadata';
 import { PageSEO } from '@/components/SEO';
-import { sortedEventPosts, allCoreContent } from '@/lib/utils/contentlayer';
+import { sortedFutureEventPosts, allCoreContent } from '@/lib/utils/contentlayer';
 import { InferGetStaticPropsType } from 'next';
 import { allEvents } from 'contentlayer/generated';
 import type { Events } from 'contentlayer/generated';
@@ -9,7 +9,7 @@ import { ListItem } from '@/components/ListItem';
 export const POSTS_PER_PAGE = 10;
 
 export const getStaticProps = async () => {
-  const events = sortedEventPosts(allEvents) as Events[];
+  const events = sortedFutureEventPosts(allEvents) as Events[];
   const initialDisplayPosts = events.slice(0, POSTS_PER_PAGE);
   const pagination = {
     currentPage: 1,

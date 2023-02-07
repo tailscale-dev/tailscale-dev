@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { PageSEO } from '@/components/SEO';
 import { siteMetadata } from '@/data/siteMetadata';
-import { sortedBlogPost, allCoreContent, sortedEventPosts } from '@/lib/utils/contentlayer';
+import { sortedBlogPost, allCoreContent, sortedFutureEventPosts } from '@/lib/utils/contentlayer';
 import { InferGetStaticPropsType } from 'next';
 import { allBlogs, allEvents } from 'contentlayer/generated';
 import type { Blog, Events } from 'contentlayer/generated';
@@ -13,7 +13,7 @@ const MAX_POSTS_DISPLAY = 5;
 
 export const getStaticProps = async () => {
   const sortedPosts = sortedBlogPost(allBlogs) as Blog[];
-  const sortedEvents = sortedEventPosts(allEvents) as Events[];
+  const sortedEvents = sortedFutureEventPosts(allEvents) as Events[];
   const posts = allCoreContent(sortedPosts);
   const events = allCoreContent(sortedEvents);
 

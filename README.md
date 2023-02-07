@@ -56,6 +56,7 @@ Events are located under `data/events` with the following front matter:
 - **date\*** (string, ANSI date)
 - **location\*** (string)
 - **summary\*** (string)
+- **endsDate** (string, ANSI date): last day of the event, defaults to **date**
 - **displayDate** (string)
 - **displayTime** (string)
 - **link** (string)
