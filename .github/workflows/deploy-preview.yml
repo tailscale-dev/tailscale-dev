@@ -1,0 +1,51 @@
+name: Deploy Preview
+
+concurrency:
+  group: ${{ github.workflow }}-$${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+  FLY_REGION: iad
+  FLY_ORG: ${{ secrets.FLY_ORG }}
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+
+    concurrency:
+      group: pr-${{ github.event.number }}
+
+    environment:
+      name: pr-${{ github.event.number }}
+      url: ${{ steps.deploy.outputs.url }}
+
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy
+        id: deploy
+        run: |
+          go run ./.github/deploy-preview/ \
+            --name=tailscale-dev-pr-${{ github.event.number }} \
+            --region=${{ env.FLY_REGION }} \
+            --org=${{ env.FLY_ORG }} \
+            --volume-name="next_cache" \
+            --volume-size="1" \
+            --environment="pr-${{ github.event.number }}" \
+            --event=${{ github.event.action }} \
+            --repo-name=${{ env.GITHUB_REPOSITORY }} \
+            --delete-environment=true
