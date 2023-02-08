@@ -48,6 +48,9 @@ yarn-error.log*
 result
 result-*
 
+# ci
+fly.preview.toml
+
 # tailscale tooling
 /.redo
 yarn.cmd
