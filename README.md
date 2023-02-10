@@ -85,7 +85,7 @@ Authors are located under `data/authors` with the following front matter:
 
 ## JSX Components
 
-Components are made available globally by defining them in the [ComponentMap](blob/main/components/MDXComponents.tsx).
+Components are made available globally by defining them in the [ComponentMap](components/MDXComponents.tsx).
 
 The following JSX components are available to all content types:
 
