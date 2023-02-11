@@ -2,10 +2,15 @@ import Link from 'next/link';
 
 import * as React from 'react';
 import Breadcrumbs from '@/components/Breadcrumbs';
+import Head from 'next/head';
 
 export default function EventsCodeOfConduct() {
   return (
     <>
+      <Head>
+        <title>Tailscale Events Code of Conduct</title>
+      </Head>
+
       <header className="bg-gray-900 py-20 text-center text-gray-100">
         <h1 className="text-4xl font-medium leading-tight tracking-tight">
           Events Code of Conduct{' '}

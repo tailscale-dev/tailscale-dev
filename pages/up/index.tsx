@@ -4,6 +4,7 @@ import NoSSRWrapper from '@/components/NoSSRWrapper';
 
 import * as React from 'react';
 import Breadcrumbs from '@/components/Breadcrumbs';
+import Head from 'next/head';
 
 interface TitoWidgetProps extends React.HTMLAttributes<HTMLElement> {
   event: string;
@@ -21,6 +22,10 @@ export default function Up() {
   return (
     <>
       <Script src="https://js.tito.io/v2" strategy="lazyOnload" />
+
+      <Head>
+        <title>Tailscale Up - Bay Area, CA - May 31, 2023</title>
+      </Head>
 
       <header className="bg-gray-900 py-20 text-center text-gray-100">
         <h1 className="text-4xl font-medium leading-tight tracking-tight">Tailscale Up</h1>
