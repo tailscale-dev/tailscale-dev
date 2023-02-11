@@ -24,12 +24,12 @@ export default function Up() {
       <Script src="https://js.tito.io/v2" strategy="lazyOnload" />
 
       <Head>
-        <title>Tailscale Up - Bay Area, CA - May 31, 2023</title>
+        <title>Tailscale Up - Bay Area, CA - May 23, 2023</title>
       </Head>
 
       <header className="bg-gray-900 py-20 text-center text-gray-100">
         <h1 className="text-4xl font-medium leading-tight tracking-tight">Tailscale Up</h1>
-        <span>Bay Area, CA - May 31, 2023</span>
+        <span>Bay Area, CA - May 23, 2023</span>
       </header>
 
       <Breadcrumbs titleMap={{ up: 'Tailscale Up', cfs: 'CFS' }} />
@@ -38,7 +38,7 @@ export default function Up() {
         <div className="col-span-3 lg:col-span-2">
           <h1 className="font-mono">you@tsdev:~$ tailscale up</h1>
           <div className="py-6">
-            On May 31 Tailscale Up will be Tailscale&apos;s first-ever in-person community
+            On May 23 Tailscale Up will be Tailscale&apos;s first-ever in-person community
             conference. Attendees will have the opportunity to hang with Tailscalars and share
             knowledge with one another to talk about projects and integrations and leave connected
             and inspired.
