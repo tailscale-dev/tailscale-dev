@@ -6,9 +6,9 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 // You might need to insert additional domains in script-src if you are using external services
 const ContentSecurityPolicy = `
-  default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' cdn.rudderlabs.com;
-  style-src 'self' 'unsafe-inline';
+  default-src 'self' js.tito.io;
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' cdn.rudderlabs.com js.tito.io;
+  style-src 'self' 'unsafe-inline' js.tito.io;
   img-src * blob: data:;
   media-src 'none';
   connect-src *;
