@@ -64,7 +64,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                       width={32}
                       height={32}
                       alt={`Photo of ${author.name}`}
-                      className="h-10 w-10 rounded-full"
+                      className="rounded-full"
                     />
                   </div>
                 ))}
