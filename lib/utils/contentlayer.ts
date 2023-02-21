@@ -1,5 +1,6 @@
 import GithubSlugger from 'github-slugger';
 import type { Document, MDX } from 'contentlayer/core';
+import type { Events } from 'contentlayer/generated';
 
 export type MDXDocument = Document & { body: MDX };
 export type MDXDocumentDate = MDXDocument & {
@@ -18,17 +19,13 @@ export function sortedBlogPost(allBlogs: MDXDocumentDate[]) {
   return allBlogs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
-export function sortedFutureEventPosts(allEvents: MDXDocumentDate[]) {
+export function sortedFutureEventPosts(allEvents: Events[]) {
   return allEvents
-    .filter((e) => {
-      const date = new Date(e.endsDate || e.date);
-      date.setDate(date.getDate() + 1);
-      return date > new Date();
-    })
+    .filter((e) => e.isFuture)
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 }
 
-export function sortedEventPosts(allEvents: MDXDocumentDate[]) {
+export function sortedEventPosts(allEvents: Events[]) {
   return allEvents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 }
 
