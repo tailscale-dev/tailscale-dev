@@ -64,6 +64,15 @@ module.exports = () => {
     eslint: {
       dirs: ['pages', 'components', 'lib', 'layouts', 'scripts'],
     },
+    async redirects() {
+      return [
+        {
+          source: '/up',
+          destination: 'https://ti.to/tailscaleup/2023',
+          permanent: false,
+        },
+      ];
+    },
     async headers() {
       return [
         {
