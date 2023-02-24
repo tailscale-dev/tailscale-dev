@@ -1,0 +1,96 @@
+---
+title: 'tevents: event logger and job monitor for tailnets'
+date: '2023-02-30'
+tags:
+  - 'oss'
+  - 'application'
+authors: ['robin-verton']
+summary: 'tevents is a tool to log events and monitor jobs on a tailnet.'
+---
+
+Since I found Tailscale some years ago, it's this magic little unobtrusive tool for me always running in the background. I don't use it daily, but thats the nice thing for me: It does not get in my way and is crucial for me when I need it.
+
+Some weeks ago I read a blog post about [golink](https://github.com/tailscale/golink), a tool written by the Tailscale team for sharing links in a Tailscale network (called *tailnet*). Link sharing services are nothing new, but having a services in your own network, accessible anytime you are connected to your own tailnet (and only to your network) did make sense. Not for me to be honest, because there is not a lot of value in sharing links with myself (other than the nice templating feature). But something else here was new to me: Having the possibility to share a single service in my tailnet, only by using a token and without giving this complete machine access to my tailnet.
+
+## Idea for tevents
+
+Thinking of interesting services I can put in my tailnet, I came up with something I usually solve with some hacky scripts. For small services, I don't have a central place to gather events/logs. I don't want to use some online service for a handful of events I'm going to watch. I also don't want to maintain some logging service with all dependencies. There was also a second usecase I thought of: I wanted to have a simple job monitor, visualizing executions of cronjobs and other scheduled tasks to keep an eye on them. I called it [tevents](https://github.com/rverton/tevents).
+
+## Just Go for it
+
+Let's start with some implementation detail here. `tevents` is written in Go, compiled to a single executable which embeds all required (web) assets.  As it is [essential](https://tailscale.com/blog/an-unlikely-database-migration/) for a Tailscale [related project](https://github.com/tailscale/golink/blob/3cb4c6cb033d9f42384b27096537a7b05947ac55/golink.go#L173-L181), I am using a JSON file as a database here. Just kidding, I skipped this ritual and spent my innovation token recklessly on some currently hyped database technology: sqlite!
+
+I like to keep direct dependencies to a minimum as long as I can, so the only external deps I need to import are the sqlite driver and tsnet. Go's stdlib is awesome, giving nearly all utilities which were needed: [Web handling](https://github.com/rverton/tevents/blob/main/http.go), [database stuff](https://github.com/rverton/tevents/blob/main/db/db.go) and [templates](https://github.com/rverton/tevents/blob/1db934e990354e1da0b058bd3ddd4c84203146f2/http.go#L45-L53). I love how Go makes it possible to embed static resources in the executable file. It allows to bundle assets as the DB schema or web resouces:
+
+```go
+//go:embed assets/*
+var assetsFS embed.FS
+
+func parseTpl(funcs template.FuncMap, file string) *template.Template {
+	return template.Must(
+		template.New("layout.html").Funcs(funcs).ParseFS(assetsFS, "assets/layout.html", file))
+}
+```
+
+The web page is styled via [TailwindCSS](https://tailwindcss.com/), which allows for fast prototyping web layouts.
+
+For convenience I made use of a [Makefile](https://github.com/rverton/tevents/blob/main/Makefile) which holds some useful commands for development: Building `tevents`, building assets (Tailwind has a built step to minimize the resulting CSS file), and watching for file changes during development.
+
+## Integrating tsnet
+
+The last step was to integrate `tsnet`, the tailscale-as-a-library package which allows to put services on a tailnet. I nearly did a 1:1 copy from the [tsnet blog post](https://tailscale.com/blog/tsnet-virtual-private-services/) and was done:
+
+```go
+ts := &tsnet.Server{
+    Hostname: *hostname,
+}
+
+defer ts.Close()
+
+ln, err := ts.Listen("tcp", ":80")
+if err != nil {
+    log.Fatal(err)
+}
+
+defer ln.Close()
+
+lc, err := ts.LocalClient()
+if err != nil {
+    log.Fatal(err)
+}
+
+// pass listener and local client to the tevents web server setup
+s := tevents.NewServer(":8080", db, ln, lc)
+s.EventService = tdb.NewEventService(db)
+
+if err := s.Start(); err != nil {
+    log.Fatal("http server failed:", err)
+}
+```
+
+The hostname is passed to the `tsnet.Server` and allows to set a custom hostname in tailnets which make use of [MagicDNS](https://tailscale.com/kb/1081/magicdns/). This way we can just call `http://tevents` for event logging and to access the dashboard.
+
+And that was all it takes for making a service in Go available in a tailnet! It's nice how a simple abstraction like this allows to deploy a private and secure service, directly embedded in a Go application.
+
+## Using tevents
+
+`tevents` can now be used with a simple HTTP request. For example, let's assume there is some script which you want to log its start, end and exit code:
+
+```bash
+#!/bin/bash
+curl http://tevents/.log?origin=worknode -d "started cleanup"
+./do_cleanup.sh
+curl http://tevents/.log?origin=worknode -d "finished cleanup: $?"
+```
+
+The other usecase I'm currently using `tevents` for is to watch cron jobs. The monitor event is only sent to tevents if the `backup.sh` script did not fail (return with a non-zero exit code):
+
+```bash
+0 1 * * * /usr/local/bin/backup.sh && curl -X POST http://tevents/.monitor?origin=cron:backup
+```
+
+This makes some nice visualizations which show the last execution of the backup script:
+
+![](https://github.com/rverton/tevents/blob/main/screenshots/events-monitors.png?raw=true)
+
+`tevents` is very early in development. Feedback is always appreciated and contributions of course, too!
