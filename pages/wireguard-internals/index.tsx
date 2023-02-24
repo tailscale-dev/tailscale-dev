@@ -2,9 +2,9 @@ import { PageSEO } from '@/components/SEO';
 
 export default function WireguardInternals() {
   const page = {
-    __html: require('!raw-loader!../public/static/wireguard-internals/index.html').default,
+    __html: require('!raw-loader!./index.html').default,
   };
-  console.log(page);
+
   return (
     <>
       <PageSEO title="Wireguard Internals" description="Internals of a WireGuard® Tunnel" />
@@ -13,7 +13,7 @@ export default function WireguardInternals() {
           Internals of a WireGuard® Tunnel
         </h1>
       </header>
-      <div className="container max-w-4xl" dangerouslySetInnerHTML={page} />
+      <div className="bg-[#0D1417]" dangerouslySetInnerHTML={page} />
     </>
   );
 }
