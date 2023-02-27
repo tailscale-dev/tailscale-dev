@@ -1,13 +1,13 @@
-name: "Article Ideas"
-description: "Submit an idea for a blog post, integration, or how-to guide."
-title: "Article idea: "
-labels: ["article-idea", "triage"]
+name: 'Article Ideas'
+description: 'Submit an idea for a blog post, integration, or how-to guide.'
+title: 'Article idea: '
+labels: ['article-idea', 'triage']
 body:
   - type: dropdown
     id: section
     attributes:
       label: Section
-      description: "What section of the site would this appear?"
+      description: 'What section of the site would this appear?'
       options:
         - Blog
         - Use Cases
@@ -21,10 +21,10 @@ body:
     id: draft
     attributes:
       label: Draft
-      description: "Link to a draft of the article."
-      placeholder: "docs.google.com/..."
+      description: 'Link to a draft of the article.'
+      placeholder: 'docs.google.com/...'
   - type: textarea
     id: idea
     attributes:
       label: Idea
-      description: "Provide an overview of the idea for the article."
+      description: 'Provide an overview of the idea for the article.'
