@@ -10,7 +10,7 @@ summary: 'tevents is a tool to log events and monitor jobs on a tailnet.'
 
 Since I found Tailscale some years ago, it's this magic little unobtrusive tool for me always running in the background. I don't use it daily, but thats the nice thing for me: It does not get in my way and is crucial for me when I need it.
 
-Some weeks ago I read a blog post about [golink](https://github.com/tailscale/golink), a tool written by the Tailscale team for sharing links in a Tailscale network (called *tailnet*). Link sharing services are nothing new, but having a services in your own network, accessible anytime you are connected to your own tailnet (and only to your network) did make sense. Not for me to be honest, because there is not a lot of value in sharing links with myself (other than the nice templating feature). But something else here was new to me: Having the possibility to share a single service in my tailnet, only by using a token and without giving this complete machine access to my tailnet.
+Some weeks ago I read a blog post about [golink](https://github.com/tailscale/golink), a tool written by the Tailscale team for sharing links in a Tailscale network (called _tailnet_). Link sharing services are nothing new, but having a services in your own network, accessible anytime you are connected to your own tailnet (and only to your network) did make sense. Not for me to be honest, because there is not a lot of value in sharing links with myself (other than the nice templating feature). But something else here was new to me: Having the possibility to share a single service in my tailnet, only by using a token and without giving this complete machine access to my tailnet.
 
 ## Idea for tevents
 
@@ -18,7 +18,7 @@ Thinking of interesting services I can put in my tailnet, I came up with somethi
 
 ## Just Go for it
 
-Let's start with some implementation detail here. `tevents` is written in Go, compiled to a single executable which embeds all required (web) assets.  As it is [essential](https://tailscale.com/blog/an-unlikely-database-migration/) for a Tailscale [related project](https://github.com/tailscale/golink/blob/3cb4c6cb033d9f42384b27096537a7b05947ac55/golink.go#L173-L181), I am using a JSON file as a database here. Just kidding, I skipped this ritual and spent my innovation token recklessly on some currently hyped database technology: sqlite!
+Let's start with some implementation detail here. `tevents` is written in Go, compiled to a single executable which embeds all required (web) assets. As it is [essential](https://tailscale.com/blog/an-unlikely-database-migration/) for a Tailscale [related project](https://github.com/tailscale/golink/blob/3cb4c6cb033d9f42384b27096537a7b05947ac55/golink.go#L173-L181), I am using a JSON file as a database here. Just kidding, I skipped this ritual and spent my innovation token recklessly on some currently hyped database technology: sqlite!
 
 I like to keep direct dependencies to a minimum as long as I can, so the only external deps I need to import are the sqlite driver and tsnet. Go's stdlib is awesome, giving nearly all utilities which were needed: [Web handling](https://github.com/rverton/tevents/blob/main/http.go), [database stuff](https://github.com/rverton/tevents/blob/main/db/db.go) and [templates](https://github.com/rverton/tevents/blob/1db934e990354e1da0b058bd3ddd4c84203146f2/http.go#L45-L53). I love how Go makes it possible to embed static resources in the executable file. It allows to bundle assets as the DB schema or web resouces:
 
@@ -79,15 +79,13 @@ I added some realtime capabilities for the event page to see events immediately 
 So let's add the htmx SSE handling:
 
 ```html
-  <div hx-sse="connect:/.sse" class="flex flex-col mt-1 font-mono text-sm">
-    <div hx-sse="swap:message" hx-swap="afterbegin"></div>
+<div hx-sse="connect:/.sse" class="mt-1 flex flex-col font-mono text-sm">
+  <div hx-sse="swap:message" hx-swap="afterbegin"></div>
 
-    {{ range .Events }}
-        {{template "row.html" . }}
-    {{ else }}
-      <div class="py-2">There are currently no events in your database.</div>
-    {{ end }}
-  </div>
+  {{ range .Events }} {{template "row.html" . }} {{ else }}
+  <div class="py-2">There are currently no events in your database.</div>
+  {{ end }}
+</div>
 ```
 
 The `hx-` attributes will results in a connection to the path `/.sse` endpoint and listen for new server data. As soon as an SSE event is retrieved, it is prepended before the already rendered elements. Because this will only add a DOM element, you can also keep your selected text in the other rows.
