@@ -72,6 +72,74 @@ The hostname is passed to the `tsnet.Server` and allows to set a custom hostname
 
 And that was all it takes for making a service in Go available in a tailnet! It's nice how a simple abstraction like this allows to deploy a private and secure service, directly embedded in a Go application.
 
+## Server-side events for realtime
+
+I have also added some realtime capabilities for the event page. I added [htmx](https://htmx.org/) to subscribe to a [server-side event](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) endpoint. I took some inspiration from a [post](https://vreco.fly.dev/blog/post/HTMX%20in%20Go) which allows to add the event handling in a few lines. As you may have noticed, I am using a lot of phrasing like *simple* and *easy* here. It really is! I usually go for some high interactivity frontend like Next.js with React, but for a lot of usecases like this one, there really is no need for this.
+
+So let's add the htmx SSE handling:
+
+```html
+  <div hx-sse="connect:/.sse" class="flex flex-col mt-1 font-mono text-sm">
+    <div hx-sse="swap:message" hx-swap="afterbegin"></div>
+
+    {{ range .Events }}
+        {{template "row.html" . }}
+    {{ else }}
+      <div class="py-2">There are currently no events in your database.</div>
+    {{ end }}
+  </div>
+```
+
+The `hx-` attributes will connect to the path `/.sse` and listen for new server events. As soon as an event was retrieved, it is prepended before the already rendered elements. Because this will only add a DOM element, you can also keep your selected text in the other rows.
+
+On the server side, there is a simple notification/pubsub handler holding a list of all connected sse listeners. If a new event is added, the notifier will send this event to all listeners, which will render it:
+
+```go
+func (s *Server) handleSSE() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/event-stream")
+		w.Header().Set("Cache-Control", "no-cache")
+		w.Header().Set("Connection", "keep-alive")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+
+		flusher, _ := w.(http.Flusher)
+
+        // ticker for keepalive
+		ticker := time.NewTicker(5 * time.Second)
+		defer ticker.Stop()
+
+        // subscribe to event publisher
+		notifyClient := s.Notifier.AddListener()
+		defer s.Notifier.RemoveListener(notifyClient)
+
+		for {
+			select {
+
+            // if a new event is received, flush it to the sse-connected client
+			case event := <-notifyClient.c:
+				// print in the format 'data:<html>' and remove newslines
+				var b bytes.Buffer
+				fmt.Fprintf(w, "data:")
+				rowTmpl.Execute(&b, event)
+				fmt.Fprintf(w, "%s\n\n", strings.ReplaceAll(b.String(), "\n", ""))
+				flusher.Flush()
+
+            // keepalive stuff
+			case <-ticker.C:
+				fmt.Fprintf(w, "keepalive: \n\n")
+				flusher.Flush()
+			case <-r.Context().Done():
+				return
+
+			}
+		}
+
+	}
+}
+```
+
+Using htmx allowed to leave out all manual javascript handling. This usecase I have here is so simple, it would be even worth removing the htmx dependency and writing the few lines of Javascript for listening by myself, but thats for another time.
+
 ## Using tevents
 
 `tevents` can now be used with a simple HTTP request. For example, let's assume there is some script which you want to log its start, end and exit code:
