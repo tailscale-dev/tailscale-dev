@@ -74,7 +74,7 @@ And that was all it takes for making a service in Go available in a tailnet! It'
 
 ## Server-side events for realtime
 
-I have also added some realtime capabilities for the event page. I added [htmx](https://htmx.org/) to subscribe to a [server-side event](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) endpoint. I took some inspiration from a [post](https://vreco.fly.dev/blog/post/HTMX%20in%20Go) which allows to add the event handling in a few lines. As you may have noticed, I am using a lot of phrasing like *simple* and *easy* here. It really is! I usually go for some high interactivity frontend like Next.js with React, but for a lot of usecases like this one, there really is no need for this.
+I added some realtime capabilities for the event page to see events immediately show when they occured. I used [htmx](https://htmx.org/) to subscribe to a [server-side event](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) endpoint. There is a nice [blog post](https://vreco.fly.dev/blog/post/HTMX%20in%20Go) describing how to do it which I took some inspiration from. It allows to add the event handling very easy in just a few lines. I usually use some (high interactivity) frontend like Next.js when writing user interface in Go, but for a lot of usecases like this one, there really is no need for this. Its enough to partially render on the server and send it over to the frontend. This keeps the overhead, languages and dependencies in use low.
 
 So let's add the htmx SSE handling:
 
@@ -90,9 +90,9 @@ So let's add the htmx SSE handling:
   </div>
 ```
 
-The `hx-` attributes will connect to the path `/.sse` and listen for new server events. As soon as an event was retrieved, it is prepended before the already rendered elements. Because this will only add a DOM element, you can also keep your selected text in the other rows.
+The `hx-` attributes will results in a connection to the path `/.sse` endpoint and listen for new server data. As soon as an SSE event is retrieved, it is prepended before the already rendered elements. Because this will only add a DOM element, you can also keep your selected text in the other rows.
 
-On the server side, there is a simple notification/pubsub handler holding a list of all connected sse listeners. If a new event is added, the notifier will send this event to all listeners, which will render it:
+On the server side, there is a [custom notification/pubsub handler](https://github.com/rverton/tevents/blob/main/notifier.go) holding a list of all connected listeners. When a new event is inserted, the notifier will send this event to all listeners, which will then render it:
 
 ```go
 func (s *Server) handleSSE() http.HandlerFunc {
