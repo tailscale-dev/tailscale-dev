@@ -28,7 +28,7 @@ export function ListItem({ slug, title, date, location, path, tags = [], summary
               {tags && tags.length > 0 && (
                 <>
                   <span className="px-4">{` • `}</span>
-                  <span>
+                  <span className="uppercase">
                     {tags.map((tag) => (
                       <Tag key={tag} text={tag} />
                     ))}
