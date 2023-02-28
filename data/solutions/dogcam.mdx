@@ -1,0 +1,147 @@
+---
+title: Set up a dogcam with Tailscale, Raspberry Pi, and Motion
+date: 2023-02-27
+summary: See how to set up a dogcam that you can securely access from anywhere.
+tags:
+  - raspi
+  - webcam
+
+menu:
+  docs:
+    identifier: dogcam
+    name: DIY dogcam
+    parent: solutions
+    weight: 2
+---
+
+Tailscale makes it easy to setup a dogcam that you can securely access from
+anywhere.
+
+Unlike an off-the-shelf dogcam, with Tailscale you don't need to trust
+a third-party service, or risk exposing a camera inside your home to the public
+internet. Every connection on Tailscale is encrypted and entirely private
+to your network.
+
+#### Prerequisites
+
+Before you begin this guide, you'll need two things:
+
+1. A Raspberry Pi with Wi-Fi/Ethernet capabilities (e.g. [Raspberry Pi 3 B+](https://www.raspberrypi.org/products/))
+1. A USB webcam (e.g. [Logitech C615](https://www.amazon.com/dp/B0058LKJIO/))
+
+This guide assumes your Raspberry Pi is already [set up with an internet connection](https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md),
+whether Wi-Fi or Ethernet.
+
+You'll also need [a Tailscale account](https://login.tailscale.com/start). You can make
+a free personal account using a @gmail.com address.
+
+#### Step 1: Install Tailscale on your Raspberry Pi
+
+You can find instructions at the link below.
+
+<DownloadTailscale />
+
+Once it is installed, and you've run `tailscale up` on your Raspberry Pi, continue to the next step.
+
+#### Step 2: Install motion
+
+Next, install [motion](https://motion-project.github.io) using apt with this command
+
+```
+sudo apt install motion
+```
+
+#### Step 3: Configure motion
+
+First, we'll enable motion to run as a background service. Edit
+`/etc/default/motion` using `nano` or your favorite editor:
+
+```
+sudo nano /etc/default/motion
+```
+
+We'll change the start_motion_daemon setting to "yes":
+
+```
+start_motion_daemon=yes
+```
+
+Save and close the file.
+
+Next, we'll configure motion to expose a web page, and modify a few video
+capture settings too.
+
+Open up `/etc/motion/motion.conf` with your editor
+
+```
+sudo nano /etc/motion/motion.conf
+```
+
+Search for the following settings, updating their values to ones listed below.
+
+_Enable viewing video streams over the web._ You can also change the port from the default value (8081) if you'd like.
+
+```bash
+stream_port 8081
+stream_localhost off
+```
+
+_Disable saving images or video to the SD card._ Since this is a dogcam, we
+only care about looking at live footage.
+
+```bash
+output_pictures off
+ffmpeg_output_movies off
+```
+
+Save and close the file.
+
+#### Step 4: Restart motion
+
+Once all your configuration settings have been updated, restart motion
+
+```
+sudo service motion restart
+```
+
+#### Step 5: View your dogcam
+
+From any device in your Tailscale network, you can now view the live webcam
+stream from `<raspberry pi tailscale ip>:8081`. [Find your Raspberry Pi's IP](/kb/1033/ip-and-dns-addresses)
+and type it into your browser.
+
+<br />
+<Image
+  src="/images/solutions/dogcam/raspi.jpg"
+  width={1000}
+  height={535}
+  alt="On macOS, you can click on the device name to copy the IP address."
+/>
+
+You should see a feed from your webcam, that will look something like
+this:
+
+<br />
+<Image
+  src="/images/solutions/dogcam/browser.jpg"
+  width={1200}
+  height={987}
+  alt="Theo and Casey are looking at something that's totally not a Tailscalar running around in a backyard."
+/>
+Success! You now have a functioning dogcam, secured with Tailscale. This can only be accessed by
+devices on your personal Tailscale network, and no one else.
+
+<Note>
+  Your browser may show an "insecure" warning, since your connection isn't over HTTPS. Tailscale
+  secures your connection at a lower level, so rest easy knowing you are securely connected to any
+  website at 100.x.y.z IP address.
+</Note>
+
+#### Next steps
+
+Install Tailscale onto your [Android](/download/android) or [iOS](/download/ios)
+device to check in on your dogs (or other pets) wherever you may be.
+
+You may also want to experiment with other settings such as `width`, `height`,
+or `framerate`. If you make other changes, be sure to restart motion
+with `sudo service motion restart` afterwards.

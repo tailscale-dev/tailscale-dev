@@ -88,6 +88,35 @@ export const Events = defineDocumentType(() => ({
   },
 }));
 
+export const Solutions = defineDocumentType(() => ({
+  name: 'Solution',
+  filePathPattern: 'solutions/**/*.mdx',
+  contentType: 'mdx',
+  fields: {
+    title: { type: 'string', required: true },
+    tags: { type: 'list', of: { type: 'string' } },
+    date: { type: 'date', required: true },
+    summary: { type: 'string', required: true },
+    authors: { type: 'list', of: { type: 'string' } },
+    draft: { type: 'boolean' },
+  },
+  computedFields: {
+    ...computedFields,
+    displayDate: {
+      type: 'string',
+      resolve: (doc) => (doc.displayDate ? doc.displayDate : doc.date),
+    },
+    isFuture: {
+      type: 'boolean',
+      resolve: (doc) => {
+        const date = new Date(doc.endsDate || doc.date);
+        date.setDate(date.getDate() + 1);
+        return date > new Date();
+      },
+    },
+  },
+}));
+
 export const Authors = defineDocumentType(() => ({
   name: 'Authors',
   filePathPattern: 'authors/**/*.mdx',
@@ -116,7 +145,7 @@ export const Authors = defineDocumentType(() => ({
 
 export default makeSource({
   contentDirPath: 'data',
-  documentTypes: [Blog, Authors, Events],
+  documentTypes: [Blog, Authors, Events, Solutions],
   mdx: {
     cwd: process.cwd(),
     remarkPlugins: [remarkExtractFrontmatter, remarkGfm, remarkCodeTitles, remarkImgToJsx],
