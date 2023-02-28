@@ -80,7 +80,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
               <div className="note">
                 This article is contributed by a member of the Tailscale community, not a Tailscale
                 employee. If you have an interesting story to share about how you use Tailscale,
-                reach out to <a href="mainto:devrel@tailscale.com">devrel@tailscale.com</a>.
+                reach out to <a href="mailto:devrel@tailscale.com">devrel@tailscale.com</a>.
               </div>
             )}
 
