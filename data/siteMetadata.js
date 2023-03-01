@@ -5,7 +5,6 @@ module.exports.siteMetadata = {
   theme: 'system',
   siteUrl: 'https://tailscale.dev',
   siteRepo: 'https://github.com/tailscale-dev/tailscale-dev',
-  image: '/static/images/avatar.png',
-  socialBanner: '/static/images/twitter-card.png',
+  socialBanner: '/images/social.png',
   locale: 'en-US',
 };
