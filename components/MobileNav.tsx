@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
-import { headerNavLinks } from '@/data/headerNavLinks';
+import { leftHeaderNavLinks, rightHeaderNavLinks } from '@/data/headerNavLinks';
 
 const MobileNav = () => {
   const [navShow, setNavShow] = useState(false);
@@ -63,7 +63,18 @@ const MobileNav = () => {
           </button>
         </div>
         <nav className="fixed mt-8 h-full">
-          {headerNavLinks.map((link) => (
+          {leftHeaderNavLinks.map((link) => (
+            <div key={link.title} className="px-12 py-4">
+              <Link
+                href={link.href}
+                className="text-2xl font-bold tracking-widest text-gray-100"
+                onClick={onToggleNav}
+              >
+                {link.title}
+              </Link>
+            </div>
+          ))}
+          {rightHeaderNavLinks.map((link) => (
             <div key={link.title} className="px-12 py-4">
               <Link
                 href={link.href}
