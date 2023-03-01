@@ -8,7 +8,7 @@ tags:
   - 'community-made'
 authors: ['robin-verton']
 images: ['/static/tevents/social.png']
-summary: 'tevents is a tool to log events and monitor jobs on a tailnet.'
+summary: 'tevents is a small tool to be deployed in your tailnet to collect events/hooks from other services. By using tsnet, it can be deployed as a virtual private service. This allows to centrally collect events in your network and display them on a web interface.'
 ---
 
 Since I found Tailscale some years ago, it's this magic little unobtrusive tool for me, always running in the background. I don't use it daily, but that's the nice thing: It does not get in my way and is crucial for me when I need it.
@@ -45,21 +45,21 @@ The last step was to integrate `tsnet`, the tailscale-as-a-library package which
 
 ```go
 ts := &tsnet.Server{
-    Hostname: *hostname,
+	Hostname: *hostname,
 }
 
 defer ts.Close()
 
 ln, err := ts.Listen("tcp", ":80")
 if err != nil {
-    log.Fatal(err)
+	log.Fatal(err)
 }
 
 defer ln.Close()
 
 lc, err := ts.LocalClient()
 if err != nil {
-    log.Fatal(err)
+	log.Fatal(err)
 }
 
 // pass listener and local client to the tevents web server setup
@@ -67,7 +67,7 @@ s := tevents.NewServer(":8080", db, ln, lc)
 s.EventService = tdb.NewEventService(db)
 
 if err := s.Start(); err != nil {
-    log.Fatal("http server failed:", err)
+	log.Fatal("http server failed:", err)
 }
 ```
 
@@ -105,18 +105,18 @@ func (s *Server) handleSSE() http.HandlerFunc {
 
 		flusher, _ := w.(http.Flusher)
 
-        // ticker for keepalive
+		// ticker for keepalive
 		ticker := time.NewTicker(5 * time.Second)
 		defer ticker.Stop()
 
-        // subscribe to event publisher
+		// subscribe to event publisher
 		notifyClient := s.Notifier.AddListener()
 		defer s.Notifier.RemoveListener(notifyClient)
 
 		for {
 			select {
 
-            // if a new event is received, flush it to the sse-connected client
+			// if a new event is received, flush it to the sse-connected client
 			case event := <-notifyClient.c:
 				// print in the format 'data:<html>' and remove newslines
 				var b bytes.Buffer
@@ -125,7 +125,7 @@ func (s *Server) handleSSE() http.HandlerFunc {
 				fmt.Fprintf(w, "%s\n\n", strings.ReplaceAll(b.String(), "\n", ""))
 				flusher.Flush()
 
-            // keepalive stuff
+			// keepalive stuff
 			case <-ticker.C:
 				fmt.Fprintf(w, "keepalive: \n\n")
 				flusher.Flush()
@@ -134,7 +134,6 @@ func (s *Server) handleSSE() http.HandlerFunc {
 
 			}
 		}
-
 	}
 }
 ```
