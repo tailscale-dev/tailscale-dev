@@ -1,6 +1,6 @@
 import React from 'react';
 import { Inter } from '@next/font/google';
-import { headerNavLinks } from '@/data/headerNavLinks';
+import { leftHeaderNavLinks, rightHeaderNavLinks } from '@/data/headerNavLinks';
 import Link from 'next/link';
 import Footer from './Footer';
 import ThemeSwitch from './ThemeSwitch';
@@ -23,7 +23,7 @@ const LayoutWrapper = ({ children }: Props) => {
     <div className={`${inter.variable} font-sans`}>
       <nav className="SiteNavigation bg-gray-900 text-gray-100">
         <div className="container flex items-center justify-between py-4 md:pt-0">
-          <div className="flex items-center ">
+          <div className="flex items-center">
             <Link className="mr-5 block md:pt-7" href="/" aria-label="Tailscale">
               <TailscaleLogo />
               <span className="pl-2 font-mono tracking-wider">
@@ -31,7 +31,7 @@ const LayoutWrapper = ({ children }: Props) => {
               </span>
             </Link>
             <ul className="relative hidden pt-8 md:flex">
-              {headerNavLinks.map((link) => (
+              {leftHeaderNavLinks.map((link) => (
                 <li key={link.title}>
                   <Link
                     key={link.title}
@@ -49,6 +49,20 @@ const LayoutWrapper = ({ children }: Props) => {
           </div>
           <div className="ml-auto hidden pt-8 md:block">
             <ul className="flex items-center">
+              {rightHeaderNavLinks.map((link) => (
+                <li key={link.title}>
+                  <Link
+                    key={link.title}
+                    href={link.href}
+                    className="px-3 font-medium  transition-colors duration-200 hover:text-gray-600"
+                  >
+                    <span>{link.title}</span>
+                    {link.href.startsWith('http') && (
+                      <span className="pl-1 text-gray-300">&#8599;</span>
+                    )}
+                  </Link>
+                </li>
+              ))}
               <li>
                 <ThemeSwitch />
               </li>
