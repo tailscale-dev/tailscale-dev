@@ -1,4 +1,9 @@
-import { defineDocumentType, ComputedFields, makeSource } from 'contentlayer/source-files';
+import {
+  defineDocumentType,
+  defineNestedType,
+  ComputedFields,
+  makeSource,
+} from 'contentlayer/source-files';
 import readingTime from 'reading-time';
 
 // Remark packages
@@ -88,6 +93,14 @@ export const Events = defineDocumentType(() => ({
   },
 }));
 
+export const PronounSet = defineNestedType(() => ({
+  name: 'PronounSet',
+  fields: {
+    display: { type: 'string', required: true },
+    link: { type: 'string', required: true },
+  },
+}));
+
 export const Authors = defineDocumentType(() => ({
   name: 'Authors',
   filePathPattern: 'authors/**/*.mdx',
@@ -104,6 +117,7 @@ export const Authors = defineDocumentType(() => ({
     layout: { type: 'string' },
     website: { type: 'string' },
     fediverse: { type: 'string' },
+    pronouns: { type: 'nested', of: PronounSet },
   },
   computedFields: {
     ...computedFields,
