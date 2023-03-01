@@ -1,0 +1,192 @@
+---
+title: "libtailscale: how it's made"
+date: '2023-03-02'
+tags:
+  - 'tsnet'
+  - 'libtailscale'
+  - 'oss'
+authors: ['crawshaw']
+summary: 'libtailscale: a Tailscale C library. Using the Go toolchain to build a c-archive tsnet package that uses a userland network stack to implement TCP/IP inside a process.'
+---
+
+We just released libtailscale, an experimental Tailscale C library.
+It is built atop the Go [tsnet](https://pkg.go.dev/tailscale.com/tsnet)
+package which uses a userland network stack to implement TCP/IP
+directly inside your process.
+
+```c
+// A tailnet echo server.
+tailscale ts = tailscale_new();
+if (tailscale_set_ephemeral(ts, 1)) {
+	return err(ts);
+}
+if (tailscale_up(ts)) {
+	return err(ts);
+}
+tailscale_listener ln;
+if (tailscale_listen(ts, "tcp", ":1999", &ln)) {
+	return err(ts);
+}
+while (1) {
+	tailscale_conn conn;
+	if (tailscale_accept(ln, &conn)) {
+		return err(ts);
+	}
+	char buf[2048];
+	while ((ret = read(conn, buf, sizeof(buf))) > 0) {
+		write(1, buf, ret);
+	}
+	close(conn);
+}
+```
+
+For those who have spent some time in our source code, you’ll know
+Tailscale writes almost everything in Go.
+So how did we end up with a C library?
+It’s not widely used, but the standard Go toolchain includes all the
+machinery necessary for producing a C library in the form of
+[build modes](https://pkg.go.dev/cmd/go#hdr-Build_modes).
+
+## Go Build Modes
+
+The two key build modes are `c-archive` and `c-shared`.
+The first creates an object archive that can be linked by a standard
+C toolchain into a binary.
+The second creates a shared object (on Linux, the .so file) that can
+be dynamically linked into a binary.
+They are surprisingly easy to use:
+
+    go build -buildmode=c-archive pkg
+
+This produces an object archive, and a generated header for the C
+symbols Go exports.
+
+As part of compilation, cgo can "export" your Go functions to C using
+an `//export` directive.
+This creates a symbol that can be easily called from a C program,
+with cgo taking care of all the work around setting up the Go runtime
+environment necessary to execute the Go code when C invokes the call.
+
+To make it possible to `read(2)` and `write(2)` on a `tailscale_conn`,
+it is one half of a `socketpair(2)`, while the other half is held by
+the userspace TCP/IP implementation.
+
+## Memory Management
+
+Where things get interesting is dealing with managed heap memory.
+Every programming language providing some form of memory safety or
+management imposes (often invisible) rules on allocated heap memory.
+The most dramatic are moving garbage collectors, which can pause some
+fraction of a program at any moment, and move a piece of memory,
+rewriting all pointers into that memory.
+This is extremely common as moving GCs are very CPU-efficient for
+programs that allocate a large amount of short-lived heap memory,
+because they enable very efficient
+[generational memory management](<https://en.wikipedia.org/wiki/Tracing_garbage_collection#Generational_GC_(ephemeral_GC)>).
+
+While Go does not use a moving collector, it does specify the rules
+for Go-managed memory crossing from Go to C.
+Those rules are designed to allow the
+[precise collector](https://en.wikipedia.org/wiki/Tracing_garbage_collection#Precise_vs._conservative_and_internal_pointers)
+to know where all pointers to Go memory are at all times, and to allow
+the Go runtime implementation to switch to a moving collector in the
+future if the trade-offs ever make sense for the sorts of programs
+written in Go.
+The result is a set of tight restrictions on when C is allowed to hold
+a pointer into Go memory.
+There is also some degree of enforcement of these rules in Go runtime
+checks, to help people from writing programs that might break
+surprisingly in the future with changes in Go.
+
+The full details of Go’s rules for passing pointers are in the
+[cgo documentation](https://pkg.go.dev/cmd/cgo#hdr-Passing_pointers).
+Two things stand out:
+
+- _Go code may pass a Go pointer to C provided the Go memory to which it points does not contain any Go pointers._
+
+- _C code may not keep a copy of a Go pointer after the call returns._
+
+These are very limiting!
+(Again, for good reasons, both today and in the future.)
+
+The first rule, no pointers to pointers, means that only simple memory
+can be passed from Go to C.
+For example, you could pass a `*byte` pointer into a slice and have C
+read out of the slice, or write into it.
+That can be very useful for efficiently copying large amounts of data.
+But if you have an `*http.Server` you can never pass a reference to C,
+for it to then use exported functions to call methods on the object.
+
+Combined with the second rule, it becomes effectively impossible to
+implement something that looks like a socket API directly as we do
+inside the Go `tsnet` package:
+
+```
+tailscale tailscale_new();
+int tailscale_dial(tailscale sd, const char* network, const char* addr, tailscale_conn* conn_out);
+```
+
+So how do we do it?
+
+## Handles
+
+It turns out we have a really well-trod conceptual model for
+interacting from C with a managed memory space: system calls.
+Kernel memory is generally off-limits to userspace and needs to be
+operated on through intermediary functions.
+Userspace memory is accessible to the kernel, but because kernels do
+not have a lot of insight into how userspace manages its memory,
+passing a pointer is always done under very carefully specified conditions.
+
+The typical way to refer to a kernel object from userspace is to be
+given a handle.
+The most familiar handle to a Unix user is a
+[file descriptor](https://en.wikipedia.org/wiki/File_descriptor).
+These are process-unique integers that refer to an entry table
+of objects stored in the kernel.
+
+We can do exactly the same thing for Go objects:
+
+```
+// servers tracks all the allocated *tsnet.Server objects.
+var servers struct {
+        mu   sync.Mutex
+        next C.int
+        m    map[C.int]*tsnet.Server
+}
+```
+
+A Go function exported to C with `//export` can allocate a new `*tsnet.Server`,
+pick a number for its handle, and return that number to C.
+Whoever C wants to refer to the server it passes the number back and
+Go looks it up in the map.
+
+This lets C refer to a Go pointer, but for the pointer itself to
+remain entirely managed by the Go runtime.
+
+We use process-global maps like this for the `tailscale`,
+`tailscale_listener`, and `tailscale_conn` handles.
+
+This puts C completely in charge of freeing memory.
+If the C program does not call the appropriate close function, the Go
+memory will live forever in the map and not be collected.
+But it is the nature of an unmanaged heap (like C has) that programmers
+have to be responsible for freeing memory.
+
+## Future work
+
+There are two next steps for libtailscale.
+The first is writing libraries in other languages on top of their
+foreign function interface libraries.
+At some point, in some way, _almost_ every language talks to C.
+(A great counter-example is the
+[WASM Tailscale client](https://tailscale.com/blog/ssh-console/)).
+It should be possible to put a `tailscale.jar` file into your Java
+project and start dialing and listening on your tailnet.
+
+The second step is exposing more functionality of the Tailscale node
+to both C and other languages built on top of libtailscale.
+To do that we need to implement LocalAPI.
+There are a few interesting lessons in using cross-language bindings
+to be found there too, which should make for a nice follow-up blog post
+to this one.
