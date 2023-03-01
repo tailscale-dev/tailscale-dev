@@ -1,0 +1,161 @@
+---
+title: Access a Pi-hole from anywhere
+slug: 1114/pi-hole
+date: 2021-06-29
+summary: Learn how to set up a Pi-hole on your Tailscale network.
+tags:
+  - dns
+  - raspi
+
+menu:
+  docs:
+    identifier: pi-hole
+    name: Run a Pi-hole
+    parent: solutions
+    weight: 4
+---
+
+One common use of a Raspberry Pi is to run a
+[Pi-hole](https://pi-hole.net), a DNS-based ad blocking services. A
+typical setup is to have a Raspberry Pi in your house running Pi-hole,
+acting as the DNS server for your local Wi-Fi network.
+
+This works great when you're at home. However, it only works when
+you're at home. If you want to use your Pi-hole to block ads from
+anywhere, you need to be able to connect to your Pi-hole from
+anywhere.
+
+<Note>
+  Can't get a Raspberry Pi right now? We can't either. You can also try setting up [NextDNS as a
+  global nameserver](https://tailscale.com/kb/1218/nextdns) in your tailnet to block ads and
+  trackers.
+</Note>
+
+### What not to do
+
+The most obvious way to do this is to run a Pi-hole in the cloud.
+
+Without a lot of precautions, this is a bad idea: Unscrupulous actors
+can [use your Pi-hole to attack other parts of the
+internet](https://www.cloudflare.com/learning/ddos/dns-amplification-ddos-attack/).
+
+You also have to pay for and trust a cloud server. Part of the charm
+of the Pi-hole is that it is cheap and easy to buy your own Raspberry
+Pi, set it up, put it on a shelf, and forget about it.
+
+### The easy way: Tailscale
+
+Tailscale lets you easily and securely connect all of your devices. It
+lets you pick a DNS server to use. And that's all you need!
+
+Tailscale is free for most personal use cases like this.
+
+#### Step 1: Install Tailscale on your Raspberry Pi
+
+You can find instructions at this link:
+
+<DownloadTailscale />
+
+When running `tailscale up`, you'll need to pass the
+`--accept-dns=false` flag. Pi-Hole uses DNS servers configured within
+Linux as its upstream servers, where it will send DNS queries that it
+cannot answer on its own. Since we're going to make the Pi-Hole _be_
+our DNS server, we don't want Pi-Hole trying to use itself as its own
+upstream.
+
+```
+tailscale up --accept-dns=false
+```
+
+Once installed, and you've run `tailscale up --accept-dns=false` on
+your Raspberry Pi, continue on.
+
+#### Step 2: Install Tailscale on your other devices
+
+We have easy installation instructions for any platform:
+
+<DownloadTailscale />
+
+#### Step 3: Set your Raspberry Pi as your DNS server
+
+You can configure DNS for your entire Tailscale network from
+[Tailscale's admin console](https://login.tailscale.com/admin/dns). Go
+to [the DNS page](https://login.tailscale.com/admin/dns) and enter
+your Raspberry Pi's Tailscale IP address as a global nameserver.
+
+You can find your Raspberry Pi's Tailscale IP address from the
+[machines page](https://login.tailscale.com/admin/machines) of the
+admin console, or on your Raspberry Pi by [following these
+instructions](https://tailscale.com/kb/1033/ip-and-dns-addresses/).
+
+<Image
+  src="/images/solutions/pi-hole/configure-dns.gif"
+  width={960}
+  height={648}
+  alt="A screencast showing how to add a DNS server from the admin console."
+  caption="Be sure to swap out 100.1.2.3 with your Raspberry Pi's unique Tailscale IP."
+/>
+
+Since we want our network-wide DNS to override any local DNS settings
+that devices have, make sure you enable the **Override local DNS**
+toggle after adding your Raspberry Pi's Tailscale IP address.
+
+#### Step 4: Disable key expiry
+
+Tailscale occasionally requires you to re-authenticate your machines,
+to keep your network secure. To avoid DNS interruptions when that
+happens, visit the [machines page of the admin
+console](https://login.tailscale.com/admin/machines) to [disable key
+expiry](https://tailscale.com/kb/1028/key-expiry/) on your Raspberry
+Pi.
+
+<Image
+  src="/images/solutions/pi-hole/disable-key-expiry.png"
+  width={1280}
+  height={393}
+  alt="A screenshot of the 'disable key expiry' option on the machines page of the admin console."
+/>
+
+#### Step 5: Done!
+
+That's it! Now whenever you are logged in to Tailscale, that device will automatically use your Pi-hole for DNS.
+
+If your Pi-hole is blocking something you need access to, you can
+disable it by disconnecting from Tailscale, and reconnecting when you
+are ready.
+
+Once you are set up with Tailscale, you might want to explore other
+possibilities, like [using
+Taildrop](https://tailscale.com/kb/1106/taildrop/) to send files from
+one of your devices to another, or making your own privacy VPN by
+using your Raspberry Pi as an [exit
+node](https://tailscale.com/kb/1103/exit-nodes/).
+
+#### Optional: Share your Pi-Hole with a friend
+
+You can share your Pi-Hole with friends using Tailscale. Follow [our
+guide to sharing nodes with other
+users](https://tailscale.com/kb/1084/sharing). Once you've shared your
+Pi-Hole and your friends have accepted the invitation, they can follow
+[Step 3 from this
+guide](#step-3-set-your-raspberry-pi-as-your-dns-server) to add it as
+a DNS server in their network too.
+
+#### Troubleshooting
+
+##### Pi-hole works when I use 192.168.x.x as my DNS server, but not with 100.x.x.x?
+
+In the Pi-hole **Admin** page in **Settings** > **DNS**, make sure
+that **Listen on all interfaces, permit all origins** is selected.
+
+Tailscale traffic comes in on the tailscale0 network interface, so
+this option is needed to allow your Pi-Hole to respond to
+Tailscale-based DNS traffic. When using this option, make sure your
+Pi-Hole is properly firewalled.
+
+<Image
+  src="/images/solutions/pi-hole/listen-all-origin.png"
+  width={1896}
+  height={1216}
+  alt="Pi-hole Admin page in Settings : DNS showing 'Listen on all interfaces, permit all origins' is selected."
+/>
