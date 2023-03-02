@@ -5,5 +5,5 @@ export interface NoteProps {
 }
 
 export const Note = ({ children }: NoteProps) => (
-  <div class="mb-1.5 text-base font-medium">{children}</div>
+  <div className="mb-1.5 text-base font-medium">{children}</div>
 );
