@@ -46,7 +46,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                       >
                         {author.name}{' '}
                       </a>
-                      {author.pronouns != undefined ? (
+                      {author.pronouns != undefined && (
                         <>
                           (
                           <a
@@ -59,8 +59,11 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                           </a>
                           )
                         </>
-                      ) : (
-                        <></>
+                      )}
+                      {author.tailscalar && (
+                        <span className="mx-1 rounded-md bg-[#496495] p-1 text-sm font-medium">
+                          Tailscalar
+                        </span>
                       )}
                     </li>
                   ))}
