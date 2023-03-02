@@ -12,6 +12,12 @@
           buildInputs = with pkgs; [
             nodejs-18_x
             yarn
+
+            # XXX(Xe): temporary hack for convert.go
+            go_1_20
+            gotools
+            go-tools
+            gopls
           ];
           shellHook = ''
             export PATH="$PATH":$(pwd)/node_modules/.bin

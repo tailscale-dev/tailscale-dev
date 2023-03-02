@@ -54,6 +54,7 @@ This will have Tailscale start up, however to authenticate to Tailscale we need
 to take a few more steps. First, head to the [Pre-Auth Keys page in the admin
 panel](https://login.tailscale.com/admin/settings/keys).
 
+<br />
 <Image
   src="/images/solutions/nixos-minecraft/preauth-key.png"
   alt="The key creation screen from the Tailscale admin UI"
@@ -222,6 +223,7 @@ Open the Digital Ocean control panel and click Create and then click Droplets.
 Choose an Ubuntu 20.04 image and a plan with at least 4 GB of ram (the Minecraft
 server needs a lot of resources, unfortunately).
 
+<br />
 <Image
   src="/images/solutions/nixos-minecraft/droplet-tier.png"
   alt="The droplet config using Ubuntu 20.04 and a droplet with 4 GB of RAM"
@@ -234,11 +236,12 @@ Paste the contents of your `user-data.yaml` file into the text box that shows
 up. Choose your SSH key in the list of SSH keys that shows up and then give the
 droplet a hostname, such as "minecraft". If you want you can enable backups.
 
+<br />
 <Image
+  src="/images/solutions/nixos-minecraft/user-data.png"
   alt="The droplet user data pasted into the user data field"
   width={1227}
   height={589}
-  src="/images/solutions/nixos-minecraft/user-data.png"
 />
 
 Once you have everything set up, click the large green button labeled Create
@@ -254,6 +257,7 @@ version of Minecraft if the in-game UI tells you to use an older version of
 Minecraft. You can adjust the Minecraft version you are running using
 [the launcher UI](https://help.minecraft.net/hc/en-us/articles/360034754852-Changing-game-versions-).
 
+<br />
 <Image
   src="/images/solutions/nixos-minecraft/host-info.png"
   alt="The host information in the Tailscale control panel"
@@ -261,6 +265,7 @@ Minecraft. You can adjust the Minecraft version you are running using
   height={59}
 />
 
+<br />
 <Image
   src="/images/solutions/nixos-minecraft/server-connect.png"
   alt="The minecraft server connection UI"
@@ -268,11 +273,12 @@ Minecraft. You can adjust the Minecraft version you are running using
   height={239}
 />
 
+<br />
 <Image
+  height={500}
   src="/images/solutions/nixos-minecraft/minecraft-world.jpg"
   alt="An in-game screenshot of the author's Minecraft avatar in a forest biome"
   width={900}
-  height={500}
 />
 
 #### Next Steps

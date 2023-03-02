@@ -138,7 +138,7 @@ func main() {
 				imageMeta["width"] = fmt.Sprintf("{%d}", img.Bounds().Max.X)
 				imageMeta["height"] = fmt.Sprintf("{%d}", img.Bounds().Max.Y)
 
-				fmt.Fprint(fout, "<Image ")
+				fmt.Fprint(fout, "<br />\n<Image ")
 
 				for k, v := range imageMeta {
 					if k == "src" {
@@ -151,7 +151,7 @@ func main() {
 
 				toDir := filepath.Join("public", "images", "solutions", fnameBase)
 				os.MkdirAll(toDir, 0777)
-				if err := copyFile(filepath.Join(dir, imageMeta["src"]), toDir); err != nil {
+				if err := copyFile(filepath.Join(dir, imageMeta["src"]), "./"+filepath.Join(toDir, imageMeta["src"])); err != nil {
 					log.Fatalf("can't copy file: %v", err)
 				}
 
@@ -197,19 +197,13 @@ func ascertainAge(dir, fname string) (*time.Time, error) {
 func copyFile(from, to string) error {
 	sourceFile, err := os.Open(from)
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("can't open source file %s: %v", from, err)
 	}
 	defer sourceFile.Close()
 
-	st, err := sourceFile.Stat()
+	destFile, err := os.Create(to)
 	if err != nil {
-		log.Fatalf("copyFile(%q, %q): %v", err)
-	}
-
-	os.Remove(to)
-	destFile, err := os.OpenFile(to, os.O_CREATE|os.O_WRONLY, st.Mode())
-	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("can't open dest file %s: %v", to, err)
 	}
 	defer destFile.Close()
 

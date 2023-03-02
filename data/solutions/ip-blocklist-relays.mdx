@@ -1,0 +1,170 @@
+---
+title: Connect to external services with IP block lists via Tailscale
+slug: 1059/ip-blocklist-relays
+date: 2020-04-02
+summary: Learn how to control access to SaaS applications hosted on servers that aren't running Tailscale.
+
+menu:
+  docs:
+    identifier: ip-blocklist-relays
+    name: Secure external services
+    parent: solutions
+    weight: 7
+---
+
+If you're migrating from a traditional office network or a centralized VPN
+concentrator, you might find you have external servers that don't run
+Tailscale but still need to have their connections
+secured.
+
+Third-party services, or internal services running on "serverless" cloud
+providers such as Heroku, might have configured an IP block list (sometimes
+known as an IP allowlist) that are
+expecting all your user traffic to originate from a single IP address or a
+small number of IP addresses. Since Tailscale doesn't need to send all
+traffic through a central concentrator, your user traffic will suddenly start
+arriving from all over the Internet, running into the IP block list
+protections operated by your service provider.
+
+### What is an IP block list?
+
+Traditionally, it has been hard to set up secure links between machines in
+different locations. As a result, people would operate "internal use"
+services that still use Internet-facing ports and IP addresses, then connect
+to those servers from their office locations. We often see this behavior
+with ssh, RDP (remote desktop protocol), and various web services.
+
+The exposed port allows attacks from anywhere on the Internet, such as port
+scanning, password guessing, infrastructure zero-days, and so on. Even if the
+service itself requires encryption and 2-factor authentication, a bug
+anywhere in the stack could result in a complete bypass of security
+protections.
+
+To make these kinds of attacks harder, traditional best practice is to
+restrict, usually at the firewall level, which IP addresses are even allowed
+to initiate connections to your service. This makes your server "invisible"
+to most people on the Internet, so they don't even know where to attack.
+
+Unfortunately, IP block lists have a few flaws:
+
+- IP block lists are, essentially, "security by obscurity." If they can
+  learn which IP addresses are allowed to initiate connections—and this is
+  not always too hard to guess, if it's the IP address of your office network
+  for example—then a sufficiently dedicated attacker can forge packets from
+  that address, or take control of a machine located at that address (for
+  example using a botnet), to talk to the server.
+
+- Users are not all at a single location. Remote workers, multiple
+  offices, or your own servers running in various datacenters will all
+  generate traffic coming from different IP addresses. IP block lists need to
+  get longer and longer in order to make sure all those locations can access
+  the service, and the longer the block list, the more ways an attacker can get
+  in.
+
+- Cloud VPCs make IP address propagation even worse. If you have internal
+  services running in a cloud provider and accessing the Internet via NAT
+  gateways and elastic IPs, then your traffic might come from a variety of
+  IPs, possibly entire subnets. This can require very wide IP block lists to
+  cover, for example, entire AWS address blocks just in case your services get
+  allocated one of those blocks. Needless to say, this makes an attacker's job
+  much easier, since all they need to do is run their attack from one of those
+  cloud providers, and wait until they get allocated an IP address in one of
+  your permitted subnets.
+
+- To avoid this problem, some companies route all their internal traffic
+  through a single VPN concentrator or central Internet gateway/NAT. This
+  makes all traffic seem to come from a single address, but adds a lot of
+  latency for people whose devices are not geographically near the NAT. It
+  also adds a single point of failure and a choke point for Internet
+  bandwidth.
+
+Nevertheless, IP block listed services are a fact of life. If you can't make
+a secure VPN tunnel to your service provider, for example because you don't
+have rights to install any software at the hosting provider or because the
+software is operated by a third party, IP block lists are still considered a
+best practice, in addition to other security measures.
+
+### Using Tailscale to improve on IP block lists
+
+In a pure Tailscale network, you don't need IP block lists because you have
+something better: Tailscale's secure IP addresses, which aren't allowed over
+the physical network, plus [Tailscale role-based ACLs](/kb/1018/acls), which
+let you configure exactly which groups of users are allowed to see a
+particular server. This allows you to build something like a central IP
+block list, but using encryption keys instead of IP addresses for protection.
+
+However, most networks are not pure Tailscale, and you eventually need to
+integrate with a third-party service. Luckily, Tailscale can help you
+greatly reduce the size of your IP block list (and thus the surface area for
+attack), without centralizing your network access and while letting your
+users access the service from anywhere. Plus, you can still use Tailscale
+role-based ACLs to control access.
+
+What we'll do is set up a Tailscale [subnet router](/kb/1019/subnets)
+that can route traffic for just the servers with the block list.
+
+The necessary steps are:
+
+1.  Set up a Linux machine or VM node, ideally somewhere near the external
+    service you want to reach. (For example, if the service is in us-west, start
+    a Linux machine in a datacenter or cloud provider in us-west.) Make sure
+    your VM has a public-facing, static IP address.
+
+2.  Make sure the VM's public-facing IP address is in the IP block list of the
+    service it needs to access. Eventually, you might want to remove all other
+    IP addresses and subnets from the list.
+
+3.  [Install tailscaled](/download/linux) on the Linux machine.
+
+4.  Tell the Linux tailscaled to advertise that it can provide access to the IP
+    address of the service in question. For example, let's say you want to
+    access the service at 8.8.8.8 and 8.8.4.4. You would use
+
+    ```bash
+    tailscale up --advertise-routes=8.8.8.8/32,8.8.4.4/32
+    ```
+
+5.  Ensure that your [tailnet policy file](/kb/1018/acls) is configured to allow the
+    correct users or groups to be able to access the server IPs in question.
+
+6.  As a Tailscale domain administrator, enable the advertised routes using
+    the [admin console][admin].
+
+That's it! Now all your organization's traffic to the external service will
+be routed through your new subnet router, as long as it is permitted by your
+tailnet policy file.
+
+<Note>
+  \-\-advertise-routes requires IP forwarding to be enabled. If you see an error about IP
+  forwarding, [follow these steps](/kb/1019/subnets/#enable-ip-forwarding).
+</Note>
+
+### How does it work?
+
+Tailscale is a multi-point VPN, which means every client device (node) can
+be connected to multiple servers and/or relays (other nodes) at the same
+time. Because Tailscale's WireGuard connections are so lightweight, each
+node can connect to as many other nodes as it wants, simultaneously.
+
+In this example, what we've done is create a node that advertises a [subnet
+route](/kb/1019/subnets) to your external service (in our example, 8.8.8.8/32
+and 8.8.4.4/32). Normally, a subnet router is used to provide access to
+an office network or VPC without having to install Tailscale on every node
+on the subnet. But there's no particular reason a subnet route has to
+include more than one or two machines, and there's no reason you can't
+provide a route to an IP address that's on an external network.
+
+The advertised route gets shared with the Tailscale coordination server.
+Then the admin needs to approve it (this is to prevent abuse, since
+otherwise any user could set up a node that tries to advertise subnet
+routes), and the routing and public key information are distributed
+automatically to every node in your network.
+
+The [tailnet policy file](/kb/1018/acls) is compiled into
+packet filters and then distributed automatically to each node as needed.
+The packet filter provided to your Linux subnet router lets it automatically
+restrict which users it will allow to access the external service.
+
+You can read more information about [Tailscale and subnet routers](/kb/1019/subnets).
+
+[admin]: https://login.tailscale.com/admin/machines
