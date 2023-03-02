@@ -111,14 +111,6 @@ export const Solutions = defineDocumentType(() => ({
       type: 'string',
       resolve: (doc) => (doc.displayDate ? doc.displayDate : doc.date),
     },
-    isFuture: {
-      type: 'boolean',
-      resolve: (doc) => {
-        const date = new Date(doc.endsDate || doc.date);
-        date.setDate(date.getDate() + 1);
-        return date > new Date();
-      },
-    },
   },
 }));
 
