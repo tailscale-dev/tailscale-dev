@@ -30,7 +30,6 @@ export default function SolutionsPage({
   initialDisplayPosts,
   pagination,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  console.log(allSolutions);
   return (
     <>
       <PageSEO title="Solutions" description={siteMetadata.description} />
