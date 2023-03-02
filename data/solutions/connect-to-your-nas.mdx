@@ -1,0 +1,61 @@
+---
+title: Access QNAP, Unraid, or FreeNAS from anywhere
+date: 2020-06-08
+slug: 1074/connect-to-your-nas
+summary: Learn how to get back to your NAS with Tailscale.
+tags:
+  - nas
+
+menu:
+  docs:
+    identifier: connect-to-your-nas
+    name: QNAP, Unraid, or FreeNAS
+    parent: nas
+    weight: 2
+---
+
+Tailscale makes it easy to securely connect to your
+[Network-Attached
+Storage](https://en.wikipedia.org/wiki/Network-attached_storage) (NAS)
+devices over WireGuard&reg;. There are different levels of official or
+community support depending on the platform.
+
+In general, [install Tailscale](https://tailscale.com/kb/1031/install-linux)
+on the NAS and follow the steps to authorize it.
+
+Tailscale is completely free for most personal uses, including accessing
+your NAS.
+
+If you run into problems, email us at
+[contact support](/contact/support) or visit the
+linked GitHub issues.
+
+### Synology
+
+Tailscale is available officially in the Synology Package Center, including
+an easy-to-use web UI for configuration. See our
+[Tailscale on Synology](/kb/1131/synology/) page for details.
+
+### QNAP
+
+Special thanks to [ivokub](https://github.com/ivokub/), who has contributed
+a community-maintained [Tailscale QPKG package
+builder](https://github.com/ivokub/tailscale-qpkg).
+
+You can read more about ongoing improvements in our [QNAP GitHub
+issue](https://github.com/tailscale/tailscale/issues/1346).
+
+### Unraid
+
+Special thanks to [deasmi](https://github.com/deasmi/), who contributed
+[Tailscale Unraid Docker build
+files](https://github.com/deasmi/unraid-tailscale) and [Docker Hub image](https://hub.docker.com/r/deasmi/unraid-tailscale).
+
+### FreeNAS
+
+Tailscale's FreeBSD support is
+community-maintained but functional. [Tailscale is now in FreeBSD
+Ports](https://www.freshports.org/security/tailscale/).
+
+FreeNAS is based on FreeBSD. Our users have reported that Tailscale's
+FreeBSD version works fine on FreeNAS.

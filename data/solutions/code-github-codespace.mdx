@@ -1,0 +1,60 @@
+---
+title: Access your tailnet from GitHub Codespaces
+date: 2021-10-25
+slug: 1160/github-codespaces
+summary: Learn how to get into your Tailscale network from GitHub Codespaces.
+tags:
+  - code
+
+menu:
+  docs:
+    identifier: github-codespaces
+    name: GitHub Codespaces
+    parent: remote-code
+---
+
+[GitHub Codespaces](https://github.com/features/codespaces) is a way to run Visual Studio
+Code—with its editor, terminal, debugger, version control, settings sync,
+and the entire ecosystem of extensions—hosted in the cloud.
+
+Tailscale can be installed within a Codespace to be able to access private resources
+such as package registries or license servers securely, regardless of whether they're in
+the cloud or on premises. You can also use Tailscale to share your development or staging
+environment with a colleague.
+
+#### Integration
+
+When using [GitHub Codespaces](https://github.com/features/codespaces), you can
+include Tailscale as a [feature](https://docs.github.com/en/codespaces/setting-up-your-project-for-codespaces/adding-features-to-a-devcontainer-file)
+in your [dev container](https://docs.github.com/en/codespaces/setting-up-your-project-for-codespaces/introduction-to-dev-containers).
+This feature is available from the
+[tailscale/codespace repository](https://github.com/tailscale/codespace).
+
+To use the Tailscale feature, in your devcontainer.json include:
+
+```json
+    "runArgs": ["--device=/dev/net/tun"],
+    "features": {
+        // ...
+        "ghcr.io/tailscale/codespace/tailscale": {}
+        // ...
+    }
+```
+
+Then launch your codespace.
+
+#### Authorization
+
+The first time the codespace starts it is necessary to authenticate it to join the tailnet.
+In the terminal window run: `tailscale up --accept-routes`
+
+This will print a URL to visit in a browser where you can log into the desired account.
+
+<br />
+<Image
+  alt="GitHub Codespace writing this article"
+  width={2580}
+  height={1734}
+  src="/images/solutions/code-github-codespace/codespace.jpg"
+  className="bordered"
+/>

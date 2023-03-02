@@ -1,0 +1,90 @@
+---
+title: Traefik certificates on Tailscale
+date: 2023-01-13
+slug: 1234/traefik-certificates
+summary: Learn how to configure Traefik to get its certs over Tailscale.
+
+menu:
+  docs:
+    identifier: traefik-certificates
+    name: Traefik Proxy
+    parent: webserver
+    weight: 2
+---
+
+[Traefik][traefik] simplifies networking complexity while designing, deploying, and operating applications. Starting with
+the release of [Traefik Proxy 3.0 Beta 1][traefik-proxy-release], Traefik Proxy supports Tailscale. When Traefik gets
+an HTTPS request for a `*.ts.net` site, it gets the HTTPS certificate from the machine's local Tailscale daemon.
+
+No configuration is required for the certificate.
+
+For example, you can define a certificate resolver in the [static configuration][config], and it automatically enables HTTPS:
+
+If you configure Traefik with YAML, use this config:
+
+```
+certificatesResolvers:
+    myresolver:
+        tailscale: {}
+```
+
+If you configure Traefik with TOML, use this config:
+
+```
+[certificatesResolvers.myresolver.tailscale]
+```
+
+Otherwise, use this command-line flag:
+
+```
+--certificatesresolvers.myresolver.tailscale=true
+```
+
+Then, for each router or entrypoint where you want to use it, explicitly reference the
+resolver in the [dynamic configuration][dynconfig]:
+
+If you configure Traefik with YAML, use this config:
+
+```
+http:
+  routers:
+    routertailscale:
+      service: "myservice"
+      rule: "Host(`example.foo.ts.net`) && Path(`/tailscale`)"
+      tls:
+        certResolver: tailscale
+
+  services:
+    myservice:
+      loadBalancer:
+        servers:
+         - url: "http://localhost:6060"
+```
+
+If you configure Traefik with TOML, use this config:
+
+```
+[http]
+  [http.routers]
+    [http.routers.routertailscale]
+      service = "myservice"
+      rule = "Host(`example.foo.ts.net`) && Path(`/tailscale`)"
+      [http.routers.routertailscale.tls]
+        certResolver = "tailscale"
+
+  [http.services]
+    [http.services.myservice.loadBalancer]
+      [[http.services.myservice.loadBalancer.servers]]
+         url = "http://localhost:6060"
+```
+
+For complete details, see the [Traefik Tailscale documentation][traefik-tailscale] at Traefik's web site.
+
+For more information about Traefik, see the [Traefik quick start][traefik-get-started].
+
+[config]: https://doc.traefik.io/traefik/getting-started/configuration-overview/#the-static-configuration
+[dynconfig]: https://doc.traefik.io/traefik/getting-started/configuration-overview/#the-dynamic-configuration
+[traefik-proxy-release]: https://github.com/traefik/traefik/blob/master/CHANGELOG.md#v300-beta1-2022-12-05
+[traefik-get-started]: https://doc.traefik.io/traefik/getting-started/quick-start/
+[traefik-tailscale]: https://doc.traefik.io/traefik/master/https/tailscale/
+[traefik]: https://doc.traefik.io/

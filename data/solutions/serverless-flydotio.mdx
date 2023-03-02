@@ -1,0 +1,85 @@
+---
+title: Tailscale on Fly.io
+date: 2021-05-17
+slug: 1132/flydotio
+summary: Learn how to connect to your Tailscale network with fly.io.
+tags:
+  - ephemeral-nodes
+  - serverless
+
+menu:
+  docs:
+    identifier: flydotio
+    name: Fly.io
+    parent: serverless
+---
+
+[Fly.io](https://fly.io) is a popular service to deploy full stack apps and databases all over the world, with Fly handling operations and scaling in each region according to demand. Adding Tailscale to a fly.io application is straightforward, allowing the App on Fly to communicate with other nodes and services on your tailnet.
+
+#### Step 1: Generate an auth key to authenticate your App on Fly
+
+First, we'll [generate an auth key](/kb/1085/auth-keys) to allow fly.io to authenticate our app to join our network.
+
+Navigate to [the auth keys page of the admin console](https://login.tailscale.com/admin/settings/authkeys). We recommend using a reusable and pre-authorized [ephemeral key](/kb/1111/ephemeral-nodes) for this purpose, since it will automatically clean up devices after they shut down.
+
+<br />
+<Image
+  src="/images/solutions/serverless-flydotio/ephemeral-keys.png"
+  alt="Tailscale's auth key generation page"
+  className="bordered"
+  width={800}
+  height={1156}
+/>
+
+Next, use `flyctl secrets set TAILSCALE_AUTHKEY="tskey-<key>"` to securely store the auth key for the App on Fly to use.
+
+#### Step 2: Configure your Dockerfile to install Tailscale
+
+Next, we'll use a [multistage Dockerfile](https://docs.docker.com/develop/develop-images/multistage-build/#use-multi-stage-builds), where the first stage builds your application, the second fetches and unpacks Tailscale binaries, and the final stage pulls application code and Tailscale into the final image to be uploaded to Fly.
+
+In your `Dockerfile`:
+
+```docker
+FROM alpine:latest as builder
+WORKDIR /app
+COPY . ./
+# This is where one could build the application code as well.
+
+
+FROM alpine:latest as tailscale
+WORKDIR /app
+ENV TSFILE={{< pkgversion binary="amd64" >}}
+RUN wget https://pkgs.tailscale.com/stable/${TSFILE} && \
+  tar xzf ${TSFILE} --strip-components=1
+
+
+# https://docs.docker.com/develop/develop-images/multistage-build/#use-multi-stage-builds
+FROM alpine:latest
+RUN apk update && apk add ca-certificates iptables ip6tables && rm -rf /var/cache/apk/*
+
+# Copy binary to production image
+COPY --from=builder /app/start.sh /app/start.sh
+COPY --from=tailscale /app/tailscaled /app/tailscaled
+COPY --from=tailscale /app/tailscale /app/tailscale
+RUN mkdir -p /var/run/tailscale /var/cache/tailscale /var/lib/tailscale
+
+# Run on container startup.
+CMD ["/app/start.sh"]
+```
+
+The Dockerfile specifies `/app/start.sh` as the initial process to run. This script needs to bring Tailscale up and then start the application binary. This is where we can use the `TAILSCALE_AUTHKEY` variable we defined earlier.
+
+Then, create a file named `start.sh` at the root of your app:
+
+```sh
+#!/bin/sh
+
+/app/tailscaled --state=/var/lib/tailscale/tailscaled.state --socket=/var/run/tailscale/tailscaled.sock &
+/app/tailscale up --authkey=${TAILSCALE_AUTHKEY} --hostname=fly-app
+/app/my-app
+```
+
+Done! The next time your App on Fly deploys, it should be able to connect to your private Tailscale network.
+
+We'd love to hear about the cool things you build. Mention
+[@tailscale on Twitter](https://twitter.com/tailscale) or email us at info@tailscale.com.

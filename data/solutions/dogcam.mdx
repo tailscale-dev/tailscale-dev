@@ -1,6 +1,7 @@
 ---
 title: Set up a dogcam with Tailscale, Raspberry Pi, and Motion
-date: 2023-02-27
+date: 2020-07-28
+slug: 1076/dogcam
 summary: See how to set up a dogcam that you can securely access from anywhere.
 tags:
   - raspi
@@ -39,7 +40,9 @@ a free personal account using a @gmail.com address.
 
 You can find instructions at the link below.
 
-<DownloadTailscale />
+<a href="/download/linux/rpi" target="_blank" rel="noopener noreferrer">
+  <button class="button button-primary">Download Tailscale</button>
+</a>
 
 Once it is installed, and you've run `tailscale up` on your Raspberry Pi, continue to the next step.
 
@@ -112,25 +115,24 @@ and type it into your browser.
 
 <br />
 <Image
-  src="/images/solutions/dogcam/raspi.jpg"
+  src="/images/solutions/dogcam/raspberry-pi.jpg"
+  caption="On macOS, you can click on the device name to copy the IP address."
   width={1000}
   height={535}
-  alt="On macOS, you can click on the device name to copy the IP address."
 />
 
-You should see a feed from your webcam, that will look something like
-this:
+You should see a feed from your webcam, that will look something like this.
 
 <br />
 <Image
-  src="/images/solutions/dogcam/browser.jpg"
   width={1200}
   height={987}
-  alt="Theo and Casey are looking at something that's totally not a Tailscalar running around in a backyard."
+  src="/images/solutions/dogcam/browser.jpg"
+  caption="Theo and Casey are looking at something that's totally not a Tailscale employee running around in a backyard."
 />
 
-Success! You now have a functioning dogcam, secured with Tailscale. This can only be accessed by
-devices on your personal Tailscale network, and no one else.
+Success! You now have a functioning dogcam, secured with Tailscale. This can
+only be accessed by devices on your personal Tailscale network, and no one else.
 
 <Note>
   Your browser may show an "insecure" warning, since your connection isn't over HTTPS. Tailscale

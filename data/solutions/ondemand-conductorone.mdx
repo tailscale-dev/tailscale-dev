@@ -36,15 +36,12 @@ See the full instructions in ConductorOne’s [blog post][blog-post] for setting
 
 To use ConductorOne with Tailscale, you’ll need to:
 
-<!-- vale tailscale.terms = NO -->
-
 1. Generate a Tailscale [API access token][access-token] from the [keys page][keys-page] of the admin console.
 1. In ConductorOne, select the **Tailscale** integration and then click **Add Connector**.
    1. Choose the option to **Create a new app**.
    1. Set the **Tailscale API key** to the Tailscale API access token you generated.
    1. Set the **Tailnet** to your tailnet’s organization. For example, `example.com`, `myemail@example.com`, `example.github`,
-   `example.org.github`, etc. You can find your organization in the [Settings][settings] page of the admin console.
-   <!-- vale tailscale.terms = YES -->
+      `example.org.github`, etc. You can find your organization in the [Settings][settings] page of the admin console.
 
 ConductorOne will automatically identify all the users in the tailnet and parse existing [access rules][access-rules] in Tailscale
 ACLs, including [SSH access rules][ssh-access-rules], as entitlements in ConductorOne. The application owner in ConductorOne can specify for each

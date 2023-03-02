@@ -1,0 +1,62 @@
+---
+title: WireGuard mesh network using OPNsense
+date: 2021-01-22
+slug: 1097/install-opnsense
+summary: Learn how to install Tailscale on OPNsense.
+menu:
+  docs:
+    identifier: install-opnsense
+    name: OPNsense
+    parent: firewall
+    weight: 2
+---
+
+[OPNsense](https://opnsense.org/) is an open source router and
+firewall platform built using FreeBSD. Tailscale can be installed on
+an OPNsense platform, joining it to your WireGuard-based mesh network.
+
+OPNsense is a community supported platform for Tailscale. GitHub user
+[@newmy-de](https://github.com/newmy-de) provided these instructions.
+
+Perform the following steps as root:
+
+```
+# opnsense-code ports
+# cd /usr/ports/security/tailscale
+# make install
+# service tailscaled enable
+# service tailscaled start
+# tailscale up
+```
+
+You'll be asked to authenticate to Tailscale in your browser.
+
+Make sure to run `opnsense-code ports` again even if you have
+done so previously, to update the ports tree to current versions. The
+version of Tailscale in the FreeBSD ports is periodically updated for new releases.
+
+Once started, Tailscale should appear in the list of interfaces in the
+OPNsense UI. It can be used in firewall rules and other OPNsense
+functions.
+
+<br />
+<Image
+  src="/images/solutions/install-opnsense/opnsense.png"
+  alt="A screenshot of the OPNSense UI"
+  width={800}
+  height={395}
+/>
+
+#### Direct Connections for LAN Clients
+
+As a router/firewall, OPNsense may also be providing Internet connectivity for LAN
+devices which themselves have a Tailscale client installed. The NAT implementation
+in OPNsense is an
+[Endpoint-Dependent Mapping, or "hard" NAT](/blog/how-nat-traversal-works/),
+which means that LAN devices have difficulty making direct connections and often resort to
+[DERP Relays](/kb/1232/derp-servers/). To learn how to make direct connections, see the
+[OPNsense and pfSense](/kb/1181/firewalls/#opnsense-and-pfsense) section in our firewall article.
+
+#### Further reading
+
+Setting up [subnet routing](/kb/1019/subnets/) or acting as an [exit node](/kb/1103/exit-nodes/) may be of interest for a router using OPNsense.

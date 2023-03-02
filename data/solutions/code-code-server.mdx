@@ -1,0 +1,35 @@
+---
+title: Access your tailnet from code-server
+date: 2021-10-25
+slug: 1164/codeserver
+summary: Connect to your Tailscale network with code-server.
+tags:
+  - code
+
+menu:
+  docs:
+    identifier: codeserver
+    name: code-server
+    parent: remote-code
+---
+
+[code-server](https://github.com/cdr/code-server) is a way to run Visual Studio Code anywhere and access it in through a browser.
+
+Tailscale can be installed within a code-server VM to be able to access private resources securely,
+such as databases or continuous integration nodes or servers in the dev/test environment.
+
+#### Integration
+
+code-server is installed within a VM with [instructions for a number of hosting providers](https://github.com/cdr/code-server/blob/main/docs/install.md).
+
+Tailscale can be [installed in VMs](https://tailscale.com/kb/1031/install-linux/)
+for many common hosting providers like
+[AWS](https://tailscale.com/kb/1021/install-aws/),
+[Azure](https://tailscale.com/kb/1142/cloud-azure-linux/),
+[Google Cloud](https://tailscale.com/kb/1147/cloud-gce/), and
+[Hetzner](https://tailscale.com/kb/1150/cloud-hetzner/).
+
+#### Authorization
+
+The VM will need to be authorized to join the tailnet using either a browser to log in,
+or an [one-time auth key](https://login.tailscale.com/admin/settings/authkeys).

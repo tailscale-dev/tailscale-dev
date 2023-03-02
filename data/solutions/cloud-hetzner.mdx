@@ -1,0 +1,61 @@
+---
+title: Access Hetzner Servers privately using Tailscale
+date: 2021-09-09
+slug: 1150/cloud-hetzner
+
+menu:
+  docs:
+    identifier: cloud-hetzner
+    name: Hetzner VMs
+    parent: cloud-server
+---
+
+Hetzner provides Linux virtual machines from several datacenters in Europe.
+We can use Tailscale to securely access these servers.
+
+#### Prerequisites
+
+Before you begin this guide, you'll need a Tailscale network set up and configured with at
+least one existing device. Read our [getting started guide](/kb/1017/install)
+if you need help with this.
+
+#### Step 1: Set up the Tailscale client for the VM
+
+First, [create a Virtual Machine in the Hetzner Cloud Console](https://console.hetzner.cloud/).
+
+ssh to the system and install the Tailscale client:
+
+```sh
+# curl -fsSL https://tailscale.com/install.sh | sh
+# tailscale up
+```
+
+In the next step we'll remove ssh access from the public IP address, so:
+
+1. Find the tailscale IP address using [`tailscale ip`](/kb/1080/cli#ip).
+1. Exit from the ssh session to the public IP address.
+1. Make a new SSH session to the Tailscale IP address.
+
+#### Step 2: Allow UDP port 41641
+
+If at least one side of a tunnel has "easy NAT," where Tailscale can determine the UDP port
+number on the far side of the NAT device, then it will make
+[direct connections to minimize latency.](/blog/how-tailscale-works/)
+We ensure that Hetzner nodes can make direct connections by allowing UDP port 41641 to ingress
+through the firewall.
+
+In the [Firewall tab of the Hetzner Cloud Console](https://console.hetzner.cloud/) click
+the **Create Firewall** button. Delete the SSH and ICMP rules and add a rule allowing UDP
+port 41641.
+
+<br />
+<Image
+  src="/images/solutions/cloud-hetzner/hetzner-firewall.jpg"
+  className="bordered"
+  alt="Firewall rule for UDP port 41641"
+  width={1950}
+  height={898}
+/>
+
+If you want to allow direct connection _between_ Hetzner VMs, also add an outbound firewall rule
+allowing UDP port 3478.

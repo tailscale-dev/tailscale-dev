@@ -1,0 +1,120 @@
+---
+title: Connect to an AWS VPC using subnet routes
+date: 2020-03-20
+slug: 1021/install-aws
+summary: Learn how to connect to an AWS VPC with Tailscale subnet routes.
+tags:
+  - subnets
+
+menu:
+  docs:
+    identifier: install-aws
+    name: AWS VPC
+    parent: cloud-server
+---
+
+Recent versions of Tailscale work fine even when nodes are placed behind an
+Amazon Managed NAT Gateway. However, because of the way the Managed NAT
+Gateway works, it blocks Tailscale's direct UDP connections, which slows it
+down and adds latency.
+
+To avoid this issue, you can install one Tailscale node on your AWS network
+and have it route traffic on behalf of your whole VPC (Virtual Private
+Cloud) subnet. This maximizes performance and minimizes bandwidth costs.
+
+In the steps below, we'll set up a fresh Amazon EC2 VPC with Amazon Managed
+NAT Gateway, then configure a Tailscale relay to offer secure access to that
+VPC. We'll create a new VPC from scratch, but once you're comfortable, you
+can adapt these instructions to set up Tailscale on an existing VPC too.
+
+#### Step 1: Create an Elastic IP
+
+From the AWS admin console, [create an Elastic IP][eip]. This will be the IP of
+your Managed NAT Gateway.
+
+[eip]: https://console.aws.amazon.com/vpc/home#Addresses
+
+#### Step 2: Create a VPC
+
+Use the **VPC with Public and Private Subnets** configuration. This is most easily
+done through the [**VPC Wizard**, option #2][wizard]. In the wizard, give it a
+name, and assign the Elastic IP you created above to the NAT gateway. You can
+leave everything else at the default values.
+
+[wizard]: https://console.aws.amazon.com/vpc/home?region=us-east-1#wizardSelector
+
+#### Step 3: Create an EC2 relay
+
+Create an instance with the following configuration:
+
+1. Use one of the [supported linux distros](/kb/1017/install).
+1. Assign the instance to the VPC you created above.
+1. Assign the instance to the public subnet of the VPC, and give it a public IP address.
+1. In the security groups configuration, allow inbound ssh. (We'll need
+   this during initial setup, but you can turn it off later.)
+1. Name the security group something distinctive, like "tailscale-relay"
+
+#### Step 4: Install Tailscale on your EC2 relay
+
+ssh into the EC2 instance and install Tailscale by following [the install
+instructions for your distro](/download/linux).
+
+Once installed, enable the Tailscale systemd service, and authenticate the
+machine to your Tailscale network by visiting a link in your browser
+
+```
+sudo systemctl enable --now tailscaled
+sudo tailscale up --advertise-routes=10.0.0.0/24,10.0.1.0/24
+```
+
+<Note>
+  \-\-advertise-routes requires IP forwarding to be enabled. If you see an error about IP
+  forwarding, [follow these
+  steps](/kb/1023/troubleshooting#why-do-i-get-an-error-about-ip-forwarding-when-using-advertise-routes).
+</Note>
+
+#### Step 5: Configure your Tailscale network
+
+Visit the [admin console][admin] and perform the following actions:
+
+1. [Disable key expiry](/kb/1028/key-expiry) so that you don't need to
+   reauthenticate the server periodically.
+1. Authorize subnet routes on the machine, so that Tailscale
+   distributes the `10.0.0.0/24` and `10.0.1.0/24` routes to the rest
+   of your Tailscale network.
+
+#### Step 6: Verify your connection
+
+Check that you can ping the EC2 instance's Tailscale IP address from your
+personal Tailscale machine (Windows, macOS, etc). You can find the Tailscale IP
+in the [admin console][admin], or by running `tailscale ip -4` on
+the EC2 instance.
+
+#### Step 7: Close off your firewall
+
+Edit the "tailscale-relay" security group settings, and remove ssh access. At
+this point, you are able to ssh to the EC2 instance securely over Tailscale, so
+you can close the hole in your public-facing firewall.
+
+#### Step 8: Create another EC2 instance to relay to
+
+Create an EC2 private instance with the following configuration:
+
+1. Use one of the [supported linux distros](/kb/1017/install).
+1. Assign the instance to the VPC you created above.
+1. Assign the instance to the private subnet of the VPC, and do
+   _not_ give it a public IP.
+1. In the security groups configuration, allow all traffic inbound
+   from the "tailscale-relay" security group.
+
+ssh to your newly created private EC2 instance, using its private
+IP. The ssh session will flow through your Tailscale subnet router
+and into the private VPC.
+
+#### 4via6 subnet routers
+
+If your network has subnets with overlapping IPv4 addresses, you can use the [4via6 subnet routers][4via6]
+feature to ensure traffic from each node on your tailnet is routed to the correct device.
+
+[4via6]: /kb/1201/4via6-subnets
+[admin]: https://login.tailscale.com/admin

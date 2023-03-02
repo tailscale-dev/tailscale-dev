@@ -1,0 +1,70 @@
+---
+title: Tailscale in LXC containers
+date: 2021-08-13
+slug: 1130/lxc-unprivileged
+summary: Learn how to access Tailscale resources in your LXC containers.
+tags:
+  - containers
+
+menu:
+  docs:
+    identifier: lxc-unprivileged
+    name: LXC containers
+    parent: serverless
+---
+
+Unprivileged LXC containers do not have access to the networking resource
+needed for Tailscale to work. This article explains how to give it access.
+
+Among many other uses, LXC containers are often found in Proxmox
+virtualization environments.
+
+### Instructions
+
+An LXC is a lightweight way to run a virtualized Linux system. An
+unprivileged LXC is one where the root user (uid 0) within the container is
+mapped to an unprivileged user in the host system, making it possible to
+run an LXC more securely.
+
+Tailscale encapsulates its frames in UDP packets and therefore doesn’t
+require kernel modules or other privileged operations to form tunnel
+connections. However, it does need access to a /dev/tun device which
+unprivileged containers usually do not provide.
+
+To bring up Tailscale in an unprivileged container, access to the /dev/tun
+device can be enabled in the config for the LXC. For example, using Proxmox 7.0
+to host as unprivileged LXC with ID 112, the following lines would be added
+to /etc/pve/lxc/112.conf:
+
+```
+lxc.cgroup2.devices.allow: c 10:200 rwm
+lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file
+```
+
+If the LXC is already running it will need to be shut down and started again
+for this change to take effect.
+
+Once /dev/tun is available, the Tailscale Linux package can be installed in
+the system running within the LXC.
+
+Alternatively, if you don't want to grant /dev/tun access, you can use
+[userspace networking mode](/kb/1112/userspace-networking/) which avoids the
+need for any administrative access at all.
+
+### FAQ
+
+#### Providing access for Proxmox 6 and earlier
+
+Use the `cgroup` environment (instead of the Proxmox 7 `cgroup2` environment):
+
+```
+lxc.cgroup.devices.allow: c 10:200 rwm
+lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file
+```
+
+If you don't want to enable /dev/tun access, remove the `lxc.mount.entry:` line.
+
+#### CentOS 7 and Ubuntu 16.x still have no /dev/net/tun in Proxmox 7.0
+
+Proxmox has a [guide for containers with a systemd too old to understand
+cgroup2](https://pve.proxmox.com/wiki/Upgrade_from_6.x_to_7.0#Old_Container_and_CGroupv2).

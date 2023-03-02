@@ -1,0 +1,89 @@
+---
+title: Tailscale on AWS App Runner
+date: 2021-06-25
+slug: 1127/aws-app-runner
+summary: Learn how to access your Tailnet in your apps on AWS App Runner.
+tags:
+  - ephemeral-nodes
+  - serverless
+
+menu:
+  docs:
+    identifier: aws-app-runner
+    name: AWS App Runner
+    parent: serverless
+---
+
+AWS App Runner is a fully managed means of running container workloads on AWS. Deployment in App Runner can make it difficult to use Tailscale, since it doesn't provide a /dev/net/tun device that Tailscale needs.
+
+In Tailscale v1.12 or later, you can use Tailscale's [userspace networking mode](/kb/1112/userspace-networking) to connect your AWS App Runner containers to your Tailscale network.
+
+#### Step 1: Generate an auth key to authenticate your AWS App Runner containers
+
+First, we'll [generate an auth key](/kb/1085/auth-keys) to allow AWS App Runner to authenticate our container to join our network.
+
+Navigate to [the auth keys page of the admin console](https://login.tailscale.com/admin/settings/authkeys). We recommend using an [ephemeral key](/kb/1111/ephemeral-nodes) for this purpose, since it will automatically clean up devices after they shut down.
+
+<br />
+<Image
+  src="/images/solutions/serverless-aws-app-runner/ephemeral-keys.png"
+  alt="Tailscale's auth key generation page"
+  class="bordered"
+  width={800}
+  height={1156}
+/>
+
+Next, [navigate to the AWS App Runner](https://console.aws.amazon.com/) Services list, and create a new service. In the **Configuration** tab, scroll down to **Service Settings** and look for **Environment Variables**. Add a variable with key `TAILSCALE_AUTHKEY` and a value of the `tskey-<key>` string generated earlier.
+
+#### Step 2: Configure your Dockerfile to install Tailscale
+
+Next, we'll use a [multistage Dockerfile](https://docs.docker.com/develop/develop-images/multistage-build/#use-multi-stage-builds), where the first stage builds your application, the second fetches and unpacks Tailscale binaries, and the final stage pulls application code and Tailscale into the final image to be uploaded to AWS.
+
+In your `Dockerfile`:
+
+```docker
+FROM alpine:latest as builder
+WORKDIR /app
+COPY . ./
+# This is where one could build the application code as well.
+
+
+FROM alpine:latest as tailscale
+WORKDIR /app
+ENV TSFILE={{< pkgversion binary="amd64" >}}
+RUN wget https://pkgs.tailscale.com/stable/${TSFILE} && \
+  tar xzf ${TSFILE} --strip-components=1
+
+
+FROM alpine:latest
+# Copy binary to production image
+COPY --from=builder /app/bootstrap /var/runtime/bootstrap
+COPY --from=tailscale /app/tailscaled /var/runtime/tailscaled
+COPY --from=tailscale /app/tailscale /var/runtime/tailscale
+RUN mkdir -p /var/run && ln -s /tmp/tailscale /var/run/tailscale && \
+    mkdir -p /var/cache && ln -s /tmp/tailscale /var/cache/tailscale && \
+    mkdir -p /var/lib && ln -s /tmp/tailscale /var/lib/tailscale && \
+    mkdir -p /var/task && ln -s /tmp/tailscale /var/task/tailscale
+
+# Run on container startup.
+ENTRYPOINT ["/var/runtime/bootstrap"]
+```
+
+The Dockerfile specifies `/var/runtime/bootstrap` as the initial process to run. This script needs to bring Tailscale up and then start the application binary. This is where we can use the `TAILSCALE_AUTHKEY` variable we defined earlier.
+
+Then, create a file named `bootstrap` at the root of your app:
+
+```sh
+#!/bin/sh
+
+mkdir -p /tmp/tailscale
+/var/runtime/tailscaled --tun=userspace-networking --socks5-server=localhost:1055 &
+/var/runtime/tailscale up --authkey=${TAILSCALE_AUTHKEY} --hostname=aws-apprunner-app
+echo Tailscale started
+ALL_PROXY=socks5://localhost:1055/ /var/runtime/my-app
+```
+
+Done! When your AWS App Runner container deploys, it should be able to connect to your private Tailscale network.
+
+We'd love to hear about the cool things you build. Mention
+[@tailscale on Twitter](https://twitter.com/tailscale) or email us at info@tailscale.com.

@@ -1,0 +1,41 @@
+---
+title: pfSense settings to enable direct connections
+date: 2021-09-07
+slug: 1146/pfsense
+summary: Learn how to install Tailscale on a pfsense server.
+menu:
+  docs:
+    identifier: pfsense
+    name: pfSense
+    parent: firewall
+    weight: 3
+---
+
+[pfSense](https://pfsense.org/) is an open source router and firewall platform
+built using FreeBSD. Tailscale clients behind a pfSense firewall can benefit
+from a settings change.
+
+#### Direct Connections for LAN Clients
+
+As a router/firewall, pfSense may also be providing Internet connectivity for LAN
+devices which themselves have a Tailscale client installed. The NAT implementation
+in pfSense is an
+[Endpoint-Dependent Mapping, or "hard" NAT](/blog/how-nat-traversal-works/),
+which means that LAN devices have difficulty making direct connections and often resort to
+[DERP Relays](/kb/1232/derp-servers/).
+
+Enabling NAT-PMP in pfSense can enable devices on the LAN to make direct connections to
+remote Tailscale nodes. NAT-PMP is a protocol by which LAN clients can ask the firewall
+to temporarily create port mappings.
+
+Enable the UPnP service and **Allow NAT-PMP Port Mapping** in
+**Services** > **UPnP & NAT-PMP**. Only NAT-PMP is needed for Tailscale's
+use, but enabling UPnP can be helpful for other applications like gaming consoles.
+
+<br />
+<Image
+  alt="Enabling Allow NAT-PMP Port Mapping in Services : UPnP & NAT-PMP : Settings"
+  width={1444}
+  height={1320}
+  src="/images/solutions/pfsense/upnp-settings.jpg"
+/>
