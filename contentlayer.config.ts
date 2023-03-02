@@ -104,6 +104,7 @@ export const Solutions = defineDocumentType(() => ({
     summary: { type: 'string', required: true },
     authors: { type: 'list', of: { type: 'string' } },
     draft: { type: 'boolean' },
+    layout: { type: 'string' },
   },
   computedFields: {
     ...computedFields,
@@ -111,6 +112,7 @@ export const Solutions = defineDocumentType(() => ({
       type: 'string',
       resolve: (doc) => (doc.displayDate ? doc.displayDate : doc.date),
     },
+    readingTime: { type: 'json', resolve: (doc) => readingTime(doc.body.raw) },
   },
 }));
 

@@ -4,12 +4,12 @@ import ListLayout from '@/layouts/ListLayout';
 import { PageSEO } from '@/components/SEO';
 import { sortedBlogPost, allCoreContent } from '@/lib/utils/contentlayer';
 import { InferGetStaticPropsType } from 'next';
-import { allSolutions } from 'contentlayer/generated';
+import { allSolutions, Solution } from 'contentlayer/generated';
 
 export const POSTS_PER_PAGE = 10;
 
 export const getStaticProps = async () => {
-  const posts = sortedBlogPost(allSolutions) as Solutions[];
+  const posts = sortedBlogPost(allSolutions) as Solution[];
   const initialDisplayPosts = posts.slice(0, POSTS_PER_PAGE);
   const pagination = {
     currentPage: 1,
