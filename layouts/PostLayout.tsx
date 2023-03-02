@@ -44,8 +44,24 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                         rel="noreferer noopener noreferrer"
                         target="_blank"
                       >
-                        {author.name}
+                        {author.name}{' '}
                       </a>
+                      {author.pronouns != undefined ? (
+                        <>
+                          (
+                          <a
+                            className="whitespace-nowrap text-blue-300 transition-colors hover:text-blue-700"
+                            href={author.pronouns.link}
+                            rel="noreferer noopener noreferrer"
+                            target="_blank"
+                          >
+                            {author.pronouns.display}
+                          </a>
+                          )
+                        </>
+                      ) : (
+                        <></>
+                      )}
                     </li>
                   ))}
                 </ul>
