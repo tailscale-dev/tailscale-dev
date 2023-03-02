@@ -56,13 +56,8 @@ func main() {
 		log.Fatalf("")
 	}
 
-	inFrontMatter := false
-
 	for _, line := range bytes.Split(data, []byte("\n")) {
 		lineStr := string(bytes.TrimSpace(line))
-		if lineStr == "---" {
-			inFrontMatter = !inFrontMatter
-		}
 
 		if strings.HasPrefix(lineStr, "summary:") {
 			fmt.Fprintf(fout, "date: %s\n", age.Format(time.DateOnly))
@@ -71,6 +66,7 @@ func main() {
 		// download tailscale button
 		if lineStr == `<a href="/download" target="_blank" rel="noopener noreferrer"><button class="button button-primary">Download Tailscale</button></a>` {
 			fmt.Fprintln(fout, `<DownloadTailscale />`)
+			continue
 		}
 
 		// acorn handling
