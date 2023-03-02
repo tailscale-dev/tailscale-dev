@@ -59,7 +59,7 @@ func main() {
 	for _, line := range bytes.Split(data, []byte("\n")) {
 		lineStr := string(bytes.TrimSpace(line))
 
-		if strings.HasPrefix(lineStr, "summary:") {
+		if strings.HasPrefix(lineStr, "slug:") {
 			fmt.Fprintf(fout, "date: %s\n", age.Format(time.DateOnly))
 		}
 
@@ -73,11 +73,18 @@ func main() {
 		if strings.HasPrefix(lineStr, "{{<") {
 			// notes
 			switch lineStr {
-			case "{{<note>}}", "{{ <note> }}":
+			case "{{<note>}}", "{{< note >}}":
 				fmt.Fprintln(fout, "<Note>")
 				continue
-			case "{{</note>}}", "{{ </note> }}":
+			case "{{</note>}}", "{{< /note >}}", "{{< /beta-note >}}":
 				fmt.Fprintln(fout, "</Note>")
+				continue
+			case "{{< toc >}}":
+				continue
+			}
+
+			if strings.HasPrefix(strings.Replace(lineStr, " ", "", -1), "{{<beta-note") {
+				fmt.Fprintln(fout, "<Note>")
 				continue
 			}
 
@@ -112,6 +119,9 @@ func main() {
 					switch attr.Key {
 					case "width", "height":
 						continue
+					case "class":
+						attr.Key = "className"
+						fallthrough
 					default:
 						if attr.Key != "src" {
 							imageMeta[attr.Key] = fmt.Sprintf("%q", attr.Val)
