@@ -68,6 +68,11 @@ func main() {
 			fmt.Fprintf(fout, "date: %s\n", age.Format(time.DateOnly))
 		}
 
+		// download tailscale button
+		if lineStr == `<a href="/download" target="_blank" rel="noopener noreferrer"><button class="button button-primary">Download Tailscale</button></a>` {
+			fmt.Fprintln(fout, `<DownloadTailscale />`)
+		}
+
 		// acorn handling
 		if strings.HasPrefix(lineStr, "{{<") {
 			// notes

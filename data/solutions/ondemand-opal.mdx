@@ -1,0 +1,68 @@
+---
+title: On-demand access with Opal
+slug: 1209/ondemand-opal
+date: 2022-08-15
+summary: Learn how to use Tailscale and Opal for on-demand access to your Tailscale network.
+
+menu:
+  docs:
+    identifier: ondemand-opal
+    name: Opal
+    parent: ondemand-access
+---
+
+[Opal][opal] is a centralized authorization platform for IT and infrastructure teams to make access
+management requests self-service.
+
+On-demand access to Tailscale resources can be provisioned using Opal. This works by adding and
+removing members from [SSH access rules][ssh-access-rules]
+for [ACL tags][acl-tags].
+
+Opal can also be used with [user & group provisioning][provisioning] to update group membership in Okta groups used in
+Tailscale ACLs, or assign the Tailscale application users in Okta.
+
+## Prerequisites
+
+Before you begin this guide, you’ll need a tailnet and an Opal account.
+
+- For information about creating a tailnet, see the [Tailscale quickstart][tailscale-quickstart].
+
+- For information about creating an Opal account, see [Opal][opal].
+
+## Integration
+
+See the full instructions in Opal’s [blog post][blog-post] for setting up an integration with Tailscale.
+
+To use Opal with Tailscale, you’ll need to:
+
+<!-- vale tailscale.terms = NO -->
+
+1. Generate a Tailscale [API access token][access-token] from the [keys page][keys-page] of the admin console.
+1. In Opal, [add Tailscale as a new application][opal-create-tailscale].
+   1. Set the **App Admin** to the team that should manage the Tailscale app in Opal.
+   1. Enter a **Description** of how you use Tailscale, so colleagues know what they’re requesting access to. For example,
+      “SSH access to the production network”.
+   1. Set the **Tailnet name** to be your tailnet’s organization. For example, `example.com`, `myemail@example.com`, `example.github`,
+      `example.org.github`, etc. You can find your organization in the [Settings][settings] page of the admin console.
+   1. Set the **Tailscale API key** to the Tailscale API access token you generated.
+1. Determine which Tailscale [ACL tags][acl-tags] should be imported into Opal. This is done by the App Admin. For each
+ACL tag that is selected, Opal will automatically parse the existing [access rules][access-rules] and
+[SSH access rules][ssh-access-rules] that apply to that tag, and which [groups][groups] have access to the tagged
+sources using those rules.
+<!-- vale tailscale.terms = YES -->
+
+Now a user can request access or SSH access to a specific tag in Tailscale.
+
+[access-rules]: /kb/1018/acls/#acl-rules
+[acl-tags]: /kb/1068/acl-tags
+[admin-console]: https://login.tailscale.com/admin
+[access-token]: /kb/1101/api/
+[blog-post]: https://opal.dev/blog-post/tailscale
+[groups]: /kb/1018/acls/#groups
+[keys-page]: https://login.tailscale.com/admin/settings/keys
+[opal-create-tailscale]: https://app.opal.dev/apps/create/tailscale
+[opal]: https://opal.dev/
+[provisioning]: /kb/1180/sso-okta-scim/
+[settings]: https://login.tailscale.com/admin/settings/
+[ssh-access-rules]: /kb/1018/acls/#tailscale-ssh
+[tailscale-quickstart]: /kb/1017/install/

@@ -1,7 +1,7 @@
 ---
 title: Coding on iPad using VSCode, Caddy, and code-server
-date: 2023-02-28
 slug: 1166/vscode-ipad
+date: 2021-05-13
 summary: Learn how to code from your iPad with a private connection no matter where you are.
 tags:
   - code
@@ -124,7 +124,7 @@ By default, code-server only allows access from the local device
 
 Since we'll only be accessing code-server over Tailscale, and Tailscale
 already uses your existing Single Sign-On (SSO) identity provider, there's
-no need for password-based auth — we can already trust that you're
+no need for password-based auth — we can already trust that you're
 authorized if you can even access the server!
 
 To do this, we'll update code-server's configuration. First, we'll open up
@@ -165,6 +165,9 @@ you log in with the same account as on your server, so the two devices can
 see each other.
 
 <DownloadTailscale />
+<a href="/download" target="_blank" rel="noopener noreferrer">
+  <button class="button button-primary">Download Tailscale</button>
+</a>
 
 Once you're authenticated, you should be able to access your server from the
 iPad by visiting `http://100.x.y.z:8080/`. (Make sure to fill in the right
