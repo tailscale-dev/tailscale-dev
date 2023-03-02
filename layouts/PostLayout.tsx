@@ -9,6 +9,7 @@ import { siteMetadata } from '@/data/siteMetadata';
 import ScrollTop from '@/components/ScrollTop';
 import ExternalLink from '@/components/ExternalLink';
 import { DateDisplay } from '@/components/DateDisplay';
+import { TagNotice } from '@/components/TagNotice';
 
 const editUrl = (path) => `${siteMetadata.siteRepo}/blob/master/data/${path}`;
 
@@ -92,13 +93,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
       <main className="container grid grid-cols-3 py-12 md:gap-16">
         <div className="col-span-3 divide-y lg:col-span-2">
           <article className="Markdown BlogMarkdown">
-            {tags.includes('community-made') && (
-              <div className="note">
-                This article is contributed by a member of the Tailscale community, not a Tailscale
-                employee. If you have an interesting story to share about how you use Tailscale,
-                reach out to <a href="mailto:devrel@tailscale.com">devrel@tailscale.com</a>.
-              </div>
-            )}
+            <TagNotice tags={tags} />
 
             {children}
 
