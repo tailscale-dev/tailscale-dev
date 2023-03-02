@@ -18,7 +18,14 @@ interface CommonSEOProps {
   canonicalUrl?: string;
 }
 
-const CommonSEO = ({ title, description, ogType, ogImage, canonicalUrl }: CommonSEOProps) => {
+const CommonSEO = ({
+  title,
+  description,
+  ogType,
+  ogImage,
+  twImage,
+  canonicalUrl,
+}: CommonSEOProps) => {
   const router = useRouter();
   return (
     <Head>
@@ -35,6 +42,13 @@ const CommonSEO = ({ title, description, ogType, ogImage, canonicalUrl }: Common
       ) : (
         <meta property="og:image" content={ogImage} key={ogImage} />
       )}
+
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@tailscale" />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={twImage} />
+
       <link
         rel="canonical"
         href={canonicalUrl ? canonicalUrl : `${siteMetadata.siteUrl}${router.asPath}`}

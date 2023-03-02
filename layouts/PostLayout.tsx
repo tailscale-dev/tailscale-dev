@@ -44,8 +44,24 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                         rel="noreferer noopener noreferrer"
                         target="_blank"
                       >
-                        {author.name}
+                        {author.name}{' '}
                       </a>
+                      {author.pronouns != undefined ? (
+                        <>
+                          (
+                          <a
+                            className="whitespace-nowrap text-blue-300 transition-colors hover:text-blue-700"
+                            href={author.pronouns.link}
+                            rel="noreferer noopener noreferrer"
+                            target="_blank"
+                          >
+                            {author.pronouns.display}
+                          </a>
+                          )
+                        </>
+                      ) : (
+                        <></>
+                      )}
                     </li>
                   ))}
                 </ul>
@@ -75,7 +91,23 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
       </header>
       <main className="container grid grid-cols-3 py-12 md:gap-16">
         <div className="col-span-3 divide-y lg:col-span-2">
-          <article className="Markdown BlogMarkdown">{children}</article>
+          <article className="Markdown BlogMarkdown">
+            {tags.includes('community-made') && (
+              <div className="note">
+                This article is contributed by a member of the Tailscale community, not a Tailscale
+                employee. If you have an interesting story to share about how you use Tailscale,
+                reach out to <a href="mailto:devrel@tailscale.com">devrel@tailscale.com</a>.
+              </div>
+            )}
+
+            {children}
+
+            {tags.includes('community-made') && (
+              <div className="note">
+                As always, make sure to review any code before running it on your computer.
+              </div>
+            )}
+          </article>
         </div>
         <div className="sticky top-0 hidden self-start lg:block">
           <div className="row-start-2 divide-y divide-gray-200 text-sm font-medium leading-5 dark:divide-gray-700">
