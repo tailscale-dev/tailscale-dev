@@ -746,13 +746,13 @@
 }
 
 .Markdown pre {
-  @apply mt-4 break-normal rounded-md border border-solid border-gray-200 bg-gray-100 leading-normal;
+  @apply mt-4 break-normal rounded-md border border-solid border-gray-800 bg-gray-800 leading-normal text-white;
   word-spacing: normal;
   tab-size: 2;
 }
 
 .Markdown pre code {
-  @apply block overflow-x-auto px-4 py-3 dark:bg-gray-800;
+  @apply block overflow-x-auto px-4 py-3;
 }
 
 .Markdown h1 > code,
