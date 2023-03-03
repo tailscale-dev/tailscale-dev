@@ -59,7 +59,7 @@ The second creates a shared object (on Linux, the .so file) that can
 be dynamically linked into a binary.
 They are surprisingly easy to use:
 
-    go build -buildmode=c-archive pkg
+`go build -buildmode=c-archive pkg`
 
 This produces an object archive, and a generated header for the C
 symbols Go exports.
@@ -153,9 +153,9 @@ We can do exactly the same thing for Go objects:
 ```go
 // servers tracks all the allocated *tsnet.Server objects.
 var servers struct {
-        mu   sync.Mutex
-        next C.int
-        m    map[C.int]*tsnet.Server
+	mu   sync.Mutex
+	next C.int
+	m    map[C.int]*tsnet.Server
 }
 ```
 
