@@ -144,7 +144,7 @@ The typical way to refer to a kernel object from userspace is to be
 given a handle.
 The most familiar handle to a Unix user is a
 [file descriptor](https://en.wikipedia.org/wiki/File_descriptor).
-These are process-unique integers that refer to an entry table
+These are process-unique integers that refer to an entry in a table
 of objects stored in the kernel.
 
 We can do exactly the same thing for Go objects:
@@ -160,7 +160,7 @@ var servers struct {
 
 A Go function exported to C with `//export` can allocate a new `*tsnet.Server`,
 pick a number for its handle, and return that number to C.
-Whoever C wants to refer to the server it passes the number back and
+Whenever C wants to refer to the server it passes the number back and
 Go looks it up in the map.
 
 This lets C refer to a Go pointer, but for the pointer itself to
