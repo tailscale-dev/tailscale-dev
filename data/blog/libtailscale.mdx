@@ -1,6 +1,6 @@
 ---
 title: "libtailscale: how it's made"
-date: '2023-03-02'
+date: '2023-03-03'
 tags:
   - 'tsnet'
   - 'libtailscale'
@@ -9,7 +9,9 @@ authors: ['crawshaw']
 summary: 'libtailscale: a Tailscale C library. Using the Go toolchain to build a c-archive tsnet package that uses a userland network stack to implement TCP/IP inside a process.'
 ---
 
-We just released libtailscale, an experimental Tailscale C library.
+We just released
+[libtailscale](https://github.com/tailscale/libtailscale),
+an experimental Tailscale C library.
 It is built atop the Go [tsnet](https://pkg.go.dev/tailscale.com/tsnet)
 package which uses a userland network stack to implement TCP/IP
 directly inside your process.
