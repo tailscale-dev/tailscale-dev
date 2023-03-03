@@ -123,7 +123,7 @@ Combined with the second rule, it becomes effectively impossible to
 implement something that looks like a socket API directly as we do
 inside the Go `tsnet` package:
 
-```
+```c
 tailscale tailscale_new();
 int tailscale_dial(tailscale sd, const char* network, const char* addr, tailscale_conn* conn_out);
 ```
@@ -149,7 +149,7 @@ of objects stored in the kernel.
 
 We can do exactly the same thing for Go objects:
 
-```
+```go
 // servers tracks all the allocated *tsnet.Server objects.
 var servers struct {
         mu   sync.Mutex

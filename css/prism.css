@@ -36,29 +36,6 @@
 }
 
 /* Token styles */
-
-code[class*='language-'],
-pre[class*='language-'] {
-  background: #27212e;
-  color: #ffffff;
-  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; /* this is the default */
-  /* The following properties are standard, please leave them as they are */
-  direction: ltr;
-  text-align: left;
-  white-space: pre;
-  word-spacing: normal;
-  word-break: normal;
-  line-height: 1.5;
-  -moz-tab-size: 2;
-  -o-tab-size: 2;
-  tab-size: 2;
-  /* The following properties are also standard */
-  -webkit-hyphens: none;
-  -moz-hyphens: none;
-  -ms-hyphens: none;
-  hyphens: none;
-}
-
 /**
  * MIT License
  * Copyright (c) 2018 Sarah Drasner
