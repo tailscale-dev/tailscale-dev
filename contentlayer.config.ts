@@ -18,8 +18,11 @@ import {
 // Rehype packages
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import rehypePrismPlus from 'rehype-prism-plus';
 import rehypePresetMinify from 'rehype-preset-minify';
+
+// Code Hike (syntax highlighting)
+import { remarkCodeHike } from '@code-hike/mdx';
+import codeHikeTheme from './css/codeHikeTheme.json';
 
 const computedFields: ComputedFields = {
   slug: {
@@ -132,12 +135,13 @@ export default makeSource({
   documentTypes: [Blog, Authors, Events],
   mdx: {
     cwd: process.cwd(),
-    remarkPlugins: [remarkExtractFrontmatter, remarkGfm, remarkCodeTitles, remarkImgToJsx],
-    rehypePlugins: [
-      rehypeSlug,
-      rehypeAutolinkHeadings,
-      [rehypePrismPlus, { ignoreMissing: true }],
-      rehypePresetMinify,
+    remarkPlugins: [
+      remarkExtractFrontmatter,
+      remarkGfm,
+      remarkCodeTitles,
+      remarkImgToJsx,
+      [remarkCodeHike, { theme: codeHikeTheme, showCopyButton: true }],
     ],
+    rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings, rehypePresetMinify],
   },
 });

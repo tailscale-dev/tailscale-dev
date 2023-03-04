@@ -735,24 +735,17 @@
   @apply not-italic;
 }
 
-.Markdown pre,
-.Markdown code {
-  @apply font-mono;
-  font-size: 1.05rem;
+.ch-codeblock {
+  box-shadow: none !important;
 }
 
-.Markdown code {
-  font-size: 0.825em;
+.ch-code {
+  @apply rounded-md border border-gray-900 dark:border-gray-800;
 }
 
-.Markdown pre {
-  @apply mt-4 break-normal rounded-md border border-solid border-gray-800 bg-gray-800 leading-normal text-white;
-  word-spacing: normal;
-  tab-size: 2;
-}
-
-.Markdown pre code {
-  @apply block overflow-x-auto px-4 py-3;
+.ch-code code {
+  @apply font-mono leading-6;
+  font-size: 1rem;
 }
 
 .Markdown h1 > code,
