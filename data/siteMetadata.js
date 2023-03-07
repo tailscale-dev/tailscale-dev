@@ -1,7 +1,7 @@
 module.exports.siteMetadata = {
   title: 'Tailscale Community',
   description:
-    "The official community site for developers building with Tailscale. Find how-tos, solutions, and integrations to make your network's security the easy part.",
+    'The official community site for developers building with Tailscale. Find how-tos, solutions, and integrations to build your own secure network that just works.',
   language: 'en-us',
   theme: 'system',
   siteUrl: 'https://tailscale.dev',
