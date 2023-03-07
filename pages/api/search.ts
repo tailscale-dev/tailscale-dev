@@ -9,7 +9,7 @@ export interface SearchResults {
 export default async function search(req: NextApiRequest, res: NextApiResponse) {
   const q = req.query.q;
   if (q === undefined) {
-    res.status(400).send('must include search query q=');
+    res.status(400).json({ message: 'must include search query q=' });
     return;
   }
 
