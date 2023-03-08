@@ -1,0 +1,65 @@
+---
+title: Tailscale on Proxmox host
+date: 2021-08-14
+#slug: 1133/proxmox
+summary: Learn how to connect Tailscale to your Proxmox host.
+tags:
+  - containers
+#menu:
+#  docs:
+#    identifier: proxmox
+#    name: Proxmox host
+#    parent: serverless
+---
+
+Proxmox is a popular open-source solution for running virtual machines and containers,
+built on top of a Debian Linux platform.
+
+[Installing Tailscale](https://tailscale.com/kb/1031/install-linux/) allows the Proxmox
+console to be accessed from anywhere, without needing to open firewall ports or manually
+configure a VPN.
+
+<br />
+<Image
+  height={410}
+  src="/images/solutions/proxmox/proxmox.png"
+  alt="Access to the proxmox Web UI via Tailscale"
+  width={1234}
+/>
+
+### Troubleshooting
+
+#### Installing Tailscale within a VM
+
+Proxmox can run virtual machines, emulating a hardware device and allowing an unmodified
+operating system to run within it. [Tailscale can be installed](https://tailscale.com/kb/install/)
+in the OS within the virtual machine as normal.
+
+#### Installing Tailscale within an LXC
+
+Proxmox can also run lightweight Linux containers called LXC/LXD and can run them privileged
+or unprivileged. Tailscale can run within LXC/LXD containers, though running within an
+unprivileged container [requires an adjustment in the config](https://tailscale.com/kb/1130/lxc-unprivileged/).
+
+#### resolv.conf within LXC
+
+By default Proxmox writes its own DNS config to /etc/resolv.conf within LXCs. Even if the LXC gets
+its DNS configuration via DHCP, Proxmox will overwrite /etc/resolv.conf with its own.
+If Tailscale is installed on Proxmox and using MagicDNS, Proxmox will write that config to
+the container's /etc/resolv.conf:
+
+```sh
+# --- BEGIN PVE ---
+nameserver 100.100.100.100
+search example.ts.net
+# --- END PVE ---
+```
+
+If the LXC itself does not have Tailscale installed, this configuration is unlikely to work and
+DNS lookups will time out.
+
+Two options to mitigate this behavior are:
+
+- Configure tailscale without MagicDNS on the Proxmox host with `tailscale up --accept-dns=false`.
+- Create a file named `/etc/.pve-ignore.resolv.conf` _within each LXC's filesystem_ that will tell
+  Proxmox not to overwrite /etc/resolv.conf.

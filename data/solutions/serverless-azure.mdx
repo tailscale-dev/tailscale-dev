@@ -1,0 +1,106 @@
+---
+title: Using Tailscale on Azure App Services
+date: 2021-05-17
+#slug: 1126/azure-app-services
+summary: Learn how to use Tailscale with Azure App Services.
+tags:
+  - ephemeral-nodes
+  - serverless
+#menu:
+#  docs:
+#    identifier: azure-app-services
+#    name: Azure App Services
+#    parent: cloud-server
+---
+
+Azure App Services is a popular cloud-hosting platform for running applications without managing servers yourself. However, it can be difficult to use Tailscale on Azure App Services, since it doesn't provide a /dev/net/tun device that Tailscale needs.
+
+In Tailscale v1.12 or later, you can use Tailscale's [userspace networking mode](/kb/1112/userspace-networking) to connect your apps to your Tailscale network.
+
+#### Step 1: Generate an auth key to authenticate your Azure App Services apps
+
+First, we'll [generate an auth key](/kb/1085/auth-keys) to allow Azure to authenticate our app to join our network.
+
+Navigate to [the auth keys page of the admin console](https://login.tailscale.com/admin/settings/authkeys). We recommend using an [ephemeral key](/kb/1111/ephemeral-nodes) for this purpose, since it will automatically clean up devices after they shut down.
+
+<br />
+<Image
+  src="/images/solutions/serverless-azure/ephemeral-keys.png"
+  alt="Tailscale's auth key generation page"
+  className="bordered"
+  width={800}
+  height={1156}
+/>
+
+Next, navigate to the [Azure Portal](https://portal.azure.com/) and then the Configuration page for your app. From here, add a new Config Var named `TAILSCALE_AUTHKEY`, with the `tskey-<key>` value you just created.
+
+<br />
+<Image
+  src="/images/solutions/serverless-azure/azure-config-vars.png"
+  alt="Azure App Servicess config var interface"
+  width={1848}
+  height={728}
+/>
+
+#### Step 2: Configure your Dockerfile to install Tailscale
+
+We recommend using a [multistage Dockerfile](https://docs.docker.com/develop/develop-images/multistage-build/#use-multi-stage-builds) where the first stage builds your application, the second fetches and unpacks Tailscale binaries, and the final stage pulls application code and Tailscale into the final image to be uploaded to Azure.
+
+Create a `Dockerfile` at the root of your app. In that `Dockerfile` add something like:
+
+```docker
+FROM golang:1.16.2-alpine3.13 as builder
+WORKDIR /app
+COPY . ./
+# This is where one could build the application code as well.
+
+
+FROM alpine:latest as tailscale
+WORKDIR /app
+ENV TSFILE={{< pkgversion binary="amd64" >}}
+RUN wget https://pkgs.tailscale.com/stable/${TSFILE} && \
+  tar xzf ${TSFILE} --strip-components=1
+
+
+FROM alpine:latest
+RUN apk update && apk add ca-certificates bash sudo && rm -rf /var/cache/apk/*
+
+# Azure allows SSH access to the container. This isn't needed for Tailscale to
+# operate, but is really useful for debugging the application.
+RUN apk add openssh openssh-keygen && echo "root:Docker!" | chpasswd
+RUN apk add netcat-openbsd
+RUN mkdir -p /etc/ssh
+COPY sshd_config /etc/ssh/
+EXPOSE 80 2222
+
+# Copy binary to production image
+COPY --from=builder /app/start.sh /app/start.sh
+COPY --from=tailscale /app/tailscaled /app/tailscaled
+COPY --from=tailscale /app/tailscale /app/tailscale
+RUN mkdir -p /var/run/tailscale /var/cache/tailscale /var/lib/tailscale
+
+# Run on container startup.
+CMD ["/app/start.sh"]
+```
+
+The Dockerfile specifies `/app/start.sh` as the initial process to run. This script needs to bring Tailscale up and then start the application binary. This is where we can use the `TAILSCALE_AUTHKEY` variable we defined earlier.
+
+Then, create a file named `start.sh` at the root of your app:
+
+```sh
+#!/bin/sh
+
+/usr/bin/ssh-keygen -A
+mkdir -p /var/run/sshd
+/usr/sbin/sshd
+
+/app/tailscaled --tun=userspace-networking --socks5-server=localhost:1055 &
+/app/tailscale up --authkey=${TAILSCALE_AUTHKEY} --hostname=azure-app
+echo Tailscale started
+ALL_PROXY=socks5://localhost:1055/ /app/my-app
+```
+
+Done! The next time your Azure app deploys, it should be able to connect to your private Tailscale network.
+
+We'd love to hear about the cool things you build. Mention
+[@tailscale on Twitter](https://twitter.com/tailscale) or email us at info@tailscale.com.

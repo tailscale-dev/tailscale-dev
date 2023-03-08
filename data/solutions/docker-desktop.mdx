@@ -1,0 +1,50 @@
+---
+title: Setting up Docker Desktop to work with Tailscale
+date: 2022-01-28
+#slug: 1184/docker-desktop
+summary: Learn how to use the Docker Desktop Tailscale plugin.
+#menu:
+#  docs:
+#    identifier: docker-desktop
+#    name: Docker Desktop
+#    parent: remote-code
+---
+
+<Note>This is a beta feature and may change.</Note>
+
+The Tailscale extension for [Docker Desktop][docker desktop] allows you to share exposed container ports from your local machine with others on your private Tailscale network (known as a [tailnet][tailnet]). Use the Tailscale extension to collaborate on services with your team, SSH into containers, and more.
+
+When using the Tailscale extension, any of your tailnet's [network access control (ACL)][acls] and [shared nodes][shared nodes] settings still exist and are enabled. If you use [MagicDNS][magicdns], it also remains enabled in Docker Desktop.
+
+### Installing the Tailscale extension
+
+1. In Docker Desktop, click **Add Extension**, find **Tailscale**, and then click **Install**.
+
+1. You will be prompted to either create a Tailscale account, or log in to a Tailscale account. _Note that logging in to Tailscale exposes your containers' public ports to your tailnet._ Click **Log in with browser** if you want to log in through a web browser, or click **Log in with another device** to get a QR code you can use to log in with another device.
+
+Once installed, you will see the Tailscale extension in the Docker Desktop sidebar.
+
+If your host device is not running Tailscale, you will not be able to access your containers locally via Tailscale, e.g., in your browser. Install Tailscale on your device to access your containers via your tailnet.
+
+### Using the Tailscale extension
+
+Click the Tailscale extension in the Docker Desktop sidebar to see your open containers and their Tailscale IP addresses and URLs. Click a URL to copy it. You could send the URL to other users on your tailnet so they can access your containers. You can also click **Open** to open the URL in your browser.
+
+### Activities that remove your container ports from your tailnet
+
+Any of the following actions on your machine running Docker Desktop will stop sharing your container ports _in Docker Desktop_ on your tailnet:
+
+- Logging out of Tailscale
+- Uninstalling the Tailscale extension
+
+### Uninstalling the Tailscale extension
+
+1. In the list of extensions, find **Tailscale**, and then click **Uninstall**.
+
+Once you uninstall the Tailscale extension, your containers' public ports will no longer be available through Docker Desktop to other users on your tailnet.
+
+[acls]: /kb/1018/acls
+[docker desktop]: https://www.docker.com/products/docker-desktop
+[magicdns]: /kb/1081/magicdns
+[shared nodes]: /kb/1084/sharing
+[tailnet]: /kb/1136/tailnet

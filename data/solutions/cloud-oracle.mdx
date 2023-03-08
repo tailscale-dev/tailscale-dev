@@ -1,0 +1,167 @@
+---
+title: Access Oracle Cloud VMs privately using Tailscale
+date: 2021-09-08
+#slug: 1149/cloud-oracle
+summary: Learn how to get into your OCP VMs with Tailscale.
+tags:
+  - subnets
+#menu:
+#  docs:
+#    identifier: oracle-cloud
+#    name: Oracle Cloud VMs
+#    parent: cloud-server
+---
+
+Oracle Cloud provides Linux virtual machines, notably featuring the ARM CPU architecture.
+We can use Tailscale to securely access Oracle virtual machines.
+
+#### Prerequisites
+
+Before you begin this guide, you'll need a Tailscale network set up and configured with at
+least one existing device. Read our [getting started guide](/kb/1017/install)
+if you need help with this.
+
+#### Step 1: Set up the Tailscale client for the VM
+
+First, [create a Virtual Machine in the OCN Console](https://cloud.oracle.com/compute/instances/create).
+
+ssh to the system and follow the steps to
+[install Tailscale on Oracle Linux](/kb/1031/install-linux/).
+
+#### Step 2: Allow UDP port 41641
+
+If at least one side of a tunnel has "easy NAT," where Tailscale can determine the UDP port
+number on the far side of the NAT device, then it will make
+[direct connections to minimize latency.](/blog/how-tailscale-works/)
+We ensure that OCN nodes can make direct connections by allowing UDP port 41641 to ingress
+through the firewall.
+
+In the [Networking tab](https://cloud.oracle.com/networking/vcns/) select **Virtual Cloud Networks**
+select the specific VCN the VM has been created on.
+
+<br />
+<Image
+  className="bordered"
+  alt="Virtual Cloud Networks list"
+  width={1274}
+  height={786}
+  src="/images/solutions/cloud-oracle/ocn-virtual-networks.jpg"
+/>
+
+Select **Security Lists** in the left hand column, and the security list in use (probably
+a Default).
+
+<br />
+<Image
+  src="/images/solutions/cloud-oracle/ocn-security-lists.jpg"
+  className="bordered"
+  alt="Security lists"
+  width={778}
+  height={570}
+/>
+
+Add a Stateless ingress rule for 0.0.0.0/0 UDP port 41641.
+
+<br />
+<Image
+  src="/images/solutions/cloud-oracle/ocn-ingress-rule.jpg"
+  className="bordered"
+  alt="Adding an Ingress Rule"
+  width={1372}
+  height={1094}
+/>
+
+#### Step 3: Advertise routes from the VM
+
+For the benefit of the _other_ nodes in the tailnet we'll set up
+[split DNS](/kb/1054/dns/#using-dns-settings-in-the-admin-panel) to allow
+use of the same DNS names as are used inside of Oracle Cloud. The DNS server provided by Oracle
+is 169.254.169.254, and supports hostnames of the form instance.subnet01234567.vcn01234567.oraclevcn.com.
+
+We'll have our VM advertise routes for both the subnet it sits on as well as the Oracle DNS
+server. For example if the subnet address range is 10.0.0.0/24, the command would be:
+
+```
+tailscale up --advertise-routes=10.0.0.0/24,169.254.169.254/32 --accept-dns=false
+```
+
+<Note>
+  For Oracle Cloud VMs it is generally best to let Oracle handle the DNS configuration, not have
+  Tailscale override it, so we added `--accept-dns=false`.
+</Note>
+
+#### Step 4: Add Oracle DNS for your tailnet
+
+In the [admin console DNS section](https://login.tailscale.com/admin/dns) we add a nameserver
+restricted to the `oraclevcn.com` domain, pointing to the Oracle DNS server which we
+made available through our VM.
+
+<br />
+<Image
+  alt="Adding a Split DNS resolver for oraclevcn.com"
+  width={1046}
+  height={1050}
+  src="/images/solutions/cloud-oracle/ocn-nameserver.jpg"
+/>
+
+Now the same hostnames which work between nodes running within Oracle Cloud will also be available
+to all nodes on our tailnet.
+
+#### Step 5: Remove public SSH access
+
+As we can now ssh to the system over the private Tailscale network, there is no reason to leave
+the SSH port open on a public IP address. In the Network > Security List the SSH rule can be
+removed.
+
+<br />
+<Image
+  height={563}
+  src="/images/solutions/cloud-oracle/ocn-remove-ssh.png"
+  className="bordered"
+  alt="Disable public SSH port."
+  width={1200}
+/>
+
+#### Troubleshooting
+
+If you find that your tailnet nodes cannot access your Oracle Cloud Linux VM, you may need to update
+the VM's `iptables` configuration.
+
+Before you modify `iptables`, make a backup of the current configuration:
+
+```
+sudo iptables-save > ~/iptables.old
+```
+
+Check your current `iptables` configuration by running:
+
+```
+sudo iptables --list --line-numbers
+```
+
+If you want to provide HTTP access from your tailnet to the VM, run:
+
+```
+sudo iptables -I INPUT 6 -m state --state NEW -p tcp --dport 80 -j ACCEPT
+sudo netfilter-persistent save
+```
+
+Alternatively, if you see a specific rule that is rejecting your ingress access, you can delete it
+by line number:
+
+```
+sudo iptables -D INPUT <line-number>
+```
+
+Check the `iptables` list again to make sure your change is in effect.
+
+```
+sudo iptables --list --line-numbers
+```
+
+Then, try accessing the Oracle Cloud Linux VM from your tailnet node again.
+
+For more information about the `iptables` command on Oracle Linux VMs, see Oracle's support content
+at [Linux OS Service 'iptables' (Doc ID 564940.1)][oracle-support-doc].
+
+[oracle-support-doc]: https://support.oracle.com/knowledge/Oracle%20Linux%20and%20Virtualization/564940_1.html

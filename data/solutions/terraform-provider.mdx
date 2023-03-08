@@ -1,0 +1,108 @@
+---
+title: Manage Tailscale resources using Terraform
+#slug: 1210/terraform-provider
+date: 2022-08-30
+summary: Learn how to use the Terraform Tailscale provider to interact with the Tailscale API.
+tags:
+  - infrastructure-as-code
+  - terraform
+#menu:
+#  docs:
+#    identifier: terraform-provider
+#    name: Terraform
+#    parent: infrastructure-as-code
+#    weight: 1
+---
+
+[Terraform][terraform] is an infrastructure as code tool that allows you to deploy infrastructure programmatically.
+
+The [Tailscale Terraform provider][terraform-provider-registry] is maintained and published in the Terraform registry by Tailscale.
+
+### Features
+
+Use the Terraform provider for Tailscale to:
+
+- Define your [tailnet policy file][acls], using the [`tailscale_acl` resource][acl-resource]
+- Set [DNS settings][dns], including:
+  - global nameservers, using the [`tailscale_dns_nameservers` resource][dns-nameservers-resource]
+  - restricted nameservers for split DNS, using the [`tailscale_dns_search_paths` resource][dns-search-paths-resource]
+  - enabling or disabling [MagicDNS][magicdns], using the
+    [`tailscale_dns_preferences` resource][dns-preferences-resource]
+- Generate an [auth key][auth-key], including setting whether it’s reusable, ephemeral, pre-authorized, and tagged,
+  using the [`tailscale_key` resource][key-resource]
+- Manage properties of a device, including:
+  - approving the device, using the [`tailscale_device_authorization` resource][device-authorization-resource]
+  - disabling key expiry, using the [`tailscale_device_key` resource][device-key-resource]
+  - setting tags, using the [`tailscale_device_tags` resource][device-tags-resource]
+  - advertising subnet routes, using the [`tailscale_device_subnet_routes` resource][device-subnet-routes-resource]
+
+### Installation steps
+
+To use Terraform with Tailscale, configure the
+[Tailscale Terraform provider][terraform-provider-registry] with an API access token for Tailscale, and with the name
+of your tailnet. These can be configured either as part of your Terraform configuration, or as environment variables in Terraform.
+
+<Note>
+  It is not recommended to store sensitive information such as an API access token in source
+  control. Instead, use an environment variable.
+</Note>
+
+```json
+terraform {
+  required_providers {
+    tailscale = {
+      source = "tailscale/tailscale"
+      version = "<version>"
+    }
+  }
+}
+
+provider "tailscale" {
+  // Not recommended to store API access tokens in source control
+  // Instead, store this as an environment variable TAILSCALE_API_KEY
+  api_key = "tskey-1234567CNTRL-abcdefghijklmnopqrstu"
+  tailnet = "example.com"
+}
+```
+
+#### Environment variables
+
+Instead of specifying Tailscale provider information in your Terraform configuration file, you can store this information as environment variables in Terraform:
+
+- `TAILSCALE_API_KEY` for the Tailscale API access token
+- `TAILSCALE_TAILNET` for the tailnet name
+
+### Migrating from the community-contributed Terraform provider
+
+If you previously used the community-contributed Terraform provider, and now want to use the provider
+managed and published by Tailscale, update the `source` argument in your Terraform configuration. That is, update
+`source = "davidsbond/tailscale"` to `source = "tailscale/tailscale"`.
+
+### Special thanks
+
+Special thanks to [David Bond][david-bond], who contributed and maintained the original community-contributed Tailscale Terraform provider. Tailscale now maintains and publishes this provider.
+
+### Support
+
+The Tailscale Terraform provider is maintained and published in the Terraform registry by Tailscale.
+If you have an issue or feature request, [contact support][support] or [file a GitHub issue][github-issue].
+
+[acl-resource]: https://registry.terraform.io/providers/tailscale/tailscale/latest/docs/resources/acl
+[acls]: /kb/1018/acls/
+[api]: /kb/1101/api/
+[auth-key]: /kb/1085/auth-keys/
+[david-bond]: https://github.com/davidsbond
+[device-authorization-resource]: https://registry.terraform.io/providers/tailscale/tailscale/latest/docs/resources/device_authorization
+[device-key-resource]: https://registry.terraform.io/providers/tailscale/tailscale/latest/docs/resources/device_key
+[device-subnet-routes-resource]: https://registry.terraform.io/providers/tailscale/tailscale/latest/docs/resources/device_subnet_routes
+[device-tags-resource]: https://registry.terraform.io/providers/tailscale/tailscale/latest/docs/resources/device_tags
+[dns-nameservers-resource]: https://registry.terraform.io/providers/tailscale/tailscale/latest/docs/resources/dns_nameservers
+[dns-preferences-resource]: https://registry.terraform.io/providers/tailscale/tailscale/latest/docs/resources/dns_preferences
+[dns-search-paths-resource]: https://registry.terraform.io/providers/tailscale/tailscale/latest/docs/resources/dns_search_paths
+[dns]: /kb/1054/dns/
+[github-issue]: https://github.com/tailscale/terraform-provider-tailscale/issues
+[key-resource]: https://registry.terraform.io/providers/tailscale/tailscale/latest/docs/resources/tailnet_key
+[magicdns]: /kb/1081/magicdns/
+[support]: /contact/support/
+[terraform-provider-registry]: https://registry.terraform.io/providers/tailscale/tailscale/latest
+[terraform]: https://www.terraform.io/

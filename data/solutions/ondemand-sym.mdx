@@ -1,0 +1,97 @@
+---
+title: On-demand access with Sym
+#slug: 1206/ondemand-sym
+date: 2022-07-27
+summary: Learn how to use Tailscale and Sym for on-demand access to your Tailscale network.
+tags:
+  - sym
+  - integration
+#menu:
+#  docs:
+#    identifier: ondemand-sym
+#    name: Sym
+#    parent: ondemand-access
+---
+
+[Sym][sym] is a security and access workflow platform that allows you to manage just-in-time access to your Tailscale resources.
+
+On-demand access to Tailscale resources can be provisioned using Sym. This works by adding and removing members from [groups][groups] defined in Tailscale ACLs.
+
+<Note>
+  Sym will use a user’s Slack email address in Tailscale ACLs. If the user's Tailscale email is
+  different from the email used by Slack, you will need to use the{' '}
+  <a href="https://docs.symops.com/docs/manage-users#update-identity">symflow CLI</a> to manage the
+  user identity.
+</Note>
+
+### Prerequisites
+
+Before you begin this guide, you’ll need a tailnet with at least one device and a Sym account.
+
+- For information about creating a tailnet, see the [Tailscale quickstart][tailscale-quickstart].
+
+- For information about creating a Sym account, see [Getting Started with Sym][sym-start].
+
+### Integration
+
+For the full set of instructions, see Sym's documentation for [setting up a Tailscale access target][sym-deploy]. To use Sym with Tailscale, you’ll need to:
+
+1. Generate a Tailscale [API access token][access-token] from the [keys page][keys-page] of the admin console. Then, [share this API access token with the Sym Runtime][sym-secrets].
+1. In Sym, define a `sym_integration` resource with `type = tailscale`.
+   1. Set the `external_id` to your tailnet’s organization. For example, `example.com`, `myemail@example.com`, `example.github`,
+      `example.org.github`, etc. You can find your organization in the [Settings][settings] page of the admin console.
+   1. Set the `api_token_secret` to the `sym_secret` referencing your Tailscale API access token.
+1. Define which groups you’d like to manage access to in Tailscale. In Sym, define a `sym_target`
+   resource with `type = tailscale_group`, and specify the `group_name` that appears in ACLs, e.g., for
+   `group:prod` in Tailscale ACLs, specify `group_name=prod` in Sym.
+
+### Example configuration
+
+When configuring Tailscale to work with Sym, you will need to set up groups that Sym can add users to and
+remove users from as their access is granted or revoked.
+
+Use [ACL tags][acl-tags] when adding servers to your Tailscale network, so that their access is based on their
+purpose. Then, you can allow [groups][groups] to have access to certain tags in Tailscale ACLs. You can also make a
+group a [tag owner][tag-owner] if they should be able to manage tagged devices.
+
+For example, if you want the SRE team `group:sre-prod` to be able to SSH into production servers with `tag:prod`,
+you can set up a configuration like:
+
+```json
+{
+  // This is the group that we will add/remove user to/from
+  "groups": {
+    "group:prod": []
+  },
+  // This allow users from the prod group to list Tailnet resources with the "tag:prod".
+  "acls": [{ "action": "accept", "src": ["group:prod"], "dst": ["tag:prod:*"] }],
+  // This allow users from the prod group to connect to instances with the `tag:prod`
+  "ssh": [
+    {
+      "action": "accept",
+      "src": ["group:prod"],
+      "dst": ["tag:prod"],
+      "users": ["ec2-user"]
+    }
+  ],
+  "tagOwners": {
+    "tag:prod": ["group:prod"]
+  }
+}
+```
+
+Now when an SRE needs to access production, they can use [Sym's Slack integration][sym-overview] to request temporary access to SSH into production.
+
+[acl-tags]: /kb/1068/acl-tags/
+[admin-console]: https://login.tailscale.com/admin
+[access-token]: /kb/1101/api/
+[groups]: /kb/1018/acls/#groups
+[keys-page]: https://login.tailscale.com/admin/settings/keys
+[settings]: https://login.tailscale.com/admin/settings/
+[sym-deploy]: https://docs.symops.com/docs/tailscale#add-tailscale-access-targets
+[sym-overview]: https://docs.symops.com/docs/sym-overview
+[sym-secrets]: https://docs.symops.com/docs/share-secrets-with-the-sym-runtime
+[sym-start]: https://docs.symops.com/docs/getting-started
+[sym]: https://symops.com/
+[tag-owner]: /kb/1018/acls/#tag-owners
+[tailscale-quickstart]: /kb/1017/install/

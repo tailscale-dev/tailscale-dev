@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { CoreContent } from '@/lib/utils/contentlayer';
-import type { Blog } from 'contentlayer/generated';
+import type { Blog, Solution } from 'contentlayer/generated';
 import Link from 'next/link';
 import { ListItem } from '@/components/ListItem';
 
@@ -10,9 +10,9 @@ interface PaginationProps {
   currentPage: number;
 }
 interface ListLayoutProps {
-  posts: CoreContent<Blog>[];
+  posts: CoreContent<Blog | Solution>[];
   title: string;
-  initialDisplayPosts?: CoreContent<Blog>[];
+  initialDisplayPosts?: CoreContent<Blog | Solution>[];
   pagination?: PaginationProps;
 }
 
@@ -64,6 +64,9 @@ export default function ListLayout({
 }: ListLayoutProps) {
   const [searchValue, setSearchValue] = useState('');
   const filteredBlogPosts = posts.filter((post) => {
+    if (post.tags === undefined) {
+      post.tags = [];
+    }
     const searchContent = post.title + post.summary + post.tags.join(' ');
     return searchContent.toLowerCase().includes(searchValue.toLowerCase());
   });

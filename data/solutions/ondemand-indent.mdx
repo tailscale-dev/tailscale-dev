@@ -1,0 +1,95 @@
+---
+title: On-demand access with Indent
+#slug: 1205/ondemand-indent
+date: 2022-07-25
+summary: Learn how to use Tailscale and Indent for on-demand access to your Tailscale network.
+tags:
+  - indent
+  - integration
+#menu:
+#  docs:
+#    identifier: ondemand-indent
+#    name: Indent
+#    parent: ondemand-access
+---
+
+[Indent][indent] is a way to get just-in-time access to your Tailscale resources, with Indent handling on-demand
+requests, including request approval workflows.
+
+On-demand access to Tailscale resources such as cloud apps and infrastructure can be provisioned using Indent.
+This works by adding and removing members from Tailscale [groups][groups].
+
+### Prerequisites
+
+Before you begin this guide, you’ll need a tailnet with at least one device and an Indent space.
+
+- For information about creating a tailnet, see the [Tailscale quickstart][tailscale-quickstart].
+
+- For information about creating an Indent space, see the [Indent quickstart][indent-quickstart].
+
+### Integration
+
+For the full set of instructions, see Indent’s documentation for [setting up a Tailscale webhook integration][indent-deploy]. To use Indent with Tailscale resources, you’ll need to:
+
+1. Set up Indent’s integration for Tailscale. This requires cloning a GitHub action and using Terraform to deploy changes to Indent.
+   1. Generate a Tailscale [API access token][access-token] from the [keys page][keys-page] of the admin console, and set it as the GitHub secret `TAILSCALE_API_KEY`.
+   1. Set your tailnet’s organization as the GitHub secret `TAILSCALE_TAILNET`. For example, `example.com`, `myemail@example.com`, `example.github`,
+      `example.org.github`, etc. You can find your organization in the [Settings][settings] page of the admin console.
+1. Sync Tailscale groups you want to use for access control to Indent. In the [Resources page][indent-resources] of the Indent dashboard, click **Pull from Integrations** to obtain Tailscale groups.
+
+### Example configuration
+
+When configuring Tailscale to work with Indent, you will need to set up groups that Indent can add users to and
+remove users from as their access is granted or revoked.
+
+Use [ACL tags][acl-tags] when adding servers to your Tailscale network, so that their access is based on their
+purpose. Then, you can allow [groups][groups] to have access to certain tags in Tailscale ACLs. You can also make a
+group a [tag owner][tag-owner] if they should be able to manage tagged devices.
+
+For example, if you want the SRE team `group:sre-prod` to be able to SSH into production servers with `tag:prod`,
+you can set up a configuration like:
+
+```json
+{
+  "groups": {
+    "group:sre-prod": ["alice@example.com", "bob@example.com"],
+  },
+  "acls": [
+    {
+      "action": "accept",
+      "src": ["group:sre-prod"],
+      "dst": ["tag:prod:*"]
+    },
+  ],
+  "ssh": [
+    {
+      "action": "accept",
+      "src": ["group:sre-prod"],
+      "dst": ["tag:prod"],
+      "users": ["ubuntu", "root"]
+    },
+  ]
+  "tagOwners": {
+    "tag:prod": ["group:sre-prod"]
+  }
+}
+```
+
+Now when an SRE needs to access production, they can use the `/access` command for Indent in Slack, or go to [access.new][access-new], to request temporary access to SSH into production.
+
+[access-new]: https://access.new
+[acl-tags]: /kb/1068/acl-tags/
+[admin-console]: https://login.tailscale.com/admin
+[access-token]: /kb/1101/api/
+[create-tag]: /kb/1068/acl-tags/#defining-a-tag
+[github-action]: https://github.com/features/actions
+[groups]: /kb/1018/acls/#groups
+[indent-deploy]: https://indent.com/docs/webhooks/deploy/tailscale
+[indent-quickstart]: https://indent.com/docs/quickstart
+[indent-resources]: https://indent.com/spaces?next=/spaces/%5Bspace%5D/resources
+[indent]: https://indent.com/
+[keys-page]: https://login.tailscale.com/admin/settings/keys
+[settings]: https://login.tailscale.com/admin/settings/
+[tag-owner]: /kb/1018/acls/#tag-owners
+[tailscale-quickstart]: /kb/1017/install/
+[tailscale-ssh]: /kb/1193/tailscale-ssh
