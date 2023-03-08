@@ -5,6 +5,7 @@ import { HeroImage } from './HeroImage';
 import { ConvSnippet } from './ConvSnippet';
 import { TOCInline } from './TOCInline';
 import ExternalLink from './ExternalLink';
+import Warning from './Warning';
 import { Pre } from './Pre';
 import { NewsletterRepublishing } from './NewsletterRepublishing';
 
@@ -21,6 +22,7 @@ export const MDXComponents: ComponentMap = {
   ConvSnippet,
   TOCInline,
   NewsletterRepublishing,
+  Warning,
   a: ExternalLink,
   pre: Pre,
   wrapper: Wrapper,
