@@ -73,6 +73,14 @@ module.exports = () => {
         },
       ];
     },
+    rewrites: () => {
+      return [
+        {
+          source: '/wireguard-internals',
+          destination: '/wireguard-internals/index.html',
+        },
+      ];
+    },
     async headers() {
       return [
         {
