@@ -71,6 +71,11 @@ module.exports = () => {
           destination: 'https://ti.to/tailscaleup/2023',
           permanent: false,
         },
+        {
+          source: '/wireguard-internals',
+          destination: '/wireguard-internals/index.html',
+          permanent: true,
+        },
       ];
     },
     async headers() {
