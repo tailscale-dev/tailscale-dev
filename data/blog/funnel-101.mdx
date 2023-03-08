@@ -36,7 +36,9 @@ In order to follow along, you will need the following:
 ## Making the service
 
 First, we need to generate the service scaffold for the application we're going
-to make. Open a terminal on your developer machine, and run this command:
+to make. You can use any tool you like, but for simplicity I'm going to be using
+[Deno](https://deno.land) and [Fresh](https://fresh.deno.dev). To get started,
+open a terminal on your developer machine, and run this command:
 
 ```
 deno run -A -r https://fresh.deno.dev funnel-example
@@ -141,13 +143,12 @@ panel](https://login.tailscale.com/admin/settings/webhooks).
 Click on "Add endpoint...".
 
 <Image
+  className="max-w-md"
   src="/images/funnel-101/webhookmake.png"
   width={552}
   height={921}
   alt="The 'Add endpoint' modal dialog. It has a box for the webhook URL and a list of events to fire on. All events are selected."
 />
-
-TODO screenshot
 
 Copy your funnel URL into the Webhook URL box and add `/api/webhooks/tailscale`
 to the end of it. Enable all events.
