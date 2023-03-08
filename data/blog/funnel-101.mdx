@@ -1,0 +1,263 @@
+---
+title: 'Funnel 101: sharing your local developer preview with the world'
+date: 2023-03-10
+authors: ['xe']
+tags:
+  - funnel
+summary: 'Tailscale Funnel lets you share a local service with the internet. Today Xe covers how you can use this productively by sharing the development copy of an application to the world.'
+---
+
+Tailscale lets you share things with your coworkers, your family, and your
+friends; but not everyone else. This is great when you're testing things with
+your coworkers or playing Minecraft with your friends, but sometimes you need
+to test things against the real world. Tailscale Funnel allows you to expose
+your local services to the public Internet.
+
+Today I'm going to walk you through the basics of funnel and show you how to
+use it with a live demo.
+
+In order to follow along, you will need the following:
+
+- An invite to the Funnel feature preview (ask us [on
+  Mastodon](https://hachyderm.io/@tailscale)!)
+- A development machine running Linux, macOS, or Windows
+  - Be sure [funnel is enabled in the tailnet policy file
+    settings](https://tailscale.com/kb/1223/tailscale-funnel/) for that machine
+- [Deno](https://deno.land) installed on your development machine
+
+<HeroImage
+  src="/images/hero/lagtrain.png"
+  desc="train station, brown hair, brown eyes, face mask, portrait, backpack, hoodie, watercolor"
+  width={1280}
+  height={512}
+  generator="Waifu Diffusion v1.4"
+/>
+
+## Making the service
+
+First, we need to generate the service scaffold for the application we're going
+to make. Open a terminal on your developer machine, and run this command:
+
+```
+deno run -A -r https://fresh.deno.dev funnel-example
+```
+
+It will ask you a few questions, answer them based on your preferences. You can
+replace `funnel-example` with a different name if desired.
+
+Enter that directory with `cd`:
+
+```
+cd funnel-example
+```
+
+Then run `deno task start` to start your web service in developer mode:
+
+```
+deno task start
+```
+
+Open [the site in your browser](http://localhost:8000). By default, this will
+run the service so that you can access it from your tailnet.
+
+Now that the app is running, use `tailscale serve` to route to that port:
+
+```
+tailscale serve / proxy 8000
+```
+
+Then you can confirm it with `tailscale serve status`:
+
+```
+$ tailscale serve status
+https://xe-dev-vm.shark-harmonic.ts.net (tailnet only)
+|-- / proxy http://127.0.0.1:8000
+```
+
+Finally, enable funnel for the machine with `tailscale serve`:
+
+```
+tailscale serve funnel on
+```
+
+Then confirm it got enabled with `tailscale serve status`:
+
+```
+$ tailscale serve status
+https://xe-dev-vm.shark-harmonic.ts.net (Funnel on)
+|-- / proxy http://127.0.0.1:8000
+```
+
+Then take that link and link it to your friends! They'll be able to see the
+changes that you make to your project as soon as you hit save. For example, open
+`routes/index.tsx` in your favorite text editor and change it to look like this:
+
+```tsx
+import { Head } from '$fresh/runtime.ts';
+import Counter from '../islands/Counter.tsx';
+
+export default function Home() {
+  return (
+    <>
+      <Head>
+        <title>Fresh App</title>
+      </Head>
+      <div class="mx-auto max-w-screen-md p-4">
+        <p class="my-6">
+          Hey from Funnel! This is running on a machine behind a firewall but you can still reach it
+          from the Internet thanks to Funnel!
+        </p>
+        <Counter start={3} />
+      </div>
+    </>
+  );
+}
+```
+
+You can do anything you can with Fresh at this point. Take a look at the [Fresh
+documentation](https://fresh.deno.dev/docs/introduction) for more ideas. You can
+also change this to point at another service, such as a Rails app or anything
+else that listens for HTTP on a network port.
+
+This isn't just limited to webapps, you can also set up GitHub, Tailscale, or
+other webhooks with this too.
+
+## Listening for Tailscale webhooks
+
+To wrap this up, I'm going to show you how to use this in the real world by
+turning your new application into a Tailscale webhook listener. you can use
+this to have custom logic run whenever something changes on your tailnet.
+
+First, open the [webhooks page in the admin
+panel](https://login.tailscale.com/admin/settings/webhooks).
+
+<Image
+  src="/images/funnel-101/webhookui.png"
+  width={831}
+  height={310}
+  alt="The webhook management component of the Tailscale admin console, showing an 'Add endpoint' button and no webhook endpoints configured."
+/>
+
+Click on "Add endpoint...".
+
+<Image
+  src="/images/funnel-101/webhookmake.png"
+  width={552}
+  height={921}
+  alt="The 'Add endpoint' modal dialog. It has a box for the webhook URL and a list of events to fire on. All events are selected."
+/>
+
+TODO screenshot
+
+Copy your funnel URL into the Webhook URL box and add `/api/webhooks/tailscale`
+to the end of it. Enable all events.
+
+This will give you a webhook secret. Copy this to your clipboard or a scratch
+buffer/notepad window. Depending on how your organization works, you may want to
+copy this value into a password manager.
+
+<Image
+  src="/images/funnel-101/webhooksecret.png"
+  width={570}
+  height={374}
+  alt="The 'Webhook secret' modal dialog. It has a box with a webhook secret in it. There is text explaining that the webhook secret is used to sign messages from Tailscale and that you cannot view the secret again if you don't copy it right now."
+/>
+
+Go back to your IDE and create a new file called `.env`. Copy the webhook secret
+into it like this (replace `tskey-webhook-hunter2hunter2hunter2` with your actual
+secret):
+
+```
+TAILSCALE_WEBHOOK_SECRET=tskey-webhook-hunter2hunter2hunter2
+```
+
+Next, load this `.env` file with the [Deno standard
+library](https://deno.land/std@0.178.0). Open `import_map.json` and add this
+line to the end of it:
+
+```json
+{
+  // the rest of the file...
+  "twind/": "https://esm.sh/twind@0.16.17/",
+  "std/": "https://deno.land/std@0.178.0/"
+}
+```
+
+Then open `main.ts` and add this line after `manifest` is imported:
+
+```ts
+import 'std/dotenv/load.ts';
+```
+
+This will use the [dotenv](https://deno.land/std@0.178.0/dotenv/mod.ts) module
+to read the `.env` file and load all values into it in the environment.
+
+TODO(Xe): replace temporary gist with GitHub repo after Latacora reviews the code
+
+Finally, we need to add the Tailscale webhook library to the import map. You can
+do that by adding this to the end of your import map JSON file:
+
+```json
+{
+  // the rest of the file
+  "std/": "https://deno.land/std@0.178.0/",
+  "$tswebhook": "https://gist.githubusercontent.com/Xe/93b5c95a90aaa3f71ca148e87d16f768/raw/5a52db30b05a5bf014d9fac85df51ed0b3f12805/mod.ts"
+}
+```
+
+Next, create a new file in your routes folder:
+`routes/api/webhooks/tailscale.ts`. You may have to create a folder called
+webhooks. Copy the following into that file:
+
+```ts
+import { Payload, validate } from '$tswebhook';
+import { HandlerContext, Handlers } from '$fresh/server.ts';
+
+export const handler: Handlers = {
+  async POST(req: Request, _ctx: HandlerContext) {
+    const { ok, body } = await validate(req, Deno.env.get('TAILSCALE_WEBHOOK_SECRET') as string);
+    if (!ok) {
+      console.log(`remote client sent invalid request`);
+      return new Response('invalid request', { status: 400 });
+    }
+
+    const msgs: Payload[] = JSON.parse(body);
+
+    msgs.forEach((msg) => {
+      console.log(`[tailscale-webhook] ${msg.message}`);
+    });
+
+    return new Response('OK', { status: 200 });
+  },
+};
+```
+
+This does the following:
+
+- Creates an async handler for the `POST` method.
+- Uses the `$tswebhook` library to validate incoming webhook requests, and
+  if they are invalid then it responds with HTTP status code 400 (Bad
+  Request).
+- Parses the webhook payload to the variable `msgs`.
+- Loops over all of the messages and runs custom logic (such as printing
+  data to standard out) on each message.
+- Responds with HTTP status 200 (OK) so that Tailscale's webhook sender
+  doesn't try to resend the webhooks.
+
+You could easily extend this to do whatever you want from here. If you
+need some ideas on what you can do with this, here are couple that I
+find interesting:
+
+- Send webhook messages to other services like Slack or Discord to
+  inform people about tailnet changes.
+- Store these events in a database like
+  [SQLite](https://deno.land/x/sqlite@v3.7.0) and show information
+  in a custom UI.
+
+We've been working a lot on funnel and different ways that you could use
+it inside your production and personal environments. What other fun uses
+have you found for funnel? I use it to expose the development version of
+[my website](https://xeiaso.net) to people that are reviewing its articles
+for grammatical and technical correctness. Let us know on the Fediverse
+by mentioning [@tailscale@hachyderm.io](https://hachyderm.io/@tailscale)
+with the hashtag #funnelHack!
