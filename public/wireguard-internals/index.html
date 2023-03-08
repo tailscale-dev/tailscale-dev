@@ -1,170 +1,180 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8">
-<title>WireGuard Internals Guide</title>
-<link rel="stylesheet" type="text/css" href="augmented-ui.min.css" />
-<style>
-body {
-	--bg-color: rgb(13, 20, 23);
-	--highlight: #efd176;
-	background-color: var(--bg-color);
-	font-family: ui-monospace, SFMono-Regular,Menlo,Monaco,monospace;
-	color: #eee;
-}
+  <head>
+    <meta charset="utf-8" />
+    <title>WireGuard Internals Guide</title>
+    <link rel="stylesheet" type="text/css" href="augmented-ui.min.css" />
+    <style>
+      body {
+        --bg-color: rgb(13, 20, 23);
+        --highlight: #efd176;
+        background-color: var(--bg-color);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+        color: #eee;
+      }
 
-.cursor { color: var(--highlight); }
-.console {
-	width: 95ch;
-	background-color: #222;
-	color: #73d29c;
-	margin-bottom: 1ch;
-	padding-top: 0.5ch;
-	padding-bottom: 0.5ch;
-}
+      .cursor {
+        color: var(--highlight);
+      }
+      .console {
+        width: 95ch;
+        background-color: #222;
+        color: #73d29c;
+        margin-bottom: 1ch;
+        padding-top: 0.5ch;
+        padding-bottom: 0.5ch;
+      }
 
-.alt {
-	display: none;
-	width: 80ch;
-}
+      .alt {
+        display: none;
+        width: 80ch;
+      }
 
-.highlight {
-	background: var(--highlight);
-	color: var(--bg-color);
-	font-weight: bold;
-	padding: 2px;
-}
+      .highlight {
+        background: var(--highlight);
+        color: var(--bg-color);
+        font-weight: bold;
+        padding: 2px;
+      }
 
-.grpfocus {
-	color: var(--highlight);
-	font-weight: bold;
-}
+      .grpfocus {
+        color: var(--highlight);
+        font-weight: bold;
+      }
 
-.grp {
-	cursor: pointer;
-}
+      .grp {
+        cursor: pointer;
+      }
 
-h2 {
-	color: var(--highlight);
-	font-size: 12px;
-	margin-block-start: 1ch;
-	margin-block-end: 1ch;
-}
+      h2 {
+        color: var(--highlight);
+        font-size: 12px;
+        margin-block-start: 1ch;
+        margin-block-end: 1ch;
+      }
 
-.tcpdump table {
-	border-spacing: 0;
-}
-.tcpdump .selected {
-	background-color: blue;
-}
-.tcpdump table tr:not(:first-child):hover {
-	background-color: blue;
-}
-.tcpdump table td {
-	cursor: pointer;
-	padding-left: 10px;
-}
+      .tcpdump table {
+        border-spacing: 0;
+      }
+      .tcpdump .selected {
+        background-color: blue;
+      }
+      .tcpdump table tr:not(:first-child):hover {
+        background-color: blue;
+      }
+      .tcpdump table td {
+        cursor: pointer;
+        padding-left: 10px;
+      }
 
-body {
-	margin: auto;
-}
+      body {
+        margin: auto;
+      }
 
-.quote {
-	padding-left: 4ch;
-}
+      .quote {
+        padding-left: 4ch;
+      }
 
-@media only screen and (max-width: 1300px) {
-	nav {
-		margin: 0 auto 2ch;
-		width: 80ch;
-		padding: 1rem;
-		position: sticky;
-		top: 0;
-		left: 0;
-		background: var(--bg-color);
-		box-shadow: 0px 15px 10px rgba(13, 20, 23, 0.8);
-	}
-	.diagram {
-		font-size: 12pt;
-		height: 250px;
-	}
-	.hover-title, .alt {
-		max-width: 100%;
-		width: max-content;
-	}
-	body {
-		font-size: 0.8rem;
-	}
-	main, header {
-		width: 90ch;
-		margin: auto;
-	}
-	main {
-		border-top: 2px solid gray;
-	}
-}
-@media only screen and (max-width: 736px) {
-	body {
-		width: 100%;
-		font-size: 16px;
-	}
-	.quote {
-		padding-left: 0;
-		font-size: 12px;
-	}
-	main, header {
-		width: 100%;
-		margin: 0;
-	}
-}
-@media only screen and (min-width: 1301px) {
-	nav {
-		position: fixed;
-		height: 100%;
-		top: 0;
-		left: 53%; /* 90/(90+80) */
-	}
-	.diagram {
-		font-size: 15pt;
-		height: 350px;
-	}
-	body {
-		width: 180ch; /* 90ch + 80ch; */
-		overflow-x: hidden;
-		font-size: 12px;
-	}
-	main, header {
-		width: 90ch;
-		padding-top: 20px;
-	}
-	.story {
-		width: 80ch;
-	}
-}
+      @media only screen and (max-width: 1300px) {
+        nav {
+          margin: 0 auto 2ch;
+          width: 80ch;
+          padding: 1rem;
+          position: sticky;
+          top: 0;
+          left: 0;
+          background: var(--bg-color);
+          box-shadow: 0px 15px 10px rgba(13, 20, 23, 0.8);
+        }
+        .diagram {
+          font-size: 12pt;
+          height: 250px;
+        }
+        .hover-title,
+        .alt {
+          max-width: 100%;
+          width: max-content;
+        }
+        body {
+          font-size: 0.8rem;
+        }
+        main,
+        header {
+          width: 90ch;
+          margin: auto;
+        }
+        main {
+          border-top: 2px solid gray;
+        }
+      }
+      @media only screen and (max-width: 736px) {
+        body {
+          width: 100%;
+          font-size: 16px;
+        }
+        .quote {
+          padding-left: 0;
+          font-size: 12px;
+        }
+        main,
+        header {
+          width: 100%;
+          margin: 0;
+        }
+      }
+      @media only screen and (min-width: 1301px) {
+        nav {
+          position: fixed;
+          height: 100%;
+          top: 0;
+          left: 53%; /* 90/(90+80) */
+        }
+        .diagram {
+          font-size: 15pt;
+          height: 350px;
+        }
+        body {
+          width: 180ch; /* 90ch + 80ch; */
+          overflow-x: hidden;
+          font-size: 12px;
+        }
+        main,
+        header {
+          width: 90ch;
+          padding-top: 20px;
+        }
+        .story {
+          width: 80ch;
+        }
+      }
 
-.story {
-	margin-bottom: 1ch;
-	border-left: 4px solid transparent;
-	padding-left: 5px;
-}
+      .story {
+        margin-bottom: 1ch;
+        border-left: 4px solid transparent;
+        padding-left: 5px;
+      }
 
-.storyactive {
-	border-left: 4px solid grey;
-}
+      .storyactive {
+        border-left: 4px solid grey;
+      }
 
-a { color: lightblue; }
-a:visited { color: lightblue; }
-</style>
+      a {
+        color: lightblue;
+      }
+      a:visited {
+        color: lightblue;
+      }
+    </style>
 
-<style>
-/* the ethernet card diagrams */
-.diagram {
-	position: relative;
-	aspect-ratio: 2/3;
-}
+    <style>
+      /* the ethernet card diagrams */
+      .diagram {
+        position: relative;
+        aspect-ratio: 2/3;
+      }
 
-.diagram .peerwire {
-	/* If these numbers look weird: they are.
+      .diagram .peerwire {
+        /* If these numbers look weird: they are.
 	 * The effect of transform-origin below really throws a wrench
 	 * into the location of... everything.
 	 *
@@ -172,1042 +182,1252 @@ a:visited { color: lightblue; }
 	 * inside a .bracket (or a .socket!) and drawing outside our field
 	 * from there. But then we need to deal with the parent's transform.
 	 */
-	position: absolute;
-	top: 23%;
-	right: -25%;
-	width: 25%;
-	height: 46%;
+        position: absolute;
+        top: 23%;
+        right: -25%;
+        width: 25%;
+        height: 46%;
 
-	--aug-border-bg: #4141ea;
-	--aug-border-top: 5px;
-	--aug-border-right: 5px;
-	--aug-border-bottom: 5px;
-	--aug-border-left: 0;
-	--aug-tr: 15px;
-	--aug-br: 15px;
-}
+        --aug-border-bg: #4141ea;
+        --aug-border-top: 5px;
+        --aug-border-right: 5px;
+        --aug-border-bottom: 5px;
+        --aug-border-left: 0;
+        --aug-tr: 15px;
+        --aug-br: 15px;
+      }
 
-.diagram .peer {
-	position: relative;
+      .diagram .peer {
+        position: relative;
 
-	transform-style: preserve-3d;
-	transform-origin: 50% 100%;
-	transform: rotateY(-20deg) rotateX(45deg);
-	transition: all 0.2s;
+        transform-style: preserve-3d;
+        transform-origin: 50% 100%;
+        transform: rotateY(-20deg) rotateX(45deg);
+        transition: all 0.2s;
 
-	margin-top: 17%;
-	width: 100%;
-	height: 33%;
-}
+        margin-top: 17%;
+        width: 100%;
+        height: 33%;
+      }
 
-.diagram .peer .content {
-	padding: 7px;
-	font-family: monospace;
-	color: white;
-}
+      .diagram .peer .content {
+        padding: 7px;
+        font-family: monospace;
+        color: white;
+      }
 
-.diagram .aug {
-	--aug-border-all: 1px;
-	--aug-br-inset1: 31%;
-	--aug-bl-inset2: 5%;
-	--aug-inlay-bg: #fbe806;
+      .diagram .aug {
+        --aug-border-all: 1px;
+        --aug-br-inset1: 31%;
+        --aug-bl-inset2: 5%;
+        --aug-inlay-bg: #fbe806;
 
-	--aug-bl: 15%;
-	--aug-br: 15%;
-}
+        --aug-bl: 15%;
+        --aug-br: 15%;
+      }
 
-.diagram .wg {
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 100%;
-	width: 100%;
-	transition: all 0.2s;
-	transform: translateZ(3rem);
-	--aug-border-all: 5px;
-	--aug-border-bg: linear-gradient(#a52e1f, #efa8a8);
-}
+      .diagram .wg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        transition: all 0.2s;
+        transform: translateZ(3rem);
+        --aug-border-all: 5px;
+        --aug-border-bg: linear-gradient(#a52e1f, #efa8a8);
+      }
 
-.diagram .ethcard {
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 100%;
-	width: 100%;
-	background-color: #3d7150;
-	transition: all 0.2s;
-}
+      .diagram .ethcard {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background-color: #3d7150;
+        transition: all 0.2s;
+      }
 
-.peer div { filter: grayscale(0%); }
+      .peer div {
+        filter: grayscale(0%);
+      }
 
-/* applied to peer to remove focus */
-.unfocused div {
-	filter: grayscale(100%);
-}
-.darkwire { filter: grayscale(1); }
+      /* applied to peer to remove focus */
+      .unfocused div {
+        filter: grayscale(100%);
+      }
+      .darkwire {
+        filter: grayscale(1);
+      }
 
-/* applied to peer to bring wg0 'down' */
-.compressed .wg {
-	transform: translateZ(0rem);
-}
-/* this makes the initial wg animation more dramatic.
+      /* applied to peer to bring wg0 'down' */
+      .compressed .wg {
+        transform: translateZ(0rem);
+      }
+      /* this makes the initial wg animation more dramatic.
 i'm not sure that's good though, may be a bit much.
 .diagram .compressed { transform: none; }*/
 
-.diagram .ethcard .teeth {
-	position: absolute;
-	bottom: 0px;
-	left: 0;
-	width: 100%;
-	height: 15%;
-	background: repeating-linear-gradient(to right, transparent, transparent 1%, #f7cf46 1%, #f7cf46 2%);
-}
+      .diagram .ethcard .teeth {
+        position: absolute;
+        bottom: 0px;
+        left: 0;
+        width: 100%;
+        height: 15%;
+        background: repeating-linear-gradient(
+          to right,
+          transparent,
+          transparent 1%,
+          #f7cf46 1%,
+          #f7cf46 2%
+        );
+      }
 
-.diagram .bracket {
-	position: absolute;
-	top: 0;
-	right: 0;
-	width: 10%;
-	height: 100%;
-	background-color: silver;
+      .diagram .bracket {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 10%;
+        height: 100%;
+        background-color: silver;
 
-	transform-style: preserve-3d;
-	transform: rotateY(90deg) translateX(0.5rem);
-	/* translate using origin just beyond green pcb to avoid tearing */
-	transform-origin: 101% 0%;
+        transform-style: preserve-3d;
+        transform: rotateY(90deg) translateX(0.5rem);
+        /* translate using origin just beyond green pcb to avoid tearing */
+        transform-origin: 101% 0%;
 
-	--aug-bl: 5px;
-	--aug-br: 5px;
-}
+        --aug-bl: 5px;
+        --aug-br: 5px;
+      }
 
-.diagram .bracket .socket {
-	position: absolute;
-	top: 60%;
-	left: 5px;
-	aspect-ratio: 1/1;
-	height: 10%;
-	background-color: black;
-}
+      .diagram .bracket .socket {
+        position: absolute;
+        top: 60%;
+        left: 5px;
+        aspect-ratio: 1/1;
+        height: 10%;
+        background-color: black;
+      }
 
-.arrows-peer3 {
-	position: absolute;
-	right: 25%;
-	top: 1%;
-	z-index: 2;
-}
+      .arrows-peer3 {
+        position: absolute;
+        right: 25%;
+        top: 1%;
+        z-index: 2;
+      }
 
-.arrows-peer4 {
-	position: absolute;
-	right: 25%;
-	bottom: 2%;
-	z-index: 2;
-}
+      .arrows-peer4 {
+        position: absolute;
+        right: 25%;
+        bottom: 2%;
+        z-index: 2;
+      }
 
-.arrows-left div {
-	display: inline-block;
-	width: 0;
-	height: 0;
-	border-top: 4px solid transparent;
-	border-bottom: 4px solid transparent;
-	border-right: 5px solid red;
-}
+      .arrows-left div {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        border-top: 4px solid transparent;
+        border-bottom: 4px solid transparent;
+        border-right: 5px solid red;
+      }
 
-.arrows-right div {
-	display: inline-block;
-	width: 0;
-	height: 0;
-	border-top: 4px solid transparent;
-	border-bottom: 4px solid transparent;
-	border-left: 5px solid red;
-}
+      .arrows-right div {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        border-top: 4px solid transparent;
+        border-bottom: 4px solid transparent;
+        border-left: 5px solid red;
+      }
 
-.wgarrow {
-	position: relative;
-	bottom: 10%;
-	left: 60%;
-	width: 0;
-	height: 0;
-	border-bottom: 10px solid transparent;
-}
+      .wgarrow {
+        position: relative;
+        bottom: 10%;
+        left: 60%;
+        width: 0;
+        height: 0;
+        border-bottom: 10px solid transparent;
+      }
 
-.wgarrow-down {
-	border-left: 10px solid transparent;
-	border-right: 10px solid transparent;
-	border-top: 10px solid red;
-	border-bottom: 0;
-}
+      .wgarrow-down {
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 10px solid red;
+        border-bottom: 0;
+      }
 
-.wgarrow-up {
-	border-left: 10px solid transparent;
-	border-right: 10px solid transparent;
-	border-top: 0;
-	border-bottom: 10px solid red;
-}
+      .wgarrow-up {
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 0;
+        border-bottom: 10px solid red;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Internals of a WireGuard® Tunnel</h1>
+    </header>
 
-</style>
+    <nav>
+      <div class="diagram">
+        <div class="peerwire" data-augmented-ui="tr-clip br-clip border">
+          <div class="arrows-peer3 arrows-left">
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <div class="arrows-peer4 arrows-left">
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
 
-</head>
-<body>
-<header>
-	<h1>Internals of a WireGuard® Tunnel</h1>
-</header>
+        <div class="peer" role="img" alt="The first peer" title="10.211.55.3">
+          <div class="wg aug" data-augmented-ui="br-rect bl-rect-x border">
+            <div class="content">wg0 <span class="grp tunip3">10.9.9.3</span></div>
+          </div>
+          <div class="ethcard aug" data-augmented-ui="br-rect bl-rect-x border">
+            <div class="content">eth0 <span class="grp physip3">10.211.55.3</span></div>
+            <div class="teeth"></div>
+          </div>
+          <!-- ethcard -->
+          <div class="bracket" data-augmented-ui="br-clip-y bl-clip-y">
+            <div class="socket"></div>
+          </div>
+        </div>
+        <!-- peer -->
 
-<nav>
+        <div class="wgarrow"></div>
 
-<div class="diagram">
-<div class="peerwire" data-augmented-ui="tr-clip br-clip border">
-	<div class="arrows-peer3 arrows-left">
-		<div></div>
-		<div></div>
-		<div></div>
-	</div>
-	<div class="arrows-peer4 arrows-left">
-		<div></div>
-		<div></div>
-		<div></div>
-	</div>
-</div>
+        <div class="peer" role="img" alt="The second peer" title="10.211.55.4">
+          <div class="wg aug" data-augmented-ui="br-rect bl-rect-x border">
+            <div class="content">wg0 <span class="grp tunip4">10.9.9.4</span></div>
+          </div>
+          <div class="ethcard aug" data-augmented-ui="br-rect bl-rect-x border">
+            <div class="content">eth0 <span class="grp physip4">10.211.55.4</span></div>
+            <div class="teeth"></div>
+          </div>
+          <!-- ethcard -->
+          <div class="bracket" data-augmented-ui="br-clip-y bl-clip-y">
+            <div class="socket"></div>
+          </div>
+        </div>
+        <!-- peer -->
 
-<div class="peer" role="img" alt="The first peer" title="10.211.55.3">
-	<div class="wg aug" data-augmented-ui="br-rect bl-rect-x border">
-		<div class="content">
-			wg0 <span class="grp tunip3">10.9.9.3</span>
-		</div>
-	</div>
-	<div class="ethcard aug" data-augmented-ui="br-rect bl-rect-x border">
-		<div class="content">
-			eth0 <span class="grp physip3">10.211.55.3</span>
-		</div>
-		<div class="teeth"></div>
-	</div> <!-- ethcard -->
-	<div class="bracket" data-augmented-ui="br-clip-y bl-clip-y">
-		<div class="socket"></div>
-	</div>
-</div> <!-- peer -->
+        <div class="wgarrow"></div>
+      </div>
+      <!-- diagram -->
 
-<div class="wgarrow"></div>
+      <div id="tcpdump" class="tcpdump">
+        $ tcpdump -i eth0
+        <table border="0">
+          <tr>
+            <th>no.</th>
+            <th>iface</th>
+            <th>src</th>
+            <th>dst</th>
+            <th>protocol</th>
+            <th>length</th>
+            <th>info</th>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>wg0</td>
+            <td><span class="grp tunip3">10.9.9.3</span></td>
+            <td><span class="grp tunip4">10.9.9.4</span></td>
+            <td>icmp</td>
+            <td>84</td>
+            <td>echo (ping) request</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>eth0</td>
+            <td><span class="grp physip3">10.211.55.3</span></td>
+            <td><span class="grp physip4">10.211.55.4</span></td>
+            <td>wireguard</td>
+            <td>176</td>
+            <td>handshake inititation</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>eth0</td>
+            <td><span class="grp physip4">10.211.55.4</span></td>
+            <td><span class="grp physip3">10.211.55.3</span></td>
+            <td>wireguard</td>
+            <td>120</td>
+            <td>handshake response</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>eth0</td>
+            <td><span class="grp physip3">10.211.55.3</span></td>
+            <td><span class="grp physip4">10.211.55.4</span></td>
+            <td>wireguard</td>
+            <td>156</td>
+            <td>transport data</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>eth0</td>
+            <td><span class="grp physip4">10.211.55.4</span></td>
+            <td><span class="grp physip3">10.211.55.3</span></td>
+            <td>wireguard</td>
+            <td>156</td>
+            <td>transport data</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>wg0</td>
+            <td><span class="grp tunip4">10.9.9.4</span></td>
+            <td><span class="grp tunip3">10.9.9.3</span></td>
+            <td>icmp</td>
+            <td>84</td>
+            <td>echo (ping) reply</td>
+          </tr>
+        </table>
+      </div>
+      <br />
 
-<div class="peer" role="img" alt="The second peer" title="10.211.55.4">
-	<div class="wg aug" data-augmented-ui="br-rect bl-rect-x border">
-		<div class="content">
-			wg0 <span class="grp tunip4">10.9.9.4</span>
-		</div>
-	</div>
-	<div class="ethcard aug" data-augmented-ui="br-rect bl-rect-x border">
-		<div class="content">
-			eth0 <span class="grp physip4">10.211.55.4</span>
-		</div>
-		<div class="teeth"></div>
-	</div> <!-- ethcard -->
-	<div class="bracket" data-augmented-ui="br-clip-y bl-clip-y">
-		<div class="socket"></div>
-	</div>
-</div> <!-- peer -->
+      <div title="the title of the current element mouse-overed" class="hover-title">
+        <div class="grp alt physip3">
+          The "physical" IP of the first system. WireGuard will send encapsulated packets using
+          physical IPs.
+        </div>
+        <div class="grp alt physip4">The "physical" IP of the second system.</div>
+        <div class="grp alt tunip3">
+          The WireGuard tunnel IP of the first system. Because it is inserted into the system
+          routing table by WireGuard, any packet the second system sees from this IP must be sent by
+          the private key that matches the public key specified in the [Peer] section.
+        </div>
+        <div class="grp alt tunip4">The WireGuard tunnel IP of the second system.</div>
+        <div class="grp alt pingipv4hdr">
+          IPv4 packet header: src: 10.9.9.3 dst: <span class="grp tunip4">10.9.9.4</span>
+        </div>
+        <div class="grp alt pingtype">ICMP type: 8 echo request</div>
+        <div class="grp alt pingseq">The ping sequence number, the first ping is 1.</div>
+        <div class="grp alt pingtimestamp">The ping timestamp.</div>
+        <div class="grp alt pingpayload">
+          The payload of the packet is filled out with the padding bytes we provided to the
+          <code>-p</code> flag.
+        </div>
 
-<div class="wgarrow"></div>
-</div> <!-- diagram -->
+        <div class="grp alt wghsinitipv4hdr">
+          IPv4 packet header: src: 10.211.55.3 dst: 10.211.55.4
+        </div>
+        <div class="grp alt wghsinitudp">UDP header: src port: 51820, dst port: 51820</div>
+        <div class="grp alt wghsinit">WireGuard Handshake Initiation</div>
+        <div class="grp alt replypayload">
+          The payload of the ICMP echo reply is filled with the payload of the incoming echo
+          request.
+        </div>
+        <div class="grp alt InitialChainKey">
+          0x60e26daef327efc02ec335e2a025d2d016eb4206f87277f52d38d1988b78cd36
+        </div>
+        <div class="grp alt WGIdentifier">
+          You too can make a new protocol and embed your email address into it.
+        </div>
+        <div class="grp alt InitialHash">
+          0x2211b361081ac566691243db458ad5322d9c6c662293e8b70ee19c65ba079ef3
+        </div>
+        <div class="grp alt peer1EphemeralPrivate">
+          0x508c7f96b164bf1b97bb9f4bb472e89f5b1484f25209c9d9343e92ba09dd9d52
+        </div>
+        <div class="grp alt peer1EphemeralPublic">
+          0xcc694746a8f75dc4d9dcd63633f9f01a5f4aff93d87a0c2c2a4152cddb18c542
+        </div>
+        <div class="grp alt hash1">
+          0x41b1bd7e1afa04db7d5f056ee281620477efada0370791dfcc8e5edfb7d1be4d
+        </div>
+        <div class="grp alt hash2">
+          0x0d43c63ce903910d7c7b53524eff91ac399babf985fea43065b7405c864e76d8
+        </div>
+        <div class="grp alt chainkey1">
+          0x20eb8ca581a4a0477d4775af9561a99ee13e833117182096977a80f67750e0e2
+        </div>
+        <div class="grp alt ephemSharedSecret">
+          0x6bc6dd484c5d5ecf6f9ad75054e9896384217f82aceeb96027f52c90872eb157
+        </div>
+        <div class="grp alt chainkey2">
+          0x6377b4b56ec457fe80e05a12b0ed8b5e2865c248b15f75bec6f5ef7b358321d7
+        </div>
+        <div class="grp alt key">
+          0x1a0af2028fb42b179a6f72cdebddc9424673cf764ac118cc2d18ed8498b4f9e0
+        </div>
+        <div class="grp alt precomputedStaticStatic">
+          0xaeeb59c5b5cafed9268c84b4452afa7fda6d89a570e3d88262e345e2a0331c75
+        </div>
+        <div class="grp alt hash3">
+          0x51320b912f010b1815ea5d0ebdb3ab7b6dc40423c8dd7eaafa7215cf6a489fe1
+        </div>
+      </div>
+    </nav>
 
-<div id="tcpdump" class="tcpdump">
-$ tcpdump -i eth0
-<table border=0>
-<tr><th>no.</th><th>iface</th><th>src</th><th>dst</th><th>protocol</th><th>length</th><th>info</th></tr>
-<tr><td>1</td><td>wg0</td><td><span class="grp tunip3">10.9.9.3</span></td><td><span class="grp tunip4">10.9.9.4</span></td><td>icmp</td><td>84</td><td>echo (ping) request</td></tr>
-<tr><td>2</td><td>eth0</td><td><span class="grp physip3">10.211.55.3</span></td><td><span class="grp physip4">10.211.55.4</span></td><td>wireguard</td><td>176</td><td>handshake inititation</td></tr>
-<tr><td>3</td><td>eth0</td><td><span class="grp physip4">10.211.55.4</span></td><td><span class="grp physip3">10.211.55.3</span></td><td>wireguard</td><td>120</td><td>handshake response</td></tr>
-<tr><td>4</td><td>eth0</td><td><span class="grp physip3">10.211.55.3</span></td><td><span class="grp physip4">10.211.55.4</span></td><td>wireguard</td><td>156</td><td>transport data</td></tr>
-<tr><td>5</td><td>eth0</td><td><span class="grp physip4">10.211.55.4</span></td><td><span class="grp physip3">10.211.55.3</span></td><td>wireguard</td><td>156</td><td>transport data</td></tr>
-<tr><td>6</td><td>wg0</td><td><span class="grp tunip4">10.9.9.4</span></td><td><span class="grp tunip3">10.9.9.3</span></td><td>icmp</td><td>84</td><td>echo (ping) reply</td></tr>
-</table>
-</div>
-<br>
+    <main>
+      <div class="story">
+        <p>
+          We are going to configure a WireGuard tunnel between two linux systems, and send a ping
+          through the tunnel.
+        </p>
+        <p>
+          On a physical network, a ping consists of two packets: an ICMP echo request sent out, and
+          an ICMP echo reply received. On an overlay network, there will also be two packets. But to
+          transmit the overlay network over the physical network, WireGuard needs to negotiate a
+          connection using a handshake then send encrypted, encapsulated packets.
+        </p>
+        <p>
+          This journey is described by the tcpdump this guide documents: two packets on the overlay
+          network (wg0), two handshake packets on the physical network (eth0), and then two
+          encrypted packets on the physical network carrying the ping-pong.
+        </p>
+        <p>
+          First we configure WireGuard on each system. We number the first system
+          <span class="grp tunip3">10.9.9.3</span>, and the second system
+          <span class="grp tunip4">10.9.9.4</span>. Each system gets told the public key of the
+          other.
+        </p>
+      </div>
+      <!-- story -->
 
-<div title="the title of the current element mouse-overed" class="hover-title">
+      <div style="display: grid; grid-template-columns: 8ch 80ch 8ch; grid-gap: 2px">
+        <div id="column0">
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
+          <div class="grp key4">
+            <div>&nbsp;&nbsp; ┌────</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; └───►</div>
+          </div>
+        </div>
+        <!-- column0 -->
 
-<div class="grp alt physip3">
-The "physical" IP of the first system.
-WireGuard will send encapsulated packets using physical IPs.
-</div>
-<div class="grp alt physip4">The "physical" IP of the second system.</div>
-<div class="grp alt tunip3">
-The WireGuard tunnel IP of the first system.
-Because it is inserted into the system routing table by WireGuard, any packet the second system sees from this IP must be sent by the private key that matches the public key specified in the [Peer] section.
-</div>
-<div class="grp alt tunip4">The WireGuard tunnel IP of the second system.</div>
-<div class="grp alt pingipv4hdr">IPv4 packet header: src: 10.9.9.3 dst: <span class="grp tunip4">10.9.9.4</span></div>
-<div class="grp alt pingtype">ICMP type: 8 echo request</div>
-<div class="grp alt pingseq">The ping sequence number, the first ping is 1.</div>
-<div class="grp alt pingtimestamp">The ping timestamp.</div>
-<div class="grp alt pingpayload">The payload of the packet is filled out with the padding bytes we provided to the <code>-p</code> flag.</div>
+        <div id="column1">
+          <div class="story console">
+            <span class="cursor">$</span> ifconfig<br />
+            eth0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST> mtu 1500<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; inet
+            <span class="grp physip3">10.211.55.3</span> netmask 255.255.255.0 broadcast
+            10.211.55.255
+            <br />
+            <br />
+            <span class="cursor">$</span> cat /etc/wireguard/wg0.conf<br />
+            [Interface]<br />
+            Address = <span class="grp tunip3">10.9.9.3</span>/24<br />
+            ListenPort = 51820<br />
+            PrivateKey = <span class="grp key3">gIVa2GgdDYbR6R4AFnk5y2aU0sQirNIIoAcpOUh/aVk=</span
+            ><br />
+            &nbsp;<br />
+            [Peer]<br />
+            PublicKey = <span class="grp key4">ZP/Mzlvt9BwNH9oqtuL0ZP8OW1foBBWfE8R6nSrM/nk=</span
+            ><br />
+            AllowedIPs = <span class="grp tunip4">10.9.9.4</span>/32<br />
+            Endpoint = <span class="grp physip4">10.211.55.4</span>:51820<br />
+            &nbsp;<br />
+            <span class="cursor">$</span> wg-quick up wg0<br />
+            [#] ip link add wg0 type wireguard<br />
+            [#] wg setconf wg0 /dev/fd/63<br />
+            [#] ip -4 address add <span class="grp tunip3">10.9.9.3</span>/24 dev wg0<br />
+            [#] ip link set mtu 1420 up dev wg0<br />
+          </div>
+          <!-- story console -->
 
-<div class="grp alt wghsinitipv4hdr">IPv4 packet header: src: 10.211.55.3 dst: 10.211.55.4</div>
-<div class="grp alt wghsinitudp">UDP header: src port: 51820, dst port: 51820</div>
-<div class="grp alt wghsinit">WireGuard Handshake Initiation</div>
-<div class="grp alt replypayload">The payload of the ICMP echo reply is filled with the payload of the incoming echo request.</div>
-<div class="grp alt InitialChainKey">0x60e26daef327efc02ec335e2a025d2d016eb4206f87277f52d38d1988b78cd36</div>
-<div class="grp alt WGIdentifier">You too can make a new protocol and embed your email address into it.</div>
-<div class="grp alt InitialHash">0x2211b361081ac566691243db458ad5322d9c6c662293e8b70ee19c65ba079ef3</div>
-<div class="grp alt peer1EphemeralPrivate">0x508c7f96b164bf1b97bb9f4bb472e89f5b1484f25209c9d9343e92ba09dd9d52</div>
-<div class="grp alt peer1EphemeralPublic">0xcc694746a8f75dc4d9dcd63633f9f01a5f4aff93d87a0c2c2a4152cddb18c542</div>
-<div class="grp alt hash1">0x41b1bd7e1afa04db7d5f056ee281620477efada0370791dfcc8e5edfb7d1be4d</div>
-<div class="grp alt hash2">0x0d43c63ce903910d7c7b53524eff91ac399babf985fea43065b7405c864e76d8</div>
-<div class="grp alt chainkey1">0x20eb8ca581a4a0477d4775af9561a99ee13e833117182096977a80f67750e0e2</div>
-<div class="grp alt ephemSharedSecret">0x6bc6dd484c5d5ecf6f9ad75054e9896384217f82aceeb96027f52c90872eb157</div>
-<div class="grp alt chainkey2">0x6377b4b56ec457fe80e05a12b0ed8b5e2865c248b15f75bec6f5ef7b358321d7</div>
-<div class="grp alt key">0x1a0af2028fb42b179a6f72cdebddc9424673cf764ac118cc2d18ed8498b4f9e0</div>
-<div class="grp alt precomputedStaticStatic">0xaeeb59c5b5cafed9268c84b4452afa7fda6d89a570e3d88262e345e2a0331c75</div>
-<div class="grp alt hash3">0x51320b912f010b1815ea5d0ebdb3ab7b6dc40423c8dd7eaafa7215cf6a489fe1</div>
-
-</div>
-
-</nav>
-
-<main>
-
-<div class="story">
-<p>
-We are going to configure a WireGuard tunnel between two linux systems,
-and send a ping through the tunnel.
-</p>
-<p>
-On a physical network, a ping consists of two packets: an ICMP echo 
-request sent out, and an ICMP echo reply received.
-On an overlay network, there will also be two packets. But to transmit
-the overlay network over the physical network, WireGuard needs to
-negotiate a connection using a handshake then send encrypted,
-encapsulated packets.
-</p>
-<p>
-This journey is described by the tcpdump this guide documents:
-two packets on the overlay network (wg0), two handshake packets
-on the physical network (eth0), and then two encrypted packets
-on the physical network carrying the ping-pong.
-</p>
-<p>
-First we configure WireGuard on each system.
-We number the first system <span class="grp tunip3">10.9.9.3</span>,
-and the second system <span class="grp tunip4">10.9.9.4</span>.
-Each system gets told the public key of the other.
-</p>
-</div> <!-- story -->
-
-<div style="display: grid; grid-template-columns: 8ch 80ch 8ch; grid-gap: 2px;">
-
-<div id="column0">
-<div>&nbsp;</div>
-<div>&nbsp;</div>
-<div>&nbsp;</div>
-<div>&nbsp;</div>
-<div>&nbsp;</div>
-<div>&nbsp;</div>
-<div>&nbsp;</div>
-<div>&nbsp;</div>
-<div>&nbsp;</div>
-<div>&nbsp;</div>
-<div>&nbsp;</div>
-<div class="grp key4">
-<div>&nbsp;&nbsp; ┌────</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; └───►</div>
-</div>
-</div> <!-- column0 -->
-
-<div id="column1">
-
-<div class="story console">
-<span class="cursor">$</span> ifconfig<br>
-eth0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-inet <span class="grp physip3">10.211.55.3</span>  netmask 255.255.255.0  broadcast 10.211.55.255
-<br>
-<br>
-<span class="cursor">$</span> cat /etc/wireguard/wg0.conf<br>
-[Interface]<br>
-Address = <span class="grp tunip3">10.9.9.3</span>/24<br>
-ListenPort = 51820<br>
-PrivateKey = <span class="grp key3">gIVa2GgdDYbR6R4AFnk5y2aU0sQirNIIoAcpOUh/aVk=</span><br>
-&nbsp;<br>
-[Peer]<br>
-PublicKey = <span class="grp key4">ZP/Mzlvt9BwNH9oqtuL0ZP8OW1foBBWfE8R6nSrM/nk=</span><br>
-AllowedIPs = <span class="grp tunip4">10.9.9.4</span>/32<br>
-Endpoint = <span class="grp physip4">10.211.55.4</span>:51820<br>
-&nbsp;<br>
-<span class="cursor">$</span> wg-quick up wg0<br>
-[#] ip link add wg0 type wireguard<br>
-[#] wg setconf wg0 /dev/fd/63<br>
-[#] ip -4 address add <span class="grp tunip3">10.9.9.3</span>/24 dev wg0<br>
-[#] ip link set mtu 1420 up dev wg0<br>
-</div> <!-- story console -->
-
-<!--div style="display:none;"><span class="cursor">$</span> echo -n TAILSCALE | xxd -ps</div>
+          <!--div style="display:none;"><span class="cursor">$</span> echo -n TAILSCALE | xxd -ps</div>
 <div style="display:none;">5441494c5343414c45</div-->
-<br>
+          <br />
 
-<div class="story console">
-<span class="cursor">$</span> ifconfig<br>
-eth0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500<br>
+          <div class="story console">
+            <span class="cursor">$</span> ifconfig<br />
+            eth0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST> mtu 1500<br />
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-inet <span class="grp physip4">10.211.55.4</span>  netmask 255.255.255.0  broadcast 10.211.55.255
-<br>
-&nbsp;<br>
-<span class="cursor">$</span> cat /etc/wireguard/wg0.conf<br>
-[Interface]<br>
-Address = <span class="grp tunip4">10.9.9.4</span>/24<br>
-ListenPort = 51820<br>
-PrivateKey = <span class="grp key4">UP38ByGCZU8WP18PmmIdcpVmx00QA3xNe7sEB9Hixkk=</span><br>
-&nbsp;<br>
-[Peer]<br>
-PublicKey = <span class="grp key3">302gDmQsULru7lawg8XvU92Y43G2eAntZk39wpJSMwY=</span><br>
-AllowedIPs = <span class="grp tunip3">10.9.9.3</span>/32<br>
-Endpoint = <span class="grp physip3">10.211.55.3</span>:51820<br>
-&nbsp;<br>
-<span class="cursor">$</span> wg-quick up wg0<br>
-[#] ip link add wg0 type wireguard<br>
-[#] wg setconf wg0 /dev/fd/63<br>
-[#] ip -4 address add <span class="grp tunip4">10.9.9.4</span>/24 dev wg0<br>
-[#] ip link set mtu 1420 up dev wg0<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; inet
+            <span class="grp physip4">10.211.55.4</span> netmask 255.255.255.0 broadcast
+            10.211.55.255
+            <br />
+            &nbsp;<br />
+            <span class="cursor">$</span> cat /etc/wireguard/wg0.conf<br />
+            [Interface]<br />
+            Address = <span class="grp tunip4">10.9.9.4</span>/24<br />
+            ListenPort = 51820<br />
+            PrivateKey = <span class="grp key4">UP38ByGCZU8WP18PmmIdcpVmx00QA3xNe7sEB9Hixkk=</span
+            ><br />
+            &nbsp;<br />
+            [Peer]<br />
+            PublicKey = <span class="grp key3">302gDmQsULru7lawg8XvU92Y43G2eAntZk39wpJSMwY=</span
+            ><br />
+            AllowedIPs = <span class="grp tunip3">10.9.9.3</span>/32<br />
+            Endpoint = <span class="grp physip3">10.211.55.3</span>:51820<br />
+            &nbsp;<br />
+            <span class="cursor">$</span> wg-quick up wg0<br />
+            [#] ip link add wg0 type wireguard<br />
+            [#] wg setconf wg0 /dev/fd/63<br />
+            [#] ip -4 address add <span class="grp tunip4">10.9.9.4</span>/24 dev wg0<br />
+            [#] ip link set mtu 1420 up dev wg0<br />
+          </div>
+          <!-- story console -->
+        </div>
+        <!-- column1 -->
 
-</div> <!-- story console -->
+        <div id="column2">
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
+          <div class="grp key3">
+            <div>───┐</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>&nbsp;&nbsp; │</div>
+            <div>◄──┘</div>
+          </div>
+        </div>
+        <!-- column2 -->
+      </div>
+      <!-- grid -->
 
-</div> <!-- column1 -->
+      <div class="story">
+        The WireGuard tunnel is now configured and ready to use.
+        <br /><br />
+        By default, WireGuard does not initialize the connection ahead of time. Nothing will happen
+        until we try to use. So let's send a ping:
+        <br /><br />
+        <div class="console">
+          <div>
+            <span class="cursor">$</span> ping
+            <span class="grp pingpayload">-p 5441494c5343414c45</span>
+            <span class="grp tunip4">10.9.9.4</span>
+          </div>
+        </div>
+        <br />
+        This causes the Linux kernel to generate an ICMP echo request packet:
+        <br /><br />
 
-<div id="column2">
-<div>&nbsp;</div>
-<div>&nbsp;</div>
-<div>&nbsp;</div>
-<div>&nbsp;</div>
-<div>&nbsp;</div>
-<div>&nbsp;</div>
-<div>&nbsp;</div>
-<div>&nbsp;</div>
-<div class="grp key3">
-<div>───┐</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>&nbsp;&nbsp; │</div>
-<div>◄──┘</div>
-</div>
-</div> <!-- column2 -->
+        <div class="hexdump">
+          <span class="grp pingipv4hdr">45 00 00 54 66 56 40 00 &nbsp;40 01 ae 3a 0a 09 09 03</span>
+          &nbsp; <span class="grp pingipv4hdr">................</span><br />
+          <span class="grp pingipv4hdr">0a 09 09 04</span> <span class="grp pingtype">08</span> 00
+          02 de &nbsp;00 08 <span class="grp pingseq">00 01</span>
+          <span class="grp pingtimestamp">a5 ec b8 62</span> &nbsp;
+          <span class="grp pingipv4hdr">....</span><span class="grp pingtype">.</span>.....<span
+            class="grp pingseq"
+            >..</span
+          ><span class="grp pingtimestamp">....</span><br />
+          <span class="grp pingtimestamp">00 00 00 00</span>
+          <span class="grp pingpayload">cd 19 00 00 &nbsp;00 00 00 00 4c 45 54 41</span> &nbsp;
+          <span class="grp pingtimestamp">....</span>........<span class="grp pingpayload"
+            >LETA</span
+          ><br />
+          <span class="grp pingpayload">49 4c 53 43 41 4c 45 54 &nbsp;41 49 4c 53 43 41 4c 45</span>
+          &nbsp; <span class="grp pingpayload">ILSCALETAILSCALE</span><br />
+          <span class="grp pingpayload">54 41 49 4c 53 43 41 4c &nbsp;45 54 41 49 4c 53 43 41</span>
+          &nbsp; <span class="grp pingpayload">TAILSCALETAILSCA</span><br />
+          <span class="grp pingpayload">4c 45 54 41</span>
+          <span style="color: grey">.. .. .. .. &nbsp;.. .. .. .. .. .. .. ..</span> &nbsp;
+          <span class="grp pingpayload">LETA</span><br />
+        </div>
 
-</div> <!-- grid -->
+        <br />
 
-<div class="story">
-The WireGuard tunnel is now configured and ready to use.
-<br><br>
-By default, WireGuard does not initialize the connection ahead of time.
-Nothing will happen until we try to use.
-So let's send a ping:
-<br><br>
-<div class="console">
-<div><span class="cursor">$</span> ping <span class="grp pingpayload">-p 5441494c5343414c45</span> <span class="grp tunip4">10.9.9.4</span></div>
-</div>
-<br>
-This causes the Linux kernel to generate an ICMP echo request packet:
-<br><br>
+        This ICMP packet is delivered to the WireGuard implementation inside the first system, as it
+        has declared it is responsible for routing packets with the destination
+        <span class="grp tunip4">10.9.9.4</span>.
 
-<div class="hexdump">
-<span class="grp pingipv4hdr">45 00 00 54 66 56 40 00 &nbsp;40 01 ae 3a 0a 09 09 03</span> &nbsp; <span class="grp pingipv4hdr">................</span><br>
-<span class="grp pingipv4hdr">0a 09 09 04</span> <span class="grp pingtype">08</span> 00 02 de &nbsp;00 08 <span class="grp pingseq">00 01</span> <span class="grp pingtimestamp">a5 ec b8 62</span> &nbsp; <span class="grp pingipv4hdr">....</span><span class="grp pingtype">.</span>.....<span class="grp pingseq">..</span><span class="grp pingtimestamp">....</span><br>
-<span class="grp pingtimestamp">00 00 00 00</span> <span class="grp pingpayload">cd 19 00 00 &nbsp;00 00 00 00 4c 45 54 41</span> &nbsp; <span class="grp pingtimestamp">....</span>........<span class="grp pingpayload">LETA</span><br>
-<span class="grp pingpayload">49 4c 53 43 41 4c 45 54 &nbsp;41 49 4c 53 43 41 4c 45</span> &nbsp; <span class="grp pingpayload">ILSCALETAILSCALE</span><br>
-<span class="grp pingpayload">54 41 49 4c 53 43 41 4c &nbsp;45 54 41 49 4c 53 43 41</span> &nbsp; <span class="grp pingpayload">TAILSCALETAILSCA</span><br>
-<span class="grp pingpayload">4c 45 54 41</span> <span style="color: grey;">.. .. .. .. &nbsp;.. .. .. .. .. .. .. ..</span> &nbsp; <span class="grp pingpayload">LETA</span><br>
-</div>
+        <br /><br />
 
-<br>
+        Receiving this packet causes WireGuard to initiate the tunnel. So let's hit pause on the
+        ping for now, while we handshake with our WireGuard peer.
+      </div>
+      <!-- story -->
 
-This ICMP packet is delivered to the WireGuard implementation inside
-the first system, as it has declared it is responsible for routing
-packets with the destination <span class="grp tunip4">10.9.9.4</span>.
+      <div class="story" style="padding-top: 1ch">
+        <h2>WireGuard Handshake Inititation</h2>
 
-<br><br>
+        <p>
+          The first system (<span class="grp tunip3">10.9.9.3</span>) generates a Handshake
+          Initiation packet. It starts with the state:
+        </p>
 
-Receiving this packet causes WireGuard to initiate the tunnel.
-So let's hit pause on the ping for now, while we handshake with our
-WireGuard peer.
-</div> <!-- story -->
+        <p class="quote">
+          localPrivate (<span class="grp tunip3">10.9.9.3</span> static key) :=<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="grp key3"
+            >0x80855ad8681d0d86d1e91e00167939cb6694d2c422acd208a0072939487f6959</span
+          ><br />
+          localPublic&nbsp; (<span class="grp tunip3">10.9.9.3</span> static key) :=<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="grp key3"
+            >0xdf4da00e642c50baeeee56b083c5ef53dd98e371b67809ed664dfdc292523306</span
+          >
+          peer2Public (<span class="grp tunip4">10.9.9.4</span> static key) :=<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="grp key4"
+            >0x64ffccce5bedf41c0d1fda2ab6e2f464ff0e5b57e804159f13c47a9d2accfe79</span
+          ><br /><br />
 
-<div class="story" style="padding-top: 1ch;">
-<h2>WireGuard Handshake Inititation</h2>
+          <span class="grp NoiseConstruction">NoiseConstruction</span> :=
+          "Noise_IKpsk2_25519_ChaChaPoly_BLAKE2s"<br />
+          <span class="grp InitialChainKey">InitialChainKey</span> &nbsp;&nbsp;:= blake2s(<span
+            class="grp NoiseConstruction"
+            >NoiseConstruction</span
+          >)<br />
+          <span class="grp WGIdentifier">WGIdentifier</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:=
+          "WireGuard v1 zx2c4 Jason@zx2c4.com"<br />
+          <span class="grp InitialHash">InitialHash</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:=
+          blake2s(<span class="grp InitialChainKey">InitialChainKey</span>,
+          <span class="grp WGIdentifier">WGIdentifier</span>)
+        </p>
 
-<p>
-The first system (<span class="grp tunip3">10.9.9.3</span>) generates a Handshake Initiation packet. It starts with the state:
-</p>
+        <p>
+          From here we encrypt a message for our peer with an ephemeral key, and compute a running
+          hash for use in processing the response:
+        </p>
 
-<p class="quote">
-localPrivate (<span class="grp tunip3">10.9.9.3</span> static key) :=<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="grp key3">0x80855ad8681d0d86d1e91e00167939cb6694d2c422acd208a0072939487f6959</span><br>
-localPublic&nbsp; (<span class="grp tunip3">10.9.9.3</span> static key) :=<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="grp key3">0xdf4da00e642c50baeeee56b083c5ef53dd98e371b67809ed664dfdc292523306</span>
-peer2Public (<span class="grp tunip4">10.9.9.4</span> static key) :=<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="grp key4">0x64ffccce5bedf41c0d1fda2ab6e2f464ff0e5b57e804159f13c47a9d2accfe79</span><br><br>
+        <p class="quote">
+          <span class="grp precomputedStaticStatic">precomputedStaticStatic</span> = curve25519
+          scalar <span class="grp key3">peer1PrivateKey</span> *
+          <span class="grp key4">peer2Public</span><br />
 
-<span class="grp NoiseConstruction">NoiseConstruction</span> := "Noise_IKpsk2_25519_ChaChaPoly_BLAKE2s"<br>
-<span class="grp InitialChainKey">InitialChainKey</span> &nbsp;&nbsp;:= blake2s(<span class="grp NoiseConstruction">NoiseConstruction</span>)<br>
-<span class="grp WGIdentifier">WGIdentifier</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:= "WireGuard v1 zx2c4 Jason@zx2c4.com"<br>
-<span class="grp InitialHash">InitialHash</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:= blake2s(<span class="grp InitialChainKey">InitialChainKey</span>, <span class="grp WGIdentifier">WGIdentifier</span>)
-</p>
+          <br />
 
-<p>
-From here we encrypt a message for our peer with an ephemeral key,
-and compute a running hash for use in processing the response:
-</p>
+          <span class="grp peer1EphemeralPrivate">peer1EphemeralPrivate</span> := rnd()<br />
+          <span class="grp peer1EphemeralPublic">peer1EphemeralPublic</span> &nbsp;:= curve25519
+          scalar base * <span class="grp peer1EphemeralPrivate">peer1EphemeralPrivate</span><br />
+          <br />
+          <span class="grp hash1">hash</span> := blake2s(hash,
+          <span class="grp key4">peer2Public</span>)<br />
+          <span class="grp hash2">hash</span> &nbsp;= blake2s(hash, peer1EphemeralPublic)<br />
+          <br />
+          <span class="grp chainkey1">chainKey</span> := KDF1(InitialChainKey,
+          <span class="grp peer1EphemeralPublic">peer1EphemeralPublic</span>)<br />
+          <br />
+          <span class="grp ephemSharedSecret">ephemSharedSecret</span> := curve25519 scalar
+          <span class="grp peer1EphemeralPrivate">peer1EphemeralPrivate</span> * remoteStatic<br />
+          <br />
+          <span class="grp chainkey2">chainKey</span>, <span class="grp key">key</span> = KDF2(<span
+            class="grp chainkey1"
+            >chainKey</span
+          >, <span class="grp ephemSharedSecret">ephemSharedSecret</span>)<br />
+          <br />
+          <span class="grp msgStatic">msgStatic</span> := aead(key).Seal(localPublic, hash)<br />
+          <br />
+          <span class="grp hash3">hash</span> = blake2s(<span class="grp hash2">hash</span>,
+          <span class="grp msgStatic">msgStatic</span>)<br />
+          <br />
+          chainKey, key = KDF2(<span class="grp chainkey2">chainKey</span>,
+          <span class="grp precomputedStaticStatic">precomputedStaticStatic</span>) = TODO<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;0x545aea64f078aca74c3d4f81603d6483e241853a4ef64900890b1b4de7201ce9
+        </p>
 
-<p class="quote">
-<span class="grp precomputedStaticStatic">precomputedStaticStatic</span> = curve25519 scalar <span class="grp key3">peer1PrivateKey</span> * <span class="grp key4">peer2Public</span><br>
+        <p>
+          The current timestamp is sealed into the handshake and is added to the hash state that is
+          preserved for processing the handshake response:
+        </p>
 
-<br>
+        <p class="quote">
+          <span class="grp timestamp">timestamp</span> = 0x40000000386ca8d900000000<br />
+          <span class="grp msgTimestamp">msgTimestamp</span> = aead(key).Seal(<span
+            class="grp timestamp"
+            >timestamp</span
+          >, hash)<br />
+          hash = blake2s(hash, <span class="grp msgTimestamp">msgTimestamp</span>) =<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;0x72fa75937edc0bd6127801d545f08a759310dee8424d308fdaa95383f720c75c
+        </p>
 
-<span class="grp peer1EphemeralPrivate">peer1EphemeralPrivate</span> := rnd()<br>
-<span class="grp peer1EphemeralPublic">peer1EphemeralPublic</span> &nbsp;:= curve25519 scalar base * <span class="grp peer1EphemeralPrivate">peer1EphemeralPrivate</span><br>
-<br>
-<span class="grp hash1">hash</span> := blake2s(hash, <span class="grp key4">peer2Public</span>)<br>
-<span class="grp hash2">hash</span> &nbsp;= blake2s(hash, peer1EphemeralPublic)<br>
-<br>
-<span class="grp chainkey1">chainKey</span> := KDF1(InitialChainKey, <span class="grp peer1EphemeralPublic">peer1EphemeralPublic</span>)<br>
-<br>
-<span class="grp ephemSharedSecret">ephemSharedSecret</span> := curve25519 scalar <span class="grp peer1EphemeralPrivate">peer1EphemeralPrivate</span> * remoteStatic<br>
-<br>
-<span class="grp chainkey2">chainKey</span>, <span class="grp key">key</span> = KDF2(<span class="grp chainkey1">chainKey</span>, <span class="grp ephemSharedSecret">ephemSharedSecret</span>)<br>
-<br>
-<span class="grp msgStatic">msgStatic</span> := aead(key).Seal(localPublic, hash)<br>
-<br>
-<span class="grp hash3">hash</span> = blake2s(<span class="grp hash2">hash</span>, <span class="grp msgStatic">msgStatic</span>)<br>
-<br>
-chainKey, key = KDF2(<span class="grp chainkey2">chainKey</span>, <span class="grp precomputedStaticStatic">precomputedStaticStatic</span>) = TODO<br>
-&nbsp;&nbsp;&nbsp;&nbsp;0x545aea64f078aca74c3d4f81603d6483e241853a4ef64900890b1b4de7201ce9
-</p>
+        <p>
+          At this point, we have assembled all of the parts of the Handshake Initiation message and
+          can construct the packet. In particular:
+        </p>
 
-<p>
-The current timestamp is sealed into the handshake and is added to the
-hash state that is preserved for processing the handshake response:
-</p>
+        <p class="quote">
+          MessageInitiation{<br />
+          &nbsp; Type: &nbsp; &nbsp; &nbsp;<span class="grp msgInitType">01 00 00 00</span><br />
+          &nbsp; Sender: &nbsp; &nbsp;<span class="grp msgInitSender">4d 9b d7 df</span><br />
+          &nbsp; Ephemeral:
+          <span class="grp peer1EphemeralPublic"
+            >cc 69 47 46 a8 f7 5d c4 d9 dc d6 36 33 f9 f0 1a</span
+          ><br />
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="grp peer1EphemeralPublic"
+            >5f 4a ff 93 d8 7a 0c 2c 2a 41 52 cd db 18 c5 42</span
+          ><br />
+          &nbsp; Static: &nbsp; &nbsp;<span class="grp msgStatic"
+            >18 56 f5 b1 ff c0 74 16 ba 5c 0a a8 f7 7a c2 0c</span
+          ><br />
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="grp msgStatic"
+            >a8 a8 24 1d 69 c5 c1 6d 20 5a 7a f5 e4 d0 a5 c0</span
+          ><br />
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="grp msgStatic"
+            >aa e1 94 cc f0 9a f2 4d 83 75 45 b2 57 8d 7d 4c</span
+          ><br />
+          &nbsp; Timestamp:
+          <span class="grp msgTimestamp">e6 93 0e 41 8d c2 8f 4a a4 3a 9f f7 1d a1 60 c5</span
+          ><br />
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="grp msgTimestamp"
+            >c3 60 26 87 47 ac 6c 04 12 93 8b a0</span
+          ><br />
+          &nbsp; MAC1: &nbsp; &nbsp; &nbsp;<span class="grp msgMAC1"
+            >70 75 21 32 17 c3 a2 ce 1b c8 b2 5d 4b 9b c9 46</span
+          ><br />
+          &nbsp; MAC2: &nbsp; &nbsp; &nbsp;<span class="grp msgMAC2">[zeros]</span><br />
+          }
+        </p>
 
-<p class="quote">
-<span class="grp timestamp">timestamp</span> = 0x40000000386ca8d900000000<br>
-<span class="grp msgTimestamp">msgTimestamp</span> = aead(key).Seal(<span class="grp timestamp">timestamp</span>, hash)<br>
-hash = blake2s(hash, <span class="grp msgTimestamp">msgTimestamp</span>) =<br>
-&nbsp;&nbsp;&nbsp;&nbsp;0x72fa75937edc0bd6127801d545f08a759310dee8424d308fdaa95383f720c75c
-</p>
+        <p>
+          The kernel prepends an IPv4 and UDP header to the Handshake Initiation packet and it is
+          routed via physical IP addresses:
+        </p>
 
-<p>
-At this point, we have assembled all of the parts of the Handshake
-Initiation message and can construct the packet. In particular:
-</p>
+        <p class="quote">
+          <span class="grp wghsinitipv4hdr"
+            >45 88 00 b0 68 66 00 00 &nbsp;40 11 8d a2 0a d3 37 03</span
+          ><br />
+          <span class="grp wghsinitipv4hdr">0a d3 37 04</span>
+          <span class="grp wghsinitudp">ca 6c ca 6c &nbsp;00 9c 84 5a</span>
+          <span class="grp msgInitType">01 00 00 00</span><br />
+          <span class="grp msgInitSender">df d7 9b 4d</span>
+          <span class="grp peer1EphemeralPublic">cc 69 47 46 &nbsp;a8 f7 5d c4 d9 dc d6 36</span
+          ><br />
+          <span class="grp peer1EphemeralPublic"
+            >33 f9 f0 1a 5f 4a ff 93 &nbsp;d8 7a 0c 2c 2a 41 52 cd</span
+          ><br />
+          <span class="grp peer1EphemeralPublic">db 18 c5 42</span>
+          <span class="grp msgStatic">18 56 f5 b1 &nbsp;ff c0 74 16 ba 5c 0a a8</span><br />
+          <span class="grp msgStatic">f7 7a c2 0c a8 a8 24 1d &nbsp;69 c5 c1 6d 20 5a 7a f5</span
+          ><br />
+          <span class="grp msgStatic">e4 d0 a5 c0 aa e1 94 cc &nbsp;f0 9a f2 4d 83 75 45 b2</span
+          ><br />
+          <span class="grp msgStatic">57 8d 7d 4c</span>
+          <span class="grp msgTimestamp">e6 93 0e 41 &nbsp;8d c2 8f 4a a4 3a 9f f7</span><br />
+          <span class="grp msgTimestamp">1d a1 60 c5 c3 60 26 87 &nbsp;47 ac 6c 04 12 93 8b a0</span
+          ><br />
+          <span class="grp msgMAC1">70 75 21 32 17 c3 a2 ce &nbsp;1b c8 b2 5d 4b 9b c9 46</span
+          ><br />
+          <span class="grp msgMAC2">00 00 00 00 00 00 00 00 &nbsp;00 00 00 00 00 00 00 00</span
+          ><br />
+        </p>
+      </div>
+      <!-- story -->
 
-<p class="quote">
-MessageInitiation{<br>
-&nbsp; Type: &nbsp; &nbsp; &nbsp;<span class="grp msgInitType">01 00 00 00</span><br>
-&nbsp; Sender: &nbsp; &nbsp;<span class="grp msgInitSender">4d 9b d7 df</span><br>
-&nbsp; Ephemeral: <span class="grp peer1EphemeralPublic">cc 69 47 46 a8 f7 5d c4 d9 dc d6 36 33 f9 f0 1a</span><br>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="grp peer1EphemeralPublic">5f 4a ff 93 d8 7a 0c 2c 2a 41 52 cd db 18 c5 42</span><br>
-&nbsp; Static: &nbsp; &nbsp;<span class="grp msgStatic">18 56 f5 b1 ff c0 74 16 ba 5c 0a a8 f7 7a c2 0c</span><br>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="grp msgStatic">a8 a8 24 1d 69 c5 c1 6d 20 5a 7a f5 e4 d0 a5 c0</span><br>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="grp msgStatic">aa e1 94 cc f0 9a f2 4d 83 75 45 b2 57 8d 7d 4c</span><br>
-&nbsp; Timestamp: <span class="grp msgTimestamp">e6 93 0e 41 8d c2 8f 4a a4 3a 9f f7 1d a1 60 c5</span><br>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="grp msgTimestamp">c3 60 26 87 47 ac 6c 04 12 93 8b a0</span><br>
-&nbsp; MAC1: &nbsp; &nbsp; &nbsp;<span class="grp msgMAC1">70 75 21 32 17 c3 a2 ce 1b c8 b2 5d 4b 9b c9 46</span><br>
-&nbsp; MAC2: &nbsp; &nbsp; &nbsp;<span class="grp msgMAC2">[zeros]</span><br>
-}
-</p>
+      <div class="story" style="padding-top: 1ch">
+        <h2>Consuming the Handshake Initiation</h2>
+        <p>
+          The second peer (10.9.9.4) receives the handshake inititation packet and verifies it. It
+          does this by repeating many of the steps the first peer performed generating it, including
+          calculating out the hash and chainKey, verifying the identity of the sender matches the
+          configuration, then opening the AEAD sealed timestamp.
+        </p>
+        <p class="quote">recvTimestamp := aead(key).Open(msg.Timestamp, hash)</p>
+        <p>This is used to protect against replay attacks and packet floods.</p>
+        <p>
+          When the second peer is satisfied with the handshake initiation message it recevied, it
+          configures the local state machine to be ready to receive packets from peer one using the
+          negotiated session key and sends a handshake response.
+        </p>
 
-<p>
-The kernel prepends an IPv4 and UDP header to the Handshake Initiation
-packet and it is routed via physical IP addresses:
-</p>
+        <h2>WireGuard Handshake Response</h2>
 
-<p class="quote">
-<span class="grp wghsinitipv4hdr">45 88 00 b0 68 66 00 00 &nbsp;40 11 8d a2 0a d3 37 03</span><br>
-<span class="grp wghsinitipv4hdr">0a d3 37 04</span> <span class="grp wghsinitudp">ca 6c ca 6c &nbsp;00 9c 84 5a</span> <span class="grp msgInitType">01 00 00 00</span><br>
-<span class="grp msgInitSender">df d7 9b 4d</span> <span class="grp peer1EphemeralPublic">cc 69 47 46 &nbsp;a8 f7 5d c4 d9 dc d6 36</span><br>
-<span class="grp peer1EphemeralPublic">33 f9 f0 1a 5f 4a ff 93 &nbsp;d8 7a 0c 2c 2a 41 52 cd</span><br>
-<span class="grp peer1EphemeralPublic">db 18 c5 42</span> <span class="grp msgStatic">18 56 f5 b1 &nbsp;ff c0 74 16 ba 5c 0a a8</span><br>
-<span class="grp msgStatic">f7 7a c2 0c a8 a8 24 1d &nbsp;69 c5 c1 6d 20 5a 7a f5</span><br>
-<span class="grp msgStatic">e4 d0 a5 c0 aa e1 94 cc &nbsp;f0 9a f2 4d 83 75 45 b2</span><br>
-<span class="grp msgStatic">57 8d 7d 4c</span> <span class="grp msgTimestamp">e6 93 0e 41 &nbsp;8d c2 8f 4a a4 3a 9f f7</span><br>
-<span class="grp msgTimestamp">1d a1 60 c5 c3 60 26 87 &nbsp;47 ac 6c 04 12 93 8b a0</span><br>
-<span class="grp msgMAC1">70 75 21 32 17 c3 a2 ce &nbsp;1b c8 b2 5d 4b 9b c9 46</span><br>
-<span class="grp msgMAC2">00 00 00 00 00 00 00 00 &nbsp;00 00 00 00 00 00 00 00</span><br>
-</p>
+        <p class="quote">
+          MessageResponse{<br />
+          &nbsp; Type: &nbsp; &nbsp; &nbsp;02 00 00 00<br />
+          &nbsp; Sender: &nbsp; &nbsp;61 9b 42 76<br />
+          &nbsp; Receiver: &nbsp;4d 9b d7 df<br />
+          &nbsp; Ephemeral: 5d 1d 09 7c fa ee 81 4c e2 0b 35 1a da e6 fe 37<br />
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;2c 5f 22 ec 15 f5 6e 5b 7d 15 1a 50 79 d5
+          90 34<br />
+          &nbsp; Empty: &nbsp; &nbsp; b3 e1 bc d4 d4 90 8e 87 4e 40 fb 0e 08 f4 d3 d5<br />
+          &nbsp; MAC1: &nbsp; &nbsp; &nbsp;ba 23 9b a6 8a 15 62 62 29 85 a5 4a 0a ab 5c d1<br />
+          &nbsp; MAC2: &nbsp; &nbsp; &nbsp;[zeros]<br />
+          }
+        </p>
 
-</div> <!-- story -->
+        <p>
+          The kernel prepends an IPv4 and UDP header to the Handshake Response packet and it is
+          routed via physical IP addresses:
+        </p>
 
-<div class="story" style="padding-top: 1ch;">
+        <p class="quote">
+          <span class="grp wghsrespipv4hdr"
+            >45 88 00 78 6e 5d 00 00 &nbsp;40 11 87 e3 0a d3 37 04</span
+          ><br />
+          <span class="grp wghsrespipv4hdr">0a d3 37 03</span>
+          <span class="grp wghsrespudp">ca 6c ca 6c &nbsp;00 64 ae 71</span>
+          <span class="grp wghsresp">02 00 00 00</span><br />
+          <span class="grp wghsresp">76 42 9b 61 df d7 9b 4d &nbsp;5d 1d 09 7c fa ee 81 4c</span
+          ><br />
+          <span class="grp wghsresp">e2 0b 35 1a da e6 fe 37 &nbsp;2c 5f 22 ec 15 f5 6e 5b</span
+          ><br />
+          <span class="grp wghsresp">7d 15 1a 50 79 d5 90 34 &nbsp;d4 15 7c 65 9d 03 4b 14</span
+          ><br />
+          <span class="grp wghsresp">1d a6 6b a3 92 c3 57 82 &nbsp;e0 56 ee 9a 49 6d e4 f0</span
+          ><br />
+          <span class="grp wghsresp">a3 95 bc d6 82 11 52 47 &nbsp;00 00 00 00 00 00 00 00</span
+          ><br />
+          <span class="grp wghsresp">00 00 00 00 00 00 00 00</span><br />
+        </p>
+      </div>
+      <!-- story -->
 
-<h2>Consuming the Handshake Initiation</h2>
-<p>
-The second peer (10.9.9.4) receives the handshake inititation packet and
-verifies it. It does this by repeating many of the steps the first peer
-performed generating it, including calculating out the hash and chainKey,
-verifying the identity of the sender matches the configuration, then
-opening the AEAD sealed timestamp.
-</p>
-<p class="quote">
-recvTimestamp := aead(key).Open(msg.Timestamp, hash)
-</p>
-<p>
-This is used to protect against replay attacks and packet floods.
-</p>
-<p>
-When the second peer is satisfied with the handshake initiation message
-it recevied, it configures the local state machine to be ready to receive
-packets from peer one using the negotiated session key and sends a
-handshake response.
-</p>
+      <div class="story">
+        <h2>WireGuard Data Transfer: Encapsulated ICMP Echo</h2>
 
-<h2>WireGuard Handshake Response</h2>
+        <p>
+          Now that the handshake response has been received, the sending peer has configured the
+          tunnel and is ready to send a data packet. The original ICMP echo request the kernel
+          generated is padded:
+        </p>
 
-<p class="quote">
-MessageResponse{<br>
-&nbsp; Type: &nbsp; &nbsp; &nbsp;02 00 00 00<br>
-&nbsp; Sender: &nbsp; &nbsp;61 9b 42 76<br>
-&nbsp; Receiver: &nbsp;4d 9b d7 df<br>
-&nbsp; Ephemeral: 5d 1d 09 7c fa ee 81 4c e2 0b 35 1a da e6 fe 37<br>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;2c 5f 22 ec 15 f5 6e 5b 7d 15 1a 50 79 d5 90 34<br>
-&nbsp; Empty: &nbsp; &nbsp; b3 e1 bc d4 d4 90 8e 87 4e 40 fb 0e 08 f4 d3 d5<br>
-&nbsp; MAC1: &nbsp; &nbsp; &nbsp;ba 23 9b a6 8a 15 62 62 29 85 a5 4a 0a ab 5c d1<br>
-&nbsp; MAC2: &nbsp; &nbsp; &nbsp;[zeros]<br>
-}
-</p>
+        <p class="quote">
+          <span class="grp pingipv4hdr">45 00 00 54 66 56 40 00 &nbsp;40 01 ae 3a 0a 09 09 03</span>
+          &nbsp; <span class="grp pingipv4hdr">................</span><br />
+          <span class="grp pingipv4hdr">0a 09 09 04</span> <span class="grp pingtype">08</span> 00
+          02 de &nbsp;00 08 <span class="grp pingseq">00 01</span>
+          <span class="grp pingtimestamp">a5 ec b8 62</span> &nbsp;
+          <span class="grp pingipv4hdr">....</span><span class="grp pingtype">.</span>.....<span
+            class="grp pingseq"
+            >..</span
+          ><span class="grp pingtimestamp">....</span><br />
+          <span class="grp pingtimestamp">00 00 00 00</span>
+          <span class="grp pingpayload">cd 19 00 00 &nbsp;00 00 00 00 4c 45 54 41</span> &nbsp;
+          <span class="grp pingtimestamp">....</span>........<span class="grp pingpayload"
+            >LETA</span
+          ><br />
+          <span class="grp pingpayload">49 4c 53 43 41 4c 45 54 &nbsp;41 49 4c 53 43 41 4c 45</span>
+          &nbsp; <span class="grp pingpayload">ILSCALETAILSCALE</span><br />
+          <span class="grp pingpayload">54 41 49 4c 53 43 41 4c &nbsp;45 54 41 49 4c 53 43 41</span>
+          &nbsp; <span class="grp pingpayload">TAILSCALETAILSCA</span><br />
+          <span class="grp pingpayload">4c 45 54 41</span> 00 00 00 00 &nbsp;00 00 00 00 00 00 00 00
+          &nbsp; <span class="grp pingpayload">LETA............</span><br />
+        </p>
 
-<p>
-The kernel prepends an IPv4 and UDP header to the Handshake Response packet and it is routed via physical IP addresses:
-</p>
+        <p>Then encrypted with the stream cipher ChaCha20Poly1305 AEAD:</p>
 
-<p class="quote">
-<span class="grp wghsrespipv4hdr">45 88 00 78 6e 5d 00 00 &nbsp;40 11 87 e3 0a d3 37 04</span><br>
-<span class="grp wghsrespipv4hdr">0a d3 37 03</span> <span class="grp wghsrespudp">ca 6c ca 6c &nbsp;00 64 ae 71</span> <span class="grp wghsresp">02 00 00 00</span><br>
-<span class="grp wghsresp">76 42 9b 61 df d7 9b 4d &nbsp;5d 1d 09 7c fa ee 81 4c</span><br>
-<span class="grp wghsresp">e2 0b 35 1a da e6 fe 37 &nbsp;2c 5f 22 ec 15 f5 6e 5b</span><br>
-<span class="grp wghsresp">7d 15 1a 50 79 d5 90 34 &nbsp;d4 15 7c 65 9d 03 4b 14</span><br>
-<span class="grp wghsresp">1d a6 6b a3 92 c3 57 82 &nbsp;e0 56 ee 9a 49 6d e4 f0</span><br>
-<span class="grp wghsresp">a3 95 bc d6 82 11 52 47 &nbsp;00 00 00 00 00 00 00 00</span><br>
-<span class="grp wghsresp">00 00 00 00 00 00 00 00</span><br>
-</p>
+        <p class="quote">
+          04 00 00 00 76 42 9b 61 &nbsp;00 00 00 00 00 00 00 00<br />
+          41 52 7d 28 43 ab 2c 57 &nbsp;4f 24 ea b4 a1 8c 7f b0<br />
+          4c 91 0a 9b 37 26 b0 9a &nbsp;23 48 ac bb 19 80 6f 9a<br />
+          6b bc cc ee 67 b4 2f 8c &nbsp;50 c9 ff 29 d7 71 0f 7c<br />
+          96 50 c0 f6 cf 48 57 c2 &nbsp;9a e2 9c a7 ee 25 14 13<br />
+          96 4e 43 ca e7 50 76 ef &nbsp;4d 26 be 47 39 20 e8 d1<br />
+          e5 49 c8 f4 81 a6 8e 33 &nbsp;3d f9 a7 72 6d 44 1a 75<br />
+          d7 89 e4 c3 e8 65 44 aa &nbsp;69 9b 2b 1f 7b a8 d6 12<br />
+        </p>
 
-</div> <!-- story -->
+        <p>
+          The kernel will prepend an IPv4 + UDP header, and send this over physical IP addresses,
+          just like the handshake inititation and response messages.
+        </p>
+      </div>
+      <!-- story -->
 
-<div class="story">
-<h2>WireGuard Data Transfer: Encapsulated ICMP Echo</h2>
+      <div class="story">
+        <h2>WireGuard Data Transfer: ICMP Echo Reply</h2>
 
-<p>
-Now that the handshake response has been received, the sending peer has configured the tunnel and is ready to send a data packet. The original ICMP echo request the kernel generated is padded:
-</p>
+        <p>
+          The encrypted echo request is received and passed to WireGuard, which decrypts the packet
+          and passes it back to the kernel for routing. On seeing the ICMP echo request, the kernel
+          generates an echo reply:
+        </p>
+        <p class="quote">
+          45 00 00 54 29 d5 00 00 &nbsp;40 01 2a bc 0a 09 09 04 &nbsp; ................<br />
+          0a 09 09 03 00 00 0a de &nbsp;00 08 00 01 a5 ec b8 62 &nbsp; ................<br />
+          00 00 00 00
+          <span class="grp replypayload">cd 19 00 00 &nbsp;00 00 00 00 4c 45 54 41</span> &nbsp;
+          ............<span class="grp replypayload">LETA</span><br />
+          <span class="grp replypayload"
+            >49 4c 53 43 41 4c 45 54 &nbsp;41 49 4c 53 43 41 4c 45</span
+          >
+          &nbsp; <span class="grp replypayload">ILSCALETAILSCALE</span><br />
+          <span class="grp replypayload"
+            >54 41 49 4c 53 43 41 4c &nbsp;45 54 41 49 4c 53 43 41</span
+          >
+          &nbsp; <span class="grp replypayload">TAILSCALETAILSCA</span><br />
+          <span class="grp replypayload">4c 45 54 41</span>
+          <span style="color: grey">.. .. .. ..&nbsp; .. .. .. .. .. .. .. ..</span> &nbsp;
+          <span class="grp replypayload">LETA</span><br />
+        </p>
 
-<p class="quote">
-<span class="grp pingipv4hdr">45 00 00 54 66 56 40 00 &nbsp;40 01 ae 3a 0a 09 09 03</span> &nbsp; <span class="grp pingipv4hdr">................</span><br>
-<span class="grp pingipv4hdr">0a 09 09 04</span> <span class="grp pingtype">08</span> 00 02 de &nbsp;00 08 <span class="grp pingseq">00 01</span> <span class="grp pingtimestamp">a5 ec b8 62</span> &nbsp; <span class="grp pingipv4hdr">....</span><span class="grp pingtype">.</span>.....<span class="grp pingseq">..</span><span class="grp pingtimestamp">....</span><br>
-<span class="grp pingtimestamp">00 00 00 00</span> <span class="grp pingpayload">cd 19 00 00 &nbsp;00 00 00 00 4c 45 54 41</span> &nbsp; <span class="grp pingtimestamp">....</span>........<span class="grp pingpayload">LETA</span><br>
-<span class="grp pingpayload">49 4c 53 43 41 4c 45 54 &nbsp;41 49 4c 53 43 41 4c 45</span> &nbsp; <span class="grp pingpayload">ILSCALETAILSCALE</span><br>
-<span class="grp pingpayload">54 41 49 4c 53 43 41 4c &nbsp;45 54 41 49 4c 53 43 41</span> &nbsp; <span class="grp pingpayload">TAILSCALETAILSCA</span><br>
-<span class="grp pingpayload">4c 45 54 41</span> 00 00 00 00 &nbsp;00 00 00 00 00 00 00 00 &nbsp; <span class="grp pingpayload">LETA............</span><br>
-</p>
+        <p>
+          The ICMP echo reply is padded, encrypted with ChaCha20Poly1305 AEAD, sent to the kernel
+          and then given an IPv4+UDP header and routed to the original peer.
+        </p>
+      </div>
+      <!-- story -->
 
-<p>
-Then encrypted with the stream cipher ChaCha20Poly1305 AEAD:
-</p>
+      <div class="story">
+        <h2>Encapsulated ICMP Reply</h2>
+        <p>
+          Finally, the encrypted echo reply is received and decrypted by WireGuard and delivered:
+        </p>
+        <div class="console">
+          PING <span class="grp tunip4">10.9.9.4</span> (<span class="grp tunip4">10.9.9.4</span>)
+          56(84) bytes of data.<br />
+          64 bytes from <span class="grp tunip4">10.9.9.4</span>: icmp_seq=1 ttl=64 time=0.879 ms<br />
+        </div>
+        <p>✨</p>
+      </div>
+      <!-- story -->
 
-<p class="quote">
-04 00 00 00 76 42 9b 61 &nbsp;00 00 00 00 00 00 00 00<br>
-41 52 7d 28 43 ab 2c 57 &nbsp;4f 24 ea b4 a1 8c 7f b0<br>
-4c 91 0a 9b 37 26 b0 9a &nbsp;23 48 ac bb 19 80 6f 9a<br>
-6b bc cc ee 67 b4 2f 8c &nbsp;50 c9 ff 29 d7 71 0f 7c<br>
-96 50 c0 f6 cf 48 57 c2 &nbsp;9a e2 9c a7 ee 25 14 13<br>
-96 4e 43 ca e7 50 76 ef &nbsp;4d 26 be 47 39 20 e8 d1<br>
-e5 49 c8 f4 81 a6 8e 33 &nbsp;3d f9 a7 72 6d 44 1a 75<br>
-d7 89 e4 c3 e8 65 44 aa &nbsp;69 9b 2b 1f 7b a8 d6 12<br>
-</p>
+      <div>
+        <p>WireGuard is a registered trademark of Jason A. Donenfeld.</p>
 
-<p>
-The kernel will prepend an IPv4 + UDP header, and send
-this over physical IP addresses, just like the handshake
-inititation and response messages.
-</p>
+        <p>
+          You can learn more about WireGuard internals at
+          <a href="https://wireguard.com/protocol">https://wireguard.com/protocol</a>.
+        </p>
 
-</div> <!-- story -->
+        <p>
+          Tailscale
+          <a href="https://tailscale.com/blog/how-tailscale-works/">uses WireGuard</a>
+          to move data, so we spend a lot of time thinking about it.
+        </p>
+      </div>
+    </main>
 
-<div class="story">
-<h2>WireGuard Data Transfer: ICMP Echo Reply</h2>
+    <script>
+      let $ = function (id) {
+        return document.getElementById(id);
+      };
 
-<p>
-The encrypted echo request is received and passed to WireGuard,
-which decrypts the packet and passes it back to the kernel for
-routing. On seeing the ICMP echo request, the kernel generates
-an echo reply:
-</p>
-<p class="quote">
-45 00 00 54 29 d5 00 00 &nbsp;40 01 2a bc 0a 09 09 04 &nbsp; ................<br>
-0a 09 09 03 00 00 0a de &nbsp;00 08 00 01 a5 ec b8 62 &nbsp; ................<br>
-00 00 00 00 <span class="grp replypayload">cd 19 00 00 &nbsp;00 00 00 00 4c 45 54 41</span> &nbsp; ............<span class="grp replypayload">LETA</span><br>
-<span class="grp replypayload">49 4c 53 43 41 4c 45 54 &nbsp;41 49 4c 53 43 41 4c 45</span> &nbsp; <span class="grp replypayload">ILSCALETAILSCALE</span><br>
-<span class="grp replypayload">54 41 49 4c 53 43 41 4c &nbsp;45 54 41 49 4c 53 43 41</span> &nbsp; <span class="grp replypayload">TAILSCALETAILSCA</span><br>
-<span class="grp replypayload">4c 45 54 41</span> <span style="color: grey;">.. .. .. ..&nbsp; .. .. .. .. .. .. .. ..</span> &nbsp; <span class="grp replypayload">LETA</span><br>
-</p>
+      let kinds = {
+        alt: true,
+      };
 
-<p>
-The ICMP echo reply is padded, encrypted with ChaCha20Poly1305 AEAD,
-sent to the kernel and then given an IPv4+UDP header and routed to
-the original peer.
-</p>
-</div> <!-- story -->
+      (function () {
+        // We are going to transform:
+        //	element-0: grp pingpayload
+        //	element-1: grp pingpayload
+        //	element-2: grp alt pingpayload
+        //	element-3: grp foo
+        //	element-4: grp alt foo
+        // into
+        //	grouped = {
+        //		"pingpayload": {
+        //			"alt": element-2,
+        //			"focus": [element-0, element-1]
+        //		},
+        //		"foo": {
+        //			"alt": element-4,
+        //			"focus": [element-3]
+        //		}
+        //	}
+        const groupedList = document.getElementsByClassName('grp');
+        var grouped = {};
+        for (let i = 0; i < groupedList.length; i++) {
+          let el = groupedList[i];
+          var name = '';
+          var kind = 'focus'; // "alt" or "focus"
+          el.classList.forEach(function (c) {
+            if (c === 'grp') {
+              return;
+            } else if (c === 'alt') {
+              kind = 'alt';
+            } else if (c === 'focus') {
+              return;
+            } else {
+              name = c;
+            }
+          });
+          if (name === '') {
+            alert('unnamed grouped element: ', groupedList[i]);
+            continue;
+          }
+          if (!grouped[name]) {
+            grouped[name] = { focus: [] };
+          }
+          if (kind == 'alt') {
+            grouped[name].alt = el;
+          } else {
+            grouped[name].focus.push(el);
+          }
+        }
+        console.log(grouped);
 
-<div class="story">
-<h2>Encapsulated ICMP Reply</h2>
-<p>
-Finally, the encrypted echo reply is received and decrypted by
-WireGuard and delivered:
-</p>
-<div class="console">
-PING <span class="grp tunip4">10.9.9.4</span> (<span class="grp tunip4">10.9.9.4</span>) 56(84) bytes of data.<br>
-64 bytes from <span class="grp tunip4">10.9.9.4</span>: icmp_seq=1 ttl=64 time=0.879 ms<br>
-</div>
-<p>
-✨
-</p>
+        for (const [name, value] of Object.entries(grouped)) {
+          console.log(name);
+          value.focus.forEach((el) => {
+            el.addEventListener('mouseover', (e) => {
+              value.focus.forEach((f) => {
+                f.classList.toggle('grpfocus');
+              });
+              if (value.alt) {
+                value.alt.style.display = 'block';
+                value.alt.classList.add('highlight');
+              }
+            });
+            el.addEventListener('mouseout', (e) => {
+              value.focus.forEach((f) => {
+                f.classList.toggle('grpfocus');
+              });
+              if (value.alt) {
+                value.alt.style.display = 'none';
+                value.alt.classList.remove('highlight');
+              }
+            });
+          });
+        }
+      })();
 
-</div> <!-- story -->
+      const packetNumToStoryNum = {
+        0: 0,
+        1: 3,
+        2: 4,
+        3: 5,
+        4: 6,
+        5: 7,
+        6: 8,
+      };
+      const storyNumToPacketNum = (function () {
+        var res = {};
+        for (const [packetNum, storyNum] of Object.entries(packetNumToStoryNum)) {
+          res[storyNum] = +packetNum;
+        }
+        res[1] = 0; // definitely not a 1:1 mapping
+        res[2] = 0;
+        return res;
+      })();
 
-<div>
-<p>WireGuard is a registered trademark of Jason A. Donenfeld.
+      let tcpdump = document.getElementById('tcpdump');
+      let tbl = tcpdump.getElementsByTagName('table')[0];
+      let trs = tbl.getElementsByTagName('tr');
+      function selectPacket(packetNum) {
+        console.log('selectPacket ', packetNum);
+        for (let i = 1; i < trs.length; i++) {
+          trs[i].classList.remove('selected');
+        }
+        if (packetNum == 0) {
+          return; // header, do not select it
+        }
+        trs[packetNum].classList.toggle('selected');
+      }
 
-<p>You can learn more about WireGuard internals at
-<a href="https://wireguard.com/protocol">https://wireguard.com/protocol</a>.
+      let diagram = document.getElementsByClassName('diagram')[0];
+      let diagramPeers = diagram.getElementsByClassName('peer');
+      let stories = document.getElementsByClassName('story');
+      function selectStory(storyNum) {
+        console.log('selectStory', storyNum);
+        if (stories[storyNum].classList.contains('storyactive')) {
+          return;
+        }
+        for (let i = 0; i < stories.length; i++) {
+          stories[i].classList.remove('storyactive');
+        }
+        stories[storyNum].classList.toggle('storyactive');
 
-<p>Tailscale
-<a href="https://tailscale.com/blog/how-tailscale-works/">uses WireGuard</a>
-to move data, so we spend a lot of time thinking about it.
-</div>
+        let packetNum = storyNumToPacketNum[storyNum];
+        if (packetNum >= 0) {
+          selectPacket(packetNum);
+        }
 
-</main>
+        let awg = document.getElementsByClassName('wgarrow');
+        let ap3 = document.getElementsByClassName('arrows-peer3')[0];
+        let ap4 = document.getElementsByClassName('arrows-peer4')[0];
 
+        //
+        // Animation state machine.
+        //
+        // Start with a base state.
+        diagramPeers[0].classList.remove('compressed');
+        diagramPeers[0].classList.remove('unfocused');
+        diagramPeers[1].classList.remove('compressed');
+        diagramPeers[1].classList.remove('unfocused');
+        ap3.classList.remove('arrows-left');
+        ap3.classList.remove('arrows-right');
+        ap4.classList.remove('arrows-left');
+        ap4.classList.remove('arrows-right');
+        awg[0].classList.remove('wgarrow-down');
+        awg[0].classList.remove('wgarrow-up');
+        awg[1].classList.remove('wgarrow-down');
+        awg[1].classList.remove('wgarrow-up');
 
-<script>
-let $ = function(id) { return document.getElementById(id); };
-
-let kinds = {
-	"alt": true,
-};
-
-(function() {
-	// We are going to transform:
-	//	element-0: grp pingpayload
-	//	element-1: grp pingpayload
-	//	element-2: grp alt pingpayload
-	//	element-3: grp foo
-	//	element-4: grp alt foo
-	// into
-	//	grouped = {
-	//		"pingpayload": {
-	//			"alt": element-2,
-	//			"focus": [element-0, element-1]
-	//		},
-	//		"foo": {
-	//			"alt": element-4,
-	//			"focus": [element-3]
-	//		}
-	//	}
-	const groupedList = document.getElementsByClassName("grp");
-	var grouped = {};
-	for (let i=0; i < groupedList.length; i++) {
-		let el = groupedList[i];
-		var name = "";
-		var kind = "focus"; // "alt" or "focus"
-		el.classList.forEach(function(c) {
-			if (c === "grp") {
-				return;
-			} else if (c === "alt") {
-				kind = "alt";
-			} else if (c === "focus") {
-				return;
-			} else {
-				name = c;
-			}
-		});
-		if (name === "") {
-			alert("unnamed grouped element: ", groupedList[i]);
-			continue;
-		}
-		if (!grouped[name]) {
-			grouped[name] = {"focus": []};
-		}
-		if (kind == "alt") {
-			grouped[name].alt = el;
-		} else {
-			grouped[name].focus.push(el);
-		}
-	}
-	console.log(grouped);
-
-	for (const [name, value] of Object.entries(grouped)) {
-		console.log(name);
-		value.focus.forEach(el => {
-			el.addEventListener("mouseover", e => {
-				value.focus.forEach(f => {
-					f.classList.toggle("grpfocus");
-				});
-				if (value.alt) {
-					value.alt.style.display = "block";
-					value.alt.classList.add("highlight");
-				}
-			});
-			el.addEventListener("mouseout", e => {
-				value.focus.forEach(f => {
-					f.classList.toggle("grpfocus");
-				});
-				if (value.alt) {
-					value.alt.style.display = "none";
-					value.alt.classList.remove("highlight");
-				}
-			});
-		});
-	}
-})();
-
-
-const packetNumToStoryNum = {
-	0: 0,
-	1: 3,
-	2: 4,
-	3: 5,
-	4: 6,
-	5: 7,
-	6: 8
-};
-const storyNumToPacketNum = (function() {
-	var res = {};
-	for (const [packetNum, storyNum] of Object.entries(packetNumToStoryNum)) {
-		res[storyNum] = +packetNum;
-	}
-	res[1] = 0; // definitely not a 1:1 mapping
-	res[2] = 0;
-	return res;
-})();
-
-let tcpdump = document.getElementById("tcpdump");
-let tbl = tcpdump.getElementsByTagName("table")[0];
-let trs = tbl.getElementsByTagName("tr");
-function selectPacket(packetNum) {
-	console.log("selectPacket ", packetNum);
-	for (let i = 1; i < trs.length; i++) {
-		trs[i].classList.remove("selected");
-	}
-	if (packetNum == 0) {
-		return; // header, do not select it
-	}
-	trs[packetNum].classList.toggle("selected");
-};
-
-let diagram = document.getElementsByClassName("diagram")[0];
-let diagramPeers = diagram.getElementsByClassName("peer")
-let stories = document.getElementsByClassName("story");
-function selectStory(storyNum) {
-	console.log("selectStory", storyNum);
-	if (stories[storyNum].classList.contains("storyactive")) {
-		return;
-	}
-	for (let i = 0; i < stories.length; i++) {
-		stories[i].classList.remove("storyactive");
-	}
-	stories[storyNum].classList.toggle("storyactive");
-
-	let packetNum = storyNumToPacketNum[storyNum];
-	if (packetNum >= 0) {
-		selectPacket(packetNum);
-	}
-
-	let awg = document.getElementsByClassName("wgarrow");
-	let ap3 = document.getElementsByClassName("arrows-peer3")[0];
-	let ap4 = document.getElementsByClassName("arrows-peer4")[0];
-
-	//
-	// Animation state machine.
-	//
-	// Start with a base state.
-	diagramPeers[0].classList.remove("compressed");
-	diagramPeers[0].classList.remove("unfocused");
-	diagramPeers[1].classList.remove("compressed");
-	diagramPeers[1].classList.remove("unfocused");
-	ap3.classList.remove("arrows-left");
-	ap3.classList.remove("arrows-right");
-	ap4.classList.remove("arrows-left");
-	ap4.classList.remove("arrows-right");
-	awg[0].classList.remove("wgarrow-down");
-	awg[0].classList.remove("wgarrow-up");
-	awg[1].classList.remove("wgarrow-down");
-	awg[1].classList.remove("wgarrow-up");
-
-	switch (storyNum) {
-	case 0:
-		diagramPeers[0].classList.add("compressed");
-		diagramPeers[1].classList.add("compressed");
-		break;
-	case 1:
-		diagramPeers[1].classList.add("compressed");
-		break;
-	case 2:
-		break;
-	case 3:
-		// TODO: arrow going into wg0 from LHS.
-		diagramPeers[1].classList.add("unfocused");
-		break;
-	case 4:
-		diagramPeers[1].classList.add("unfocused");
-		/* works, but kinda ugly
+        switch (storyNum) {
+          case 0:
+            diagramPeers[0].classList.add('compressed');
+            diagramPeers[1].classList.add('compressed');
+            break;
+          case 1:
+            diagramPeers[1].classList.add('compressed');
+            break;
+          case 2:
+            break;
+          case 3:
+            // TODO: arrow going into wg0 from LHS.
+            diagramPeers[1].classList.add('unfocused');
+            break;
+          case 4:
+            diagramPeers[1].classList.add('unfocused');
+            /* works, but kinda ugly
 		awg[0].classList.add("wgarrow-down");
 		ap3.classList.add("arrows-right");
 		ap4.classList.add("arrows-left");
 		awg[1].classList.add("wgarrow-up");*/
-		break;
-	case 5:
-		diagramPeers[0].classList.add("unfocused");
-		/*works, but kinda ugly
+            break;
+          case 5:
+            diagramPeers[0].classList.add('unfocused');
+            /*works, but kinda ugly
 		awg[0].classList.add("wgarrow-up");
 		ap3.classList.add("arrows-left");
 		ap4.classList.add("arrows-right");
 		awg[1].classList.add("wgarrow-down");*/
-		break;
-	case 6:
-		diagramPeers[1].classList.add("unfocused");
-		break;
-	case 7:
-		diagramPeers[0].classList.add("unfocused");
-		break;
-	}
-};
+            break;
+          case 6:
+            diagramPeers[1].classList.add('unfocused');
+            break;
+          case 7:
+            diagramPeers[0].classList.add('unfocused');
+            break;
+        }
+      }
 
-window.addEventListener("click", function(e) {
-	for (let i = 0; i < e.path.length; i++) {
-		let el = e.path[i];
-		if (el.classList && el.classList.contains("story")) {
-			let storyNum = Array.prototype.indexOf.call(stories, el);
-			selectStory(storyNum);
-		}
-	}
-});
+      window.addEventListener('click', function (e) {
+        for (let i = 0; i < e.path.length; i++) {
+          let el = e.path[i];
+          if (el.classList && el.classList.contains('story')) {
+            let storyNum = Array.prototype.indexOf.call(stories, el);
+            selectStory(storyNum);
+          }
+        }
+      });
 
-function scrollHandler(e) {
-	console.log("scroll", e);
-	var current = -1;
-	var firstVisible = -1;
-	var lastVisible = -1;
-	for (let i = 0; i < stories.length; i++) {
-		let story = stories[i];
-		let active = story.classList.contains("storyactive");
-		if (active) {
-			current = i;
-		}
-		var visible = false;
-		if (window.scrollY >= story.offsetTop) {
-			if (window.scrollY < story.offsetTop + story.offsetHeight) {
-				visible = true;
-			} else {
-				// story is above the screen
-			}
-		} else {
-			if (window.scrollY + window.innerHeight > story.offsetTop) {
-				visible = true;
-			} else {
-				// story is below the screen
-			}
-		}
-		if (visible) {
-			if (active) {
-				return;
-			}
-			if (firstVisible == -1) {
-				firstVisible = i;
-			}
-			lastVisible = i;
-		}
-	}
-	console.log("current=", current, "firstVisible=", firstVisible, "lastVisible=", lastVisible);
-	if (current == -1 && stories[firstVisible].offsetTop < window.scrollY) {
-		// Initial page load. Instead of picking the first element
-		// with any part of it on the screen, pick the first element
-		// thats start is visible on the screen.
-		selectStory(firstVisible+1);
-	} else if (current < firstVisible) {
-		selectStory(firstVisible);
-	} else if (lastVisible != -1 && current > lastVisible) {
-		selectStory(lastVisible);
-	}
-}
-window.addEventListener("scroll", scrollHandler);
-window.addEventListener("wheel", function(e) {
-	if (window.scrollY == 0 && e.deltaY < 0) { // at top
-		for (let i = 0; i < stories.length; i++) {
-			if (stories[i].classList.contains("storyactive")) {
-				if (i > 0) {
-					selectStory(i-1);
-					return;
-				}
-			}
-		}
-	}
-	if (e.deltaY > 0 && window.innerHeight + window.pageYOffset >= document.body.offsetHeight) {
-		// at bottom
-		for (let i = 0; i < stories.length; i++) {
-			if (stories[i].classList.contains("storyactive")) {
-				if (i+1 < stories.length) {
-					selectStory(i+1);
-					return;
-				}
-			}
-		}
-	}
-});
+      function scrollHandler(e) {
+        console.log('scroll', e);
+        var current = -1;
+        var firstVisible = -1;
+        var lastVisible = -1;
+        for (let i = 0; i < stories.length; i++) {
+          let story = stories[i];
+          let active = story.classList.contains('storyactive');
+          if (active) {
+            current = i;
+          }
+          var visible = false;
+          if (window.scrollY >= story.offsetTop) {
+            if (window.scrollY < story.offsetTop + story.offsetHeight) {
+              visible = true;
+            } else {
+              // story is above the screen
+            }
+          } else {
+            if (window.scrollY + window.innerHeight > story.offsetTop) {
+              visible = true;
+            } else {
+              // story is below the screen
+            }
+          }
+          if (visible) {
+            if (active) {
+              return;
+            }
+            if (firstVisible == -1) {
+              firstVisible = i;
+            }
+            lastVisible = i;
+          }
+        }
+        console.log(
+          'current=',
+          current,
+          'firstVisible=',
+          firstVisible,
+          'lastVisible=',
+          lastVisible
+        );
+        if (current == -1 && stories[firstVisible].offsetTop < window.scrollY) {
+          // Initial page load. Instead of picking the first element
+          // with any part of it on the screen, pick the first element
+          // thats start is visible on the screen.
+          selectStory(firstVisible + 1);
+        } else if (current < firstVisible) {
+          selectStory(firstVisible);
+        } else if (lastVisible != -1 && current > lastVisible) {
+          selectStory(lastVisible);
+        }
+      }
+      window.addEventListener('scroll', scrollHandler);
+      window.addEventListener('wheel', function (e) {
+        if (window.scrollY == 0 && e.deltaY < 0) {
+          // at top
+          for (let i = 0; i < stories.length; i++) {
+            if (stories[i].classList.contains('storyactive')) {
+              if (i > 0) {
+                selectStory(i - 1);
+                return;
+              }
+            }
+          }
+        }
+        if (e.deltaY > 0 && window.innerHeight + window.pageYOffset >= document.body.offsetHeight) {
+          // at bottom
+          for (let i = 0; i < stories.length; i++) {
+            if (stories[i].classList.contains('storyactive')) {
+              if (i + 1 < stories.length) {
+                selectStory(i + 1);
+                return;
+              }
+            }
+          }
+        }
+      });
 
-for (let i = 1; i < trs.length; i++) {
-	trs[i].onclick = function() {
-		selectPacket(i);
-		let storyNum = packetNumToStoryNum[i];
-		if (storyNum >= 0) {
-			selectStory(storyNum);
-			stories[storyNum].scrollIntoView();
-		}
-	}
-}
+      for (let i = 1; i < trs.length; i++) {
+        trs[i].onclick = function () {
+          selectPacket(i);
+          let storyNum = packetNumToStoryNum[i];
+          if (storyNum >= 0) {
+            selectStory(storyNum);
+            stories[storyNum].scrollIntoView();
+          }
+        };
+      }
 
-scrollHandler(); // select an initial story
-</script>
-
-</body>
+      scrollHandler(); // select an initial story
+    </script>
+  </body>
 </html>
