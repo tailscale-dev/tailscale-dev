@@ -5,24 +5,28 @@ authors: ['xe']
 tags:
   - funnel
 summary: 'Tailscale Funnel lets you share a local service with the internet. Today Xe covers how you can use this productively by sharing the development copy of an application to the world.'
+images: ['/images/hero/lagtrain.png']
 ---
 
 Tailscale lets you share things with your coworkers, your family, and your
-friends; but not everyone else. This is great when you're testing things with
-your coworkers or playing Minecraft with your friends, but sometimes you need
-to test things against the real world. Tailscale Funnel allows you to expose
-your local services to the public Internet.
+friends; but not everyone else. This allows you to set up your own [private URL
+shortener](https://tailscale.com/blog/golink/) or expose a test instance of your
+application to your coworkers, but sometimes you need to test your tools against
+the real world. Tailscale Funnel allows you to expose your local services to
+the public Internet, just like any other website.
 
 Today I'm going to walk you through the basics of funnel and show you how to
-use it with a live demo.
+use it with a live demo. We're going to start by creating a small service that
+says hello world, and then I'm going to show you how to make it interact with
+other applications on the internet, such as receiving webhooks from Tailscale.
 
 In order to follow along, you will need the following:
 
 - An invite to the Funnel feature preview (ask us [on
-  Mastodon](https://hachyderm.io/@tailscale)! or check the
-  [thread on Reddit](https://www.reddit.com/r/Tailscale/comments/105tvgo/the_funnel_invite_request_and_share_thread/))
-- A development machine running Linux, macOS, or Windows
-- [Deno](https://deno.land) installed on your development machine
+  Mastodon](https://hachyderm.io/@tailscale) or check the
+  [thread on Reddit](https://www.reddit.com/r/Tailscale/comments/105tvgo/the_funnel_invite_request_and_share_thread/)).
+- A development machine running Linux, macOS, or Windows.
+- [Deno](https://deno.land) installed on your development machine.
 
 <Warning>
   Be sure [funnel is enabled in your tailnet policy
