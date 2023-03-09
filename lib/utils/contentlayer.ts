@@ -9,11 +9,9 @@ export type MDXDocumentDate = MDXDocument & {
 export type MDXBlog = MDXDocumentDate & {
   tags?: string[];
   draft?: boolean;
+  authors?: string[];
 };
-
-export type MDXAuthor = MDXDocument & {
-  name: string;
-};
+export type MDXAuthor = Document & { name: string };
 
 export function sortedBlogPost(allBlogs: MDXDocumentDate[]) {
   return allBlogs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
