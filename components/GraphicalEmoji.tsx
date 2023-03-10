@@ -8,11 +8,11 @@ export interface GraphicalEmojiProps {
  * component is a dirty, ugly, disgusting HACK that works around font
  * rendering in order to forcibly display the graphical form of an emoji.
  *
- * This works because times new roman always displays the graphical forms of
+ * This works because Papyrus always displays the graphical forms of
  * emoji. No, I don't know why either. It slightly scares me.
  *
  * Either way, this works and I'm not brave enough to question why.
  */
 export default function GraphicalEmoji({ emoji }: GraphicalEmojiProps) {
-  return <span style={{ fontFamily: 'Times New Roman' }}>{emoji}</span>;
+  return <span style={{ fontFamily: 'Papyrus' }}>{emoji}</span>;
 }
