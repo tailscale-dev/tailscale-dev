@@ -1,0 +1,62 @@
+---
+title: 'Embed Funnel in your App'
+date: '2023-03-11'
+tags:
+  - 'tsnet'
+  - 'funnel'
+  - 'oss'
+authors: ['maisem']
+images: ['/images/libtailscale/social.png']
+summary: 'Tailscale Funnel is now available as a Go library you can embed directly in your programs.'
+---
+
+We recently released
+[Tailscale Funnel](https://tailscale.com/kb/1223/tailscale-funnel/)
+for testing, which lets you expose a locally running web server to the internet.
+
+Funnal can be especially useful when you are hosting services in a homelab, or
+developing against webhook APIs that need to POST back to your server.
+The standard way to use Funnel is to install Tailscale, run your server
+on localhost, and then configure Funnel to share that server.
+
+Today we are adding another way to use Funnel: compile it into your program.
+No need to install a separate Tailscale on the host.
+
+The open source Go
+[tsnet package](https://pkg.go.dev/tailscale.com@main/tsnet)
+has gained a new method: `ListenFunnel`. Call one function and you get a
+`net.Listener` with a publicly reachable domain name and a valid
+TLS certificate. Using it looks like this:
+
+```go
+s := &tsnet.Server{ Hostname: "fun" }
+defer s.Close()
+
+ln, err := s.ListenFunnel("tcp", ":443") // does TLS
+if err != nil {
+	log.Fatal(err)
+}
+defer ln.Close()
+
+h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "<html>Hello from Funnel!")
+})
+
+log.Fatal(http.Serve(ln, h))
+```
+
+See the full example on GitHub in
+[tsnet-funnel.go](https://github.com/tailscale/tailscale/blob/main/tsnet/example/tsnet-funnel/tsnet-funnel.go).
+
+After enabling HTTPS and Funnel in the Tailscale admin panel,
+you can generate an
+[auth key](https://tailscale.com/kb/1085/auth-keys/)
+and use it to run run this example:
+
+```sh
+TS_AUTHKEY=<your-key> go run ./tsnet-funnel.go
+```
+
+Your local web server is now available on the internet under your
+[tailnet name](https://tailscale.com/kb/1217/tailnet-name/#fun-tailnet-name) at
+`https://fun.<your-fun-name>.ts.net`.
