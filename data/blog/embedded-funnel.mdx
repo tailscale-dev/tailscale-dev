@@ -38,8 +38,10 @@ if err != nil {
 }
 defer ln.Close()
 
+fmt.Printf("Listening on https://%v\n", s.CertDomains()[0])
+
 h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "<html>Hello from Funnel!")
+	fmt.Fprintln(w, "Hello from Funnel!")
 })
 
 log.Fatal(http.Serve(ln, h))
