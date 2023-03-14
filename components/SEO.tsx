@@ -43,7 +43,7 @@ const CommonSEO = ({
         <meta property="og:image" content={ogImage} key={ogImage} />
       )}
 
-      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content="@tailscale" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
