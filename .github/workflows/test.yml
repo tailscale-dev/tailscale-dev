@@ -14,6 +14,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'yarn'
+      - uses: actions/setup-go@v4
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Build
@@ -22,3 +23,6 @@ jobs:
         run: yarn lint
       - name: Prettier
         run: yarn prettier --check .
+      - name: Test Looker
+        run: go test ./...
+        working-directory: ./var/looker
