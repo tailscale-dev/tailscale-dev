@@ -14,6 +14,7 @@ const findPosts = (q: string) =>
   });
 
 const getPost = (slug: string): Blog => {
+  slug = slug.split('/')[1];
   for (const post of allBlogs) {
     if (post.slug == slug) {
       return post;

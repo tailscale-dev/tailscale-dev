@@ -6712,11 +6712,6 @@ slice-ansi@^5.0.0:
     ansi-styles "^6.0.0"
     is-fullwidth-code-point "^4.0.0"
 
-sonic-channel@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/sonic-channel/-/sonic-channel-1.3.1.tgz#dd818a30f08a7032a4bfc0fe3292cc2b35aeaa41"
-  integrity sha512-+K4IZVFE7Tf2DB4EFZ23xo7a/+gJaiOHhFzXVZpzkX6Rs/rvf4YbSxnEGdYw8mrTcjtpG+jLVQEhP8sNTtN5VA==
-
 source-map-js@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.0.2.tgz#adbc361d9c62df380125e7f161f71c826f1e490c"
