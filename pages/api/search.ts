@@ -10,7 +10,11 @@ export interface SearchRequest {
 }
 
 export const lookerLookup = async (req: SearchRequest): Promise<SearchResults> => {
-  const resp = await fetch(`${process.env.LOOKER_URL}/api/search?q=${encodeURIComponent(req.q)}`);
+  const resp = await fetch(`${process.env.LOOKER_URL}/api/search?q=${encodeURIComponent(req.q)}`, {
+    headers: {
+      Authorization: `Bearer ${process.env.LOOKER_TOKEN}`,
+    },
+  });
   return await resp.json();
 };
 

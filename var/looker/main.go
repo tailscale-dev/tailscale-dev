@@ -18,10 +18,12 @@ import (
 )
 
 var (
+	bind = flag.String("bind", ":" + os.Getenv("PORT"), "host:port to bind on, defaults to :$PORT")
+	purgeToken = flag.String("purge-token", os.Getenv("PURGE_TOKEN"), "Authorization token required to purge things")
+	searchToken = flag.String("search-token", os.Getenv("SEARCH_TOKEN"), "Authorization token required to search things")
 	sonicServer = flag.String("sonic-server", os.Getenv("SONIC_SERVER"), "Sonic server host")
 	sonicPort = flag.Int("sonic-port", 1491, "Sonic server port")
 	sonicPass = flag.String("sonic-pass", os.Getenv("SONIC_PASSWORD"), "Sonic password")
-	bind = flag.String("bind", ":" + os.Getenv("PORT"), "host:port to bind on, defaults to :$PORT")
 )
 
 func main() {
@@ -35,10 +37,13 @@ func main() {
 		log.Fatal(err)
 	}
 
+	c.Quit()
+
 	log.Println("Sonic works!")
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/search", searchArticles)
+	mux.HandleFunc("/api/looker/purge", purgeCollection)
 	mux.HandleFunc("/api/webhook/vercel", handleWebhook)
 
 	log.Printf("listening on %s", *bind)
@@ -54,7 +59,42 @@ func handleWebhook(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "OK")
 }
 
+func purgeCollection(w http.ResponseWriter, r *http.Request)  {
+	if err := actuallyDoPurge(); err != nil {
+		log.Printf("purge failed: %v", err)
+		http.Error(w, "can't purge: " + err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	fmt.Fprintln(w, "OK")
+}
+
+func actuallyDoPurge() error {
+	ing, err := sonic.NewIngester(*sonicServer, *sonicPort, *sonicPass)
+	if err != nil {
+		return err
+	}
+	defer ing.Quit()
+
+	if err := ing.FlushCollection("posts"); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func searchArticles(w http.ResponseWriter, r *http.Request) {
+	auth := r.Header.Get("Authorization")
+	if auth == "" || auth != fmt.Sprintf("Bearer %s", *searchToken) {
+		w.WriteHeader(http.StatusForbidden)
+		json.NewEncoder(w).Encode(struct {
+			Message string `json:"message"`
+		} {
+			Message: "authorization required",
+		})
+		return
+	}
+
 	srchr, err := sonic.NewSearch(*sonicServer, *sonicPort, *sonicPass)
 	if err != nil {
 		log.Printf("can't reach sonic: %v", err)
