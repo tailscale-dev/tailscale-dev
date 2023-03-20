@@ -231,16 +231,32 @@ func ingest(ing sonic.Ingestable, collection, fname string) error {
 	}
 	defer fin.Close()
 
-	data, err := io.ReadAll(fin)
+	dataBytes, err := io.ReadAll(fin)
 	if err != nil {
 		return err
 	}
+
+	data := string(dataBytes)
+
+	// detect markdown front matter
+	if !strings.HasPrefix(data, "---\n") {
+		return fmt.Errorf("looker: [unexpected] somehow a markdown file doesn't start with \"---\\n\": %s", fname)
+	}
+
+	// get index of end of front matter
+	idx := strings.Index(data, "\n---\n")
+	if idx == -1 {
+		return fmt.Errorf("looker: [unexpected] somehow a markdown file's front matter doesn't end with %q: %s", "\n---\n", fname)
+	}
+
+	// advance past front matter
+	data = data[idx+5:]
 
 	log.Printf("pushing %s (%d bytes)", fname, len(data))
 
 	objectName := collection + "/" + getNameWithoutExt(fname)
 
-	if err := ing.Push("posts", "posts", objectName, string(data), sonic.LangEng); err != nil {
+	if err := ing.Push("posts", "posts", objectName, data, sonic.LangEng); err != nil {
 		return err
 	}
 
