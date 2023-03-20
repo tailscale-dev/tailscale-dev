@@ -3,7 +3,7 @@ import { Ingest } from 'sonic-channel';
 
 (async () => {
   const ch = new Ingest({
-    host: '::1',
+    host: 'tsdev-search.internal',
     port: 1491,
     auth: 'hunter2',
   }).connect({

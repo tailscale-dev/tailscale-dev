@@ -1,0 +1,22 @@
+# fly.toml file generated for tsdev-search on 2023-03-20T09:53:17-07:00
+
+app = "tsdev-search"
+kill_signal = "SIGINT"
+kill_timeout = 5
+primary_region = "iad"
+processes = []
+
+[env]
+
+[experimental]
+  auto_rollback = true
+
+[mounts]
+  source="search_data"
+  destination="/data"
+
+[[services]]
+  http_checks = []
+  processes = ["app"]
+  protocol = "tcp"
+  script_checks = []
