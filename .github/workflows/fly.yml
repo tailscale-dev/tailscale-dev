@@ -14,4 +14,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: docker/setup-buildx-action@v2
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: flyctl deploy --local-only
+      - name: 'Main site deploy'
+        run: flyctl deploy --local-only
+      - name: 'Looker deploy'
+        run: flyctl deploy --local-only
+        working-directory: ./var/looker
