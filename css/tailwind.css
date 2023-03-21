@@ -14,6 +14,14 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  html.dark {
+    /**
+     * We can't use the dark: modifier here because it only applies to
+     * children of the html element, not the html element itself.
+     */
+    @apply bg-gray-900 text-white;
+  }
+
   body {
     @apply flex h-full flex-col justify-start text-base;
   }
