@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import * as React from 'react';
-import Breadcrumbs from '@/components/Breadcrumbs';
+import Breadcrumbs from '@/components/breadcrumbs';
 import Head from 'next/head';
 
 export default function EventsCodeOfConduct() {

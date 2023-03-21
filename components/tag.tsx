@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
-import { kebabCase } from '@/lib/utils/kebabCase';
-import { translateTag } from '@/lib/utils/translateTag';
+import { kebabCase } from '@/lib/utils/kebab-case';
+import { translateTag } from '@/lib/utils/translate-tag';
 
 interface Props {
   text: string;

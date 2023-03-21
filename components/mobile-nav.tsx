@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
-import { leftHeaderNavLinks, rightHeaderNavLinks } from '@/data/headerNavLinks';
+import { leftHeaderNavLinks, rightHeaderNavLinks } from '@/data/header-nav-links';
 
 const MobileNav = () => {
   const [navShow, setNavShow] = useState(false);

@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { CoreContent } from '@/lib/utils/contentlayer';
 import type { Blog } from 'contentlayer/generated';
 import Link from 'next/link';
-import { ListItem } from '@/components/ListItem';
+import { ListItem } from '@/components/list-item';
 
 interface PaginationProps {
   totalPages: number;

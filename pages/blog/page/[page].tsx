@@ -1,7 +1,7 @@
 import React from 'react';
-import { PageSEO } from '@/components/SEO';
-import { siteMetadata } from '@/data/siteMetadata';
-import ListLayout from '@/layouts/ListLayout';
+import { PageSEO } from '@/components/seo';
+import { siteMetadata } from '@/data/site-metadata';
+import ListLayout from '@/layouts/list-layout';
 import { allCoreContent, sortedBlogPost } from '@/lib/utils/contentlayer';
 import { POSTS_PER_PAGE } from '../index';
 import { InferGetStaticPropsType } from 'next';

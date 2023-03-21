@@ -1,10 +1,10 @@
-import { siteMetadata } from '@/data/siteMetadata';
-import { PageSEO } from '@/components/SEO';
+import { siteMetadata } from '@/data/site-metadata';
+import { PageSEO } from '@/components/seo';
 import { sortedFutureEventPosts, allCoreContent } from '@/lib/utils/contentlayer';
 import { InferGetStaticPropsType } from 'next';
 import { allEvents } from 'contentlayer/generated';
 import type { Events } from 'contentlayer/generated';
-import { ListItem } from '@/components/ListItem';
+import { ListItem } from '@/components/list-item';
 
 export const POSTS_PER_PAGE = 10;
 

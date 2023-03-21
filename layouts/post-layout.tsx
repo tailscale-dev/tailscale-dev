@@ -2,13 +2,13 @@ import React, { ReactNode } from 'react';
 import { CoreContent } from '@/lib/utils/contentlayer';
 import type { Blog, Authors } from 'contentlayer/generated';
 import Link from 'next/link';
-import { BlogSEO } from '@/components/SEO';
-import Image from '@/components/Image';
-import Tag from '@/components/Tag';
-import { siteMetadata } from '@/data/siteMetadata';
-import ScrollTop from '@/components/ScrollTop';
-import ExternalLink from '@/components/ExternalLink';
-import { DateDisplay } from '@/components/DateDisplay';
+import { BlogSEO } from '@/components/seo';
+import Image from '@/components/image';
+import Tag from '@/components/tag';
+import { siteMetadata } from '@/data/site-metadata';
+import ScrollTop from '@/components/scroll-top';
+import ExternalLink from '@/components/external-link';
+import { DateDisplay } from '@/components/date-display';
 
 const editUrl = (path) => `${siteMetadata.siteRepo}/blob/master/data/${path}`;
 
