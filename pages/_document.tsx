@@ -18,7 +18,7 @@ class MyDocument extends Document {
             }}
           />
         </Head>
-        <body className="min-h-screen bg-white text-black antialiased dark:bg-gray-900 dark:text-white">
+        <body className="min-h-screen">
           <Main />
           <NextScript />
         </body>
