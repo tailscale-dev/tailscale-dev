@@ -1,8 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
-import { PageSEO } from '@/components/SEO';
-import Tag from '@/components/Tag';
-import { kebabCase } from '@/lib/utils/kebabCase';
+import { PageSEO } from '@/components/seo';
+import Tag from '@/components/tag';
+import { kebabCase } from '@/lib/utils/kebab-case';
 import { getAllTags } from '@/lib/utils/contentlayer';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { allBlogs } from 'contentlayer/generated';

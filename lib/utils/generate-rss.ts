@@ -1,7 +1,7 @@
 import { writeFileSync, mkdirSync } from 'fs';
 import path from 'path';
 import GithubSlugger from 'github-slugger';
-import { escape } from './htmlEscaper';
+import { escape } from './html-escaper';
 import type { MDXAuthor, MDXBlog } from './contentlayer';
 import { getAllTags } from './contentlayer';
 

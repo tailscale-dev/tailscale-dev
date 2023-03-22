@@ -1,12 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
-import { PageSEO } from '@/components/SEO';
-import { siteMetadata } from '@/data/siteMetadata';
+import { PageSEO } from '@/components/seo';
+import { siteMetadata } from '@/data/site-metadata';
 import { sortedBlogPost, allCoreContent, sortedFutureEventPosts } from '@/lib/utils/contentlayer';
 import { InferGetStaticPropsType } from 'next';
 import { allBlogs, allEvents } from 'contentlayer/generated';
 import type { Blog, Events } from 'contentlayer/generated';
-import { ListItem } from '@/components/ListItem';
+import { ListItem } from '@/components/list-item';
 
 const MAX_EVENTS_DISPLAY = 3;
 const MAX_POSTS_DISPLAY = 5;

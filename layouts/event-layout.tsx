@@ -2,11 +2,11 @@ import { ReactNode } from 'react';
 import { CoreContent } from '@/lib/utils/contentlayer';
 import type { Events, Authors } from 'contentlayer/generated';
 import Link from 'next/link';
-import { PageSEO } from '@/components/SEO';
-import { siteMetadata } from '@/data/siteMetadata';
-import ScrollTop from '@/components/ScrollTop';
-import ExternalLink from '@/components/ExternalLink';
-import { DateDisplay } from '@/components/DateDisplay';
+import { PageSEO } from '@/components/seo';
+import { siteMetadata } from '@/data/site-metadata';
+import ScrollTop from '@/components/scroll-top';
+import ExternalLink from '@/components/external-link';
+import { DateDisplay } from '@/components/date-display';
 
 const editUrl = (path) => `${siteMetadata.siteRepo}/blob/master/data/${path}`;
 

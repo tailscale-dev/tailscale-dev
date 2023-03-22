@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import Tag from '@/components/Tag';
-import { DateDisplay } from '@/components/DateDisplay';
+import Tag from '@/components/tag';
+import { DateDisplay } from '@/components/date-display';
 
 interface ListItemProps {
   slug: string;

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Inter } from '@next/font/google';
-import { leftHeaderNavLinks, rightHeaderNavLinks } from '@/data/headerNavLinks';
+import { leftHeaderNavLinks, rightHeaderNavLinks } from '@/data/header-nav-links';
 import Link from 'next/link';
-import Footer from './Footer';
-import ThemeSwitch from './ThemeSwitch';
+import Footer from './footer';
+import ThemeSwitch from './theme-switch';
 import { ReactNode } from 'react';
-import { TailscaleLogo } from '@/components/TailscaleLogo';
-import MobileNav from './MobileNav';
+import { TailscaleLogo } from '@/components/tailscale-logo';
+import MobileNav from './mobile-nav';
 
 interface Props {
   children: ReactNode;

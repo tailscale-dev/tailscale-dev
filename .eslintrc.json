@@ -5,7 +5,7 @@
     "es2022": true,
     "node": true
   },
-  "plugins": ["unused-imports"],
+  "plugins": ["unused-imports", "unicorn"],
   "rules": {
     "@typescript-eslint/no-unused-vars": "off",
     "unused-imports/no-unused-imports": "error",
@@ -17,6 +17,12 @@
         "varsIgnorePattern": "^_",
         "args": "after-used",
         "argsIgnorePattern": "^_"
+      }
+    ],
+    "unicorn/filename-case": [
+      "error",
+      {
+        "case": "kebabCase"
       }
     ]
   }

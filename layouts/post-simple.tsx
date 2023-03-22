@@ -1,12 +1,12 @@
 import React, { ReactNode } from 'react';
-import { DateDisplay } from '@/components/DateDisplay';
+import { DateDisplay } from '@/components/date-display';
 import { CoreContent } from '@/lib/utils/contentlayer';
 import type { Blog } from 'contentlayer/generated';
 import Link from 'next/link';
-import PageTitle from '@/components/PageTitle';
-import { BlogSEO } from '@/components/SEO';
-import { siteMetadata } from '@/data/siteMetadata';
-import ScrollTop from '@/components/ScrollTop';
+import PageTitle from '@/components/page-title';
+import { BlogSEO } from '@/components/seo';
+import { siteMetadata } from '@/data/site-metadata';
+import ScrollTop from '@/components/scroll-top';
 
 interface LayoutProps {
   content: CoreContent<Blog>;

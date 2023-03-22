@@ -1,11 +1,11 @@
-import { MDXLayoutRenderer } from '@/components/mdx-components';
-import PageTitle from '@/components/PageTitle';
-import { MDXComponents } from '@/components/MDXComponents';
+import { MDXLayoutRenderer } from '@/components/mdx';
+import PageTitle from '@/components/page-title';
+import { MDXComponents } from '@/components/mdx-components';
 import { sortedEventPosts, coreContent } from '@/lib/utils/contentlayer';
 import { InferGetStaticPropsType } from 'next';
 import { allEvents, allAuthors } from 'contentlayer/generated';
 
-const DEFAULT_LAYOUT = 'EventLayout';
+const DEFAULT_LAYOUT = 'event-layout';
 
 export async function getStaticPaths() {
   return {
