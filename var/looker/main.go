@@ -42,6 +42,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/search", searchArticles)
 	mux.HandleFunc("/api/looker/purge", purgeCollection)
+	mux.HandleFunc("/api/looker/reingest", reingest)
 	mux.HandleFunc("/api/webhook/vercel", handleWebhook)
 	mux.HandleFunc("/health", healthCheck)
 
@@ -136,6 +137,25 @@ func handleWebhook(w http.ResponseWriter, r *http.Request) {
 
 		log.Println("done!")
 	}()
+
+	fmt.Fprintln(w, "OK")
+}
+
+func reingest(w http.ResponseWriter, r *http.Request) {
+	if auth := r.Header.Get("Authorization"); auth == "" || auth != fmt.Sprintf("Bearer %s", *purgeToken) {
+		w.WriteHeader(http.StatusForbidden)
+		json.NewEncoder(w).Encode(struct {
+			Message string `json:"message"`
+		}{
+			Message: "authorization required",
+		})
+		return
+	}
+
+	if err := grabRepoAndSubmitArticlesToSonic(); err != nil {
+		log.Printf("can't grab from git and push to sonic: %v", err)
+		return
+	}
 
 	fmt.Fprintln(w, "OK")
 }
