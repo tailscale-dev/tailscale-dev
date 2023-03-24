@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { allBlogs, allAuthors } from 'contentlayer/generated';
 import { generateRSS } from '../../lib/utils/generate-rss';
-import { siteMetadata } from '../../data/siteMetadata';
+import { siteMetadata } from '../../data/site-metadata';
 
 const handler = async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
