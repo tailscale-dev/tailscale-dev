@@ -65,7 +65,9 @@ func healthCheck(w http.ResponseWriter, r *http.Request) {
 			return err
 		}
 
-		return c.Quit()
+		defer c.Quit()
+
+		return nil
 	}
 
 	if err := doer(); err != nil {
