@@ -1,99 +1,75 @@
-import React from 'react';
-import { siteMetadata } from '@/data/siteMetadata';
-import ListLayout from '@/layouts/ListLayout';
-import { PageSEO } from '@/components/SEO';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import useSwr from 'swr';
-import u from '@/lib/utils/url';
-import type { SearchResults } from './api/search';
-import { allBlogs, Blog } from 'contentlayer/generated';
-
-const findPosts = (q: string) =>
-  fetch(u('/api/search', { q })).then((res) => {
-    return res.json();
-  });
-
-const getPost = (slug: string): Blog => {
-  slug = slug.split('/')[1];
-  for (const post of allBlogs) {
-    if (post.slug == slug) {
-      return post;
-    }
-  }
-
-  return undefined;
-};
 
 export default function SearchPage({}) {
   const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const { q }: { q: string } = router.query as { q: string };
-  const { data, error, isLoading } = useSwr<SearchResults>(q ? q : null, findPosts);
+  const findPosts = async () => {
+    const res = await fetch(`/api/search?q=${searchTerm}`);
+    return await res.json();
+  };
 
-  if (q === undefined) {
-    return <h1>search box page here</h1>;
-  }
+  const { data } = useSwr(searchTerm, findPosts);
 
-  if (error) {
-    return (
-      <>
-        <PageSEO title="oh noes" description={siteMetadata.description} />
-        <h1>something bad happened</h1>
-        <pre>
-          <code>{error}</code>
-        </pre>
-      </>
-    );
-  }
+  useEffect(() => {
+    if (searchTerm) {
+      return;
+    }
 
-  if (isLoading) {
-    return (
-      <>
-        <PageSEO title={`${q}: Search results`} description={siteMetadata.description} />
-        <ListLayout
-          posts={[]}
-          initialDisplayPosts={undefined}
-          searchText={q}
-          pagination={undefined}
-          title={`Loading...`}
-        />
-      </>
-    );
-  }
-
-  if (!data) {
-    return null;
-  }
-
-  if (data.message) {
-    return (
-      <>
-        <PageSEO title="Can't find anything" description={siteMetadata.description} />
-        <ListLayout
-          posts={[]}
-          searchText={q}
-          initialDisplayPosts={undefined}
-          pagination={undefined}
-          title={`Results for ${q}`}
-        />
-      </>
-    );
-  }
-
-  console.log(data);
-
-  const posts = data.posts.map((slug) => getPost(slug));
+    switch (typeof router.query?.q) {
+      case 'string':
+        setSearchTerm(router.query.q);
+        break;
+      case 'object':
+        setSearchTerm(router.query.q[0]);
+        break;
+    }
+  }, [router.query.q, router, searchTerm]);
 
   return (
     <>
-      <PageSEO title={`${q}: Search results`} description={siteMetadata.description} />
-      <ListLayout
-        posts={posts}
-        searchText={q}
-        initialDisplayPosts={undefined}
-        pagination={undefined}
-        title={`Results for ${q}`}
-      />
+      <header className="bg-gray-900 py-20 text-center text-gray-100">
+        <h1 className="text-4xl font-medium leading-tight tracking-tight">Search</h1>
+
+        <div className="mt-6">
+          <div className="flex justify-center md:justify-center">
+            <div className="items-center justify-center leading-tight md:flex">
+              <div className="relative max-w-lg">
+                <label>
+                  <span className="sr-only">Search posts</span>
+                  <input
+                    aria-label="Search posts"
+                    type="text"
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    defaultValue={searchTerm}
+                    placeholder="Search title ..."
+                    className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-900 dark:border-gray-900 dark:bg-gray-800 dark:text-gray-100"
+                  />
+                </label>
+                <svg
+                  className="absolute right-3 top-3 h-5 w-5 text-gray-400 dark:text-gray-300"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <main className="container max-w-4xl">
+        <ul>{data && data.posts && data?.posts.map((post) => <li key={post}>{post}</li>)}</ul>
+      </main>
     </>
   );
 }
