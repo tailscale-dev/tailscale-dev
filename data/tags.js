@@ -1,4 +1,4 @@
-module.exports.tags = {
+export const tags = {
   'community-made': 'Community Made',
   oss: 'Open Source',
   logs: 'Logs',

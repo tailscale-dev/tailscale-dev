@@ -2,11 +2,12 @@
   "name": "tailscale-dev",
   "version": "0.0.1",
   "private": true,
+  "type": "module",
   "scripts": {
     "start": "next dev",
     "dev": "next dev",
-    "build": "next build && yarn build-postbuild && node dist/postbuild.js",
-    "build-postbuild": "esbuild scripts/postbuild.ts --bundle --platform=node --outfile=dist/postbuild.js",
+    "build": "next build",
+    "postbuild": "tsx scripts/sitemap.ts",
     "serve": "next start",
     "analyze": "cross-env ANALYZE=true next build",
     "precommit": "lint-staged",
@@ -68,6 +69,7 @@
     "prettier": "^2.7.0",
     "prettier-plugin-tailwindcss": "^0.1.13",
     "raw-loader": "^4.0.2",
+    "tsx": "^3.12.6",
     "typescript": "^4.8.3"
   },
   "lint-staged": {

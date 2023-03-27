@@ -73,6 +73,7 @@ module.exports = () => {
         },
       ];
     },
+    experimental: { esmExternals: true },
     rewrites: () => {
       return [
         {
