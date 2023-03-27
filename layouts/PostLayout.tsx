@@ -9,6 +9,7 @@ import { siteMetadata } from '@/data/siteMetadata';
 import ScrollTop from '@/components/ScrollTop';
 import ExternalLink from '@/components/ExternalLink';
 import { DateDisplay } from '@/components/DateDisplay';
+import { useRouter } from 'next/router';
 
 const editUrl = (path) => `${siteMetadata.siteRepo}/blob/master/data/${path}`;
 
@@ -20,41 +21,34 @@ interface LayoutProps {
   children: ReactNode;
 }
 
-const u = (url = '', params: Record<string, string> = {}) => {
-  let result = new URL(url, 'https://tailscale.dev');
-  Object.entries(params).forEach((kv) => {
-    let [k, v] = kv;
-    result.searchParams.set(k, v);
-  });
-  return result.toString();
-};
-
-const ShareLinkButton = ({
-  children,
-  href,
-  onClick,
-}: {
+interface ShareLinkButtonProps {
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
+  href?: any; // XXX(Xe): the type of the next/link href prop is a bit weird, can't figure out how to import it
   children: ReactNode;
-  href?: string;
-  onClick: MouseEventHandler<HTMLAnchorElement>;
-}) => {
+}
+
+const ShareLinkButton = ({ children, href = '#', onClick }: ShareLinkButtonProps) => {
   return (
-    <div className="mx-1 shrink-0">
-      <a
-        href={href}
-        className="w-42 mt-2 flex rounded bg-blue-500 px-6 py-3 text-gray-200 no-underline hover:cursor-pointer hover:bg-blue-600 hover:text-gray-100 hover:underline"
-        onClick={onClick}
-      >
-        {children}
-      </a>
-    </div>
+    <>
+      <div className="mx-1 shrink-0">
+        <Link
+          href={href}
+          className="w-42 mt-2 flex rounded bg-blue-500 px-6 py-3 text-gray-200 no-underline hover:cursor-pointer hover:bg-blue-600 hover:text-gray-100 hover:underline"
+          onClick={onClick}
+        >
+          {children}
+        </Link>
+      </div>
+    </>
   );
 };
 
 export default function PostLayout({ content, authorDetails, next, prev, children }: LayoutProps) {
+  const router = useRouter();
+
   const { filePath, path, date, title, tags } = content;
   const basePath = path.split('/')[0];
-  const guessForPageURL = `https://tailscale.dev/blog/${content.slug}`; // xxx needs fix once solutions lands
+  const guessForPageURL = `https://tailscale.dev/${router.asPath}`; // xxx needs fix once solutions lands
 
   return (
     <>
@@ -247,11 +241,12 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
               Share
             </ShareLinkButton>
             <ShareLinkButton
-              href={u('https://twitter.com/intent/tweet', {
-                via: 'tailscale',
-                text: `${content.title}`,
-                url: guessForPageURL,
-              })}
+              href={{
+                protocol: 'https',
+                hostname: 'twitter.com',
+                pathname: 'intent/tweet',
+                query: { via: 'tailscale', text: `${content.title}`, url: guessForPageURL },
+              }}
               onClick={() => {}}
             >
               <svg
@@ -271,10 +266,12 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
               Tweet
             </ShareLinkButton>
             <ShareLinkButton
-              href={u('https://www.linkedin.com/shareArticle', {
-                url: guessForPageURL,
-                title: content.title,
-              })}
+              href={{
+                protocol: 'https',
+                hostname: 'www.linkedin.com',
+                pathname: 'shareArticle',
+                query: { url: guessForPageURL, title: content.title },
+              }}
               onClick={() => {}}
             >
               <svg
@@ -296,12 +293,17 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
               LinkedIn
             </ShareLinkButton>
             <ShareLinkButton
-              href={u('https://hachyderm.io/share', {
-                text: `${content.title}\n\n${guessForPageURL} - by ${
-                  authorDetails[0].fediverse ? authorDetails[0].fediverse : '@tailscale'
-                }`,
-                visibility: 'public',
-              })}
+              href={{
+                protocol: 'https',
+                hostname: 'hachyderm.io',
+                pathname: 'share',
+                query: {
+                  text: `${content.title}\n\n${guessForPageURL} - by ${
+                    authorDetails[0].fediverse ? authorDetails[0].fediverse : '@tailscale'
+                  }`,
+                  visibility: 'public',
+                },
+              }}
               onClick={() => {}}
             >
               <svg
