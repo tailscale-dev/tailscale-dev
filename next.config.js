@@ -79,14 +79,6 @@ module.exports = () => {
           source: '/wireguard-internals',
           destination: '/wireguard-internals/index.html',
         },
-        {
-          source: '/feed.xml',
-          destination: '/api/rss',
-        },
-        {
-          source: '/tags/:tag/feed.xml',
-          destination: '/api/rss?tag=:tag',
-        },
       ];
     },
     async headers() {
