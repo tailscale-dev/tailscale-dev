@@ -201,7 +201,7 @@ export default function Up() {
               We are putting a lot of thought into the food and drink that will be served throughout
               the day. This ain’t no regular conference food. We will announce specifics in the
               coming weeks but there will be a clean breakfast, a variety of food trucks for lunch,
-              and dinner with craft beer and mocktails at the after-hours social event. And and all
+              and dinner with craft beer and mocktails at the after-hours social event. And an all
               day coffee cart, of course.
             </div>
           </div>
