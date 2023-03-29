@@ -39,7 +39,6 @@ const featuredSpeakers = [
   },
   {
     name: 'Emily Trau',
-    title: 'Developer Advocate',
     talk: 'All the buttons',
     description:
       "What kind of user experiences can you build if you use every trick in the Tailscale book - features that are old, new, and even unreleased? We built a hacking attack/defense simulation platform, and want to show you what's possible when you commit Tailscale crimes.",
@@ -63,9 +62,9 @@ function Headshot(props: { speaker: (typeof featuredSpeakers)[0] }) {
         <Image
           src={`/static/up/headshots/${props.speaker.headshot}`}
           alt={`Headshot of ${props.speaker.name}`}
-          className="rounded-full border-8 border-gray-200 dark:border-gray-700"
-          width={200}
-          height={200}
+          className="rounded-full  border-gray-200 dark:border-gray-700"
+          width={170}
+          height={170}
         />
       </div>
     </div>
@@ -76,9 +75,9 @@ function Bio(props: { speaker: (typeof featuredSpeakers)[0] }) {
   return (
     <div className="hidden w-64 flex-none lg:block">
       <div className="h-full">
-        <div className="text-4xl font-medium">{props.speaker.name}</div>
+        <div className="text-3xl font-medium">{props.speaker.name}</div>
         <div className="pt-4">
-          <span className="font-medium">{props.speaker.title}</span>
+          {props.speaker.title && <span className="font-medium">{props.speaker.title}</span>}
           {props.speaker.company && <div>@ {props.speaker.company}</div>}
           <br />
         </div>
@@ -147,15 +146,15 @@ export default function Up() {
 
                 <div className="flex-auto px-6">
                   <div className="lg:hidden">
-                    <div className="text-4xl font-medium">{speaker.name}</div>
+                    <div className="text-3xl font-medium">{speaker.name}</div>
                     <div className="pt-4">
                       <span className="font-medium">
                         {speaker.title}
-                        {/* {speaker.company && <>@ {speaker.company}</>} */}
+                        {speaker.company && <> @ {speaker.company}</>}
                       </span>
                     </div>
                   </div>
-                  <div className="text-lg font-bold text-[#cca000]">{speaker.talk}</div>
+                  <div className="text-xl font-bold text-blue-600">{speaker.talk}</div>
                   <div className="pt-4">{speaker.description}</div>
                 </div>
 
