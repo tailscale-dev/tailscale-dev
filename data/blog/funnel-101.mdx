@@ -70,7 +70,7 @@ run the service so that you can access it from your tailnet.
 Now that the app is running, use `tailscale serve` to route to that port:
 
 ```
-tailscale serve / proxy 8000
+tailscale serve https / http://localhost:8000
 ```
 
 Then you can confirm it with `tailscale serve status`:
@@ -84,13 +84,13 @@ https://xe-dev-vm.shark-harmonic.ts.net (tailnet only)
 Finally, enable funnel for the machine with `tailscale serve`:
 
 ```
-tailscale serve funnel on
+tailscale funnel 443 on
 ```
 
 Then confirm it got enabled with `tailscale serve status`:
 
 ```
-$ tailscale serve status
+$ tailscale funnel status
 https://xe-dev-vm.shark-harmonic.ts.net (Funnel on)
 |-- / proxy http://127.0.0.1:8000
 ```
