@@ -171,14 +171,12 @@ export default function Up() {
           </h2>
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
             <div className="mx-auto">
-              <Link href="https://www.hotelviasf.com/">
-                <Image
-                  src="/static/up/food-truck.svg"
-                  alt="An image of a food truck"
-                  width={209}
-                  height={110}
-                />
-              </Link>
+              <Image
+                src="/static/up/food-truck.svg"
+                alt="An image of a food truck"
+                width={209}
+                height={110}
+              />
             </div>
 
             <div className="col-span-2">
@@ -203,9 +201,7 @@ export default function Up() {
             </div>
 
             <div className="mx-auto">
-              <Link href="https://www.hotelvia.com/">
-                <Image src="/static/up/beer.svg" alt="An image of beer" width={78} height={110} />
-              </Link>
+              <Image src="/static/up/beer.svg" alt="An image of beer" width={78} height={110} />
             </div>
           </div>
         </div>
@@ -246,7 +242,7 @@ export default function Up() {
             <div className="mx-auto">
               <Link href="https://www.hotelvia.com/">
                 <Image
-                  src="/static/up/hotelvia.png"
+                  src="/static/up/hotel-via.svg"
                   alt="Hotel Via logo"
                   width={288}
                   height={197}
@@ -288,7 +284,6 @@ export default function Up() {
             Tickets
           </h2>
           <div>
-            Early bird tickets sales end April 11th.
             <NoSSRWrapper>
               <tito-widget event="tailscaleup/2023"></tito-widget>
             </NoSSRWrapper>
