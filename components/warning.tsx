@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import GraphicalEmoji from './GraphicalEmoji';
+import GraphicalEmoji from './graphical-emoji';
 
 export interface WarningProps {
   children: ReactNode;
