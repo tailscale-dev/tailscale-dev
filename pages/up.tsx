@@ -133,11 +133,30 @@ export default function Up() {
       </header>
 
       <main className="container max-w-5xl">
+        <div className="mx-auto max-w-2xl pt-6">
+          On May 31 Tailscale Up will be Tailscale&apos;s first-ever in-person conference for the
+          Tailscale community. Providing attendees the opportunity to meet with the tailscalars and
+          each other, talk about their projects and integrations, and leave connected and inspired.
+          A single track will be comprised of community speakers.
+          <br />
+          <br />
+          To stay updated on the latest developments and announcements about Tailscale Up, check
+          back regularly or follow our{' '}
+          <Link href="https://twitter.com/tailscale" className="text-blue-500" target="_blank">
+            Twitter
+          </Link>{' '}
+          and our{' '}
+          <Link href="https://hachyderm.io/@tailscale" className="text-blue-500" target="_blank">
+            Fediverse
+          </Link>{' '}
+          account. You won&apos;t want to miss out on this unique opportunity to meet and learn from
+          others in the Tailscale community as well as Tailscale team members.
+        </div>
         <div>
           <h2 className="pt-10 pb-4 text-center text-3xl font-bold leading-8 tracking-tight">
             Featured Speakers
           </h2>
-          <div className="pb-2 text-center">(Full speaker lineup soon)</div>
+          <div className="pb-2 text-center">Stay tuned for our full speaker lineup</div>
 
           <div className="divide-y divide-gray-200 dark:divide-gray-700">
             {featuredSpeakers.map((speaker, index) => (
@@ -192,14 +211,14 @@ export default function Up() {
           <h2 className="pt-10 pb-6 text-center text-3xl font-bold leading-8 tracking-tight">
             After hours
           </h2>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
-            <div className="col-span-2">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-5">
+            <div className="col-span-4">
               We will stay onsite at Dogpatch to wrap up the conference with craft beer, natural
               wines, and immaculate vibes. There will be food, board games, graphic novels, and good
               company.
             </div>
 
-            <div className="mx-auto">
+            <div>
               <Image src="/static/up/beer.svg" alt="An image of beer" width={78} height={110} />
             </div>
           </div>
@@ -212,7 +231,11 @@ export default function Up() {
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
             <div className="w-full">
               <div className="pb-4 text-xl font-bold">Dogpatch Studios</div>
-              <div>991 Tennessee St, San Francisco, CA 94107</div>
+              <div>
+                991 Tennessee St
+                <br />
+                San Francisco, CA 94107
+              </div>
               <div className="pt-4">
                 Located on the hip side of Potrero Hill just one mile south of the Giants’ ballpark,
                 Dogpatch is easily accessed by bus, train, car, taxi, rideshare, MUNI (T-Line), or
@@ -284,9 +307,33 @@ export default function Up() {
             Tickets
           </h2>
           <div>
-            <NoSSRWrapper>
-              <tito-widget event="tailscaleup/2023"></tito-widget>
-            </NoSSRWrapper>
+            <div className="mx-auto max-w-2xl">
+              <div className="pb-4">
+                Tickets are on sale now!
+                <br />
+                <br />
+                Ticket sales are limited, so act quickly! Early-bird tickets are available for $75.
+                <br />
+                Standard tickets will go on sale for $200 starting April 11th.
+              </div>
+              <NoSSRWrapper>
+                <tito-widget event="tailscaleup/2023"></tito-widget>
+              </NoSSRWrapper>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 className="pt-10 pb-6 text-center text-3xl font-bold leading-8 tracking-tight">
+            Partnerships
+          </h2>
+          <div className="mx-auto max-w-2xl">
+            <div>
+              Building something that&apos;s the peanut butter to Tailscale&apos;s chocolate? If
+              you&apos;re interested in exploring potential partnership opportunities with us, we
+              invite you to email us at <code>up@tailscale.com</code>. We are open to discussing
+              different options for collaboration and finding creative ways to work together.
+            </div>
           </div>
         </div>
 
@@ -294,8 +341,9 @@ export default function Up() {
           <h2 className="pt-10 pb-6 text-center text-3xl font-bold leading-8 tracking-tight">
             Code of Conduct
           </h2>
-          <div>
+          <div className="mx-auto max-w-2xl">
             Promoting a respectful and inclusive environment is a top priority for Tailscale Up.
+            <br />
             Everyone will be expected to follow our{' '}
             <Link className="text-blue-500" href="https://tailscale.dev/events/code-of-conduct">
               Code of Conduct
@@ -308,17 +356,19 @@ export default function Up() {
           <h2 className="pt-10 pb-6 text-center text-3xl font-bold leading-8 tracking-tight">
             Coronavirus (COVID-19) information
           </h2>
-          <div>
-            At Tailscale Up, we’ll implement the following safety measures to prevent the spread of
-            Covid. We encourage all attendees to wear a mask and will be providing masks at the
-            venue check-in table. We will require a negative test completed on the same day (tests
-            provided to all attendees by mail before the event). Please do not attend if you are
-            exhibiting symptoms.
-          </div>
-          <div className="pt-4">
-            We offer a full refund if you are unable to attend. These measures will be reviewed and
-            updated to reflect the changing situation and number of cases as we approach the
-            conference date.
+          <div className="mx-auto max-w-2xl">
+            <div>
+              At Tailscale Up, we’ll implement the following safety measures to prevent the spread
+              of Covid. We encourage all attendees to wear a mask and will be providing masks at the
+              venue check-in table. We will require a negative test completed on the same day (tests
+              provided to all attendees by mail before the event). Please do not attend if you are
+              exhibiting symptoms.
+            </div>
+            <div className="pt-4">
+              We offer a full refund if you are unable to attend. These measures will be reviewed
+              and updated to reflect the changing situation and number of cases as we approach the
+              conference date.
+            </div>
           </div>
         </div>
       </main>
