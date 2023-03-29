@@ -22,38 +22,37 @@ const featuredSpeakers = [
   {
     name: 'Amye Scavarda Perrin',
     title: 'Director of Developer Programs',
-    company: {
-      name: 'CNCF',
-      url: 'https://www.cncf.io/',
-    },
+    company: 'CNCF',
     talk: 'Your Family Needs Tailscale',
     description:
       'With the power of Tailscale and Pi-hole combined, you too can have your household internet free of pesky popups, attention grabbers and possibly misleading claims to have won an iPhone.',
     headshot: 'amye-scavarda-perrin.jpg',
   },
   {
-    name: 'Corey Quinn',
-    title: 'Chief Cloud Economist',
-    company: {
-      name: 'The Duckbill Group',
-      url: 'https://www.duckbillgroup.com/',
-    },
-    talk: 'The Managed NAT Gateway Time Machine',
-    description:
-      'Via the magic of Tailscale, the presenter will do the (financially) impossible: pass traffic through two AWS Managed NAT Gateways. This in turn creates a vortex that is so phenomenally expensive that it warps the very fabric of space and time. That vortex will then be used to take the audience on a living tour of the history of crappy VPNs, hilariously bad multicloud networking attempts, and bear living witness to the actual moment Cisco set off down its path to become a sad corporate dragon with no friends.',
-    headshot: 'corey-quinn.jpg',
-  },
-  {
     name: 'Justin Garrison',
     title: 'Developer Advocate',
-    company: {
-      name: 'AWS',
-      url: 'https://aws.amazon.com/',
-    },
+    company: 'AWS',
     talk: 'Build your own game streaming service',
     description:
       'Streaming games from the cloud is great, but how can you get the same flexibility with existing hardware? Using Tailscale with Steam we can game from anywhere, anytime, on any device.',
     headshot: 'justin-garrison.jpg',
+  },
+  {
+    name: 'Emily Trau',
+    title: 'Developer Advocate',
+    talk: 'All the buttons',
+    description:
+      "What kind of user experiences can you build if you use every trick in the Tailscale book - features that are old, new, and even unreleased? We built a hacking attack/defense simulation platform, and want to show you what's possible when you commit Tailscale crimes.",
+    headshot: 'emily-trau.jpg',
+  },
+  {
+    name: 'Corey Quinn',
+    title: 'Chief Cloud Economist',
+    company: 'The Duckbill Group',
+    talk: 'The Managed NAT Gateway Time Machine',
+    description:
+      'Via the magic of Tailscale, the presenter will do the (financially) impossible: pass traffic through two AWS Managed NAT Gateways. This in turn creates a vortex that is so phenomenally expensive that it warps the very fabric of space and time. That vortex will then be used to take the audience on a living tour of the history of crappy VPNs, hilariously bad multicloud networking attempts, and bear living witness to the actual moment Cisco set off down its path to become a sad corporate dragon with no friends.',
+    headshot: 'corey-quinn.jpg',
   },
 ];
 
@@ -74,13 +73,15 @@ function Headshot(props: { speaker: (typeof featuredSpeakers)[0] }) {
 }
 
 function Bio(props: { speaker: (typeof featuredSpeakers)[0] }) {
+  console.log('>>>', props.speaker.company);
   return (
     <div className="hidden w-64 flex-none lg:block">
       <div className="h-full">
         <div className="text-4xl font-medium">{props.speaker.name}</div>
         <div className="pt-4">
           <span className="font-medium">{props.speaker.title}</span>
-          <br />@ {props.speaker.company.name}
+          {props.speaker.company && <div>@ {props.speaker.company}</div>}
+          <br />
         </div>
       </div>
     </div>
@@ -150,7 +151,8 @@ export default function Up() {
                     <div className="text-4xl font-medium">{speaker.name}</div>
                     <div className="pt-4">
                       <span className="font-medium">
-                        {speaker.title} @ {speaker.company.name}
+                        {speaker.title}
+                        {/* {speaker.company && <>@ {speaker.company}</>} */}
                       </span>
                     </div>
                   </div>
