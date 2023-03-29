@@ -257,6 +257,7 @@ export default function Up() {
               </div>
               <Link
                 className="cta-button button-large my-6 mx-auto block whitespace-nowrap text-white"
+                target="_blank"
                 href="https://res.windsurfercrs.com/ibe/details.aspx?propertyid=14840&nights=1&checkin=5/30/2023&group=8135285&lang=en-us"
               >
                 Book now
