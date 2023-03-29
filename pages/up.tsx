@@ -73,7 +73,6 @@ function Headshot(props: { speaker: (typeof featuredSpeakers)[0] }) {
 }
 
 function Bio(props: { speaker: (typeof featuredSpeakers)[0] }) {
-  console.log('>>>', props.speaker.company);
   return (
     <div className="hidden w-64 flex-none lg:block">
       <div className="h-full">
@@ -172,12 +171,12 @@ export default function Up() {
           </h2>
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
             <div className="mx-auto">
-              <Link href="https://www.hotelvia.com/">
+              <Link href="https://www.hotelviasf.com/">
                 <Image
-                  src="/static/up/food-trucks.jpg"
-                  alt="An image of food trucks lined up"
-                  width={288}
-                  height={151}
+                  src="/static/up/food-truck.svg"
+                  alt="An image of a food truck"
+                  width={209}
+                  height={110}
                 />
               </Link>
             </div>
@@ -205,12 +204,7 @@ export default function Up() {
 
             <div className="mx-auto">
               <Link href="https://www.hotelvia.com/">
-                <Image
-                  src="/static/up/social.jpg"
-                  alt="An image of cheersing with beer and wine"
-                  width={288}
-                  height={192}
-                />
+                <Image src="/static/up/beer.svg" alt="An image of beer" width={78} height={110} />
               </Link>
             </div>
           </div>
