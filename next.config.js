@@ -6,7 +6,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 // You might need to insert additional domains in script-src if you are using external services
 const ContentSecurityPolicy = `
-  default-src 'self' js.tito.io;
+  default-src 'self' js.tito.io www.google.com;
   script-src 'self' 'unsafe-eval' 'unsafe-inline' cdn.rudderlabs.com js.tito.io;
   style-src 'self' 'unsafe-inline' js.tito.io;
   img-src * blob: data:;
@@ -63,15 +63,6 @@ module.exports = () => {
     pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
     eslint: {
       dirs: ['pages', 'components', 'lib', 'layouts', 'scripts'],
-    },
-    async redirects() {
-      return [
-        {
-          source: '/up',
-          destination: 'https://ti.to/tailscaleup/2023',
-          permanent: false,
-        },
-      ];
     },
     rewrites: () => {
       return [
