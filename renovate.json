@@ -1,11 +1,15 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:base"],
+  "enabledManagers": ["npm"],
   "baseBranches": ["main"],
+  "prConcurrentLimit": 0,
+  "rangeStrategy": "pin",
+  "prHourlyLimit": 0,
   "packageRules": [
     {
       "groupName": "react",
-      "matchPackagePatterns": ["^react", "react$"],
+      "matchPackagePatterns": ["^react", ".*react$"],
       "matchPackageNames": ["eslint-plugin-react"]
     },
     {
@@ -19,7 +23,7 @@
     },
     {
       "groupName": "next",
-      "matchPackagePatterns": ["^next", "^@next", "next$"]
+      "matchPackagePatterns": ["^next", "^@next", ".*next$"]
     },
     {
       "groupName": "typescript",
