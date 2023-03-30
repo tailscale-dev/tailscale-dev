@@ -9,6 +9,7 @@ import { Pre } from './pre';
 import { NewsletterRepublishing } from './newsletter-republishing';
 import Image from './image';
 import Warning from './warning';
+import { Question } from './question';
 
 export const Wrapper = ({ layout, content, ...rest }: MDXLayout) => {
   const Layout = require(`../layouts/${layout}`).default;
@@ -25,4 +26,5 @@ export const MDXComponents: ComponentMap = {
   a: ExternalLink,
   pre: Pre,
   wrapper: Wrapper,
+  Question,
 };

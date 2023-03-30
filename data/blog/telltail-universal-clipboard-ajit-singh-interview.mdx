@@ -15,13 +15,19 @@ We love cool projects that people build on top of Tailscale, so when we first sa
 
 We asked Ajit a few questions about Telltail, why he wanted it, how he built it, and what he learned along the way. We hope you enjoy reading his answers here — and if they inspire you to build something fun with Tailscale that you want to share with the community, shoot us a note at devrel\@tailscale.com and let us know more!
 
-**Q: So first things first, can you tell me a little about yourself? Where are you based, and do you do programming professionally there? What kind of programming do you like to do?**
+<Question>
+  So first things first, can you tell me a little about yourself? Where are you based, and do you do
+  programming professionally there? What kind of programming do you like to do?
+</Question>
 
-A: Hi! I'm [Ajit Singh](https://hemarkable.com). I'm from India, and I work for a software company where I build frontend apps.
+Hi! I'm [Ajit Singh](https://hemarkable.com). I'm from India, and I work for a software company where I build frontend apps.
 
 Outside my job, rather than writing code, I like to learn about alternate possibilities in interfaces that exist or used to exist, like Emacs, [Acme](https://research.swtch.com/acme) and [Leap](https://leebyron.com/til/leap/) for editing text, the effort to bring a smartphone a decade earlier by [General Magic](https://www.generalmagicthemovie.com/), and [this interaction](https://youtu.be/HvKCMYVuvRM?t=277) in HTC HD2.
 
-**How'd you run into the problem you solved with Telltail? Was there a particular moment when you thought: I have to build a solution to this?**
+<Question>
+  How'd you run into the problem you solved with Telltail? Was there a particular moment when you
+  thought: I have to build a solution to this?
+</Question>
 
 Given the nature of my work, I happen to be in front of a screen quite often. Thankfully I have only two: a laptop running Fedora and an iPhone. But this means I switch between them frequently. It's quite usual for me to browse social media on my phone, finding and sharing a link of a post to my laptop so I can read on a bigger screen later. Many apps exist that let you transfer files to another device, but I never was able to find first class support for sharing text in any app. In the ones you'd find some support, you'd always have to open that app in both of my devices, then wait for them to discover each other (or you manually put one device's IP in another), but even then the connection could fail on you. I was surprised to see that none of the app offers to do it efficiently, given that even Apple has already [introduced it as a feature](https://support.apple.com/en-in/HT209460).
 
@@ -29,7 +35,11 @@ When I downloaded Tailscale, I didn't do it for the purpose of solving a problem
 
 Now that I knew that serving a website across my devices is easy, and as I was already going through [gobyexample.com](https://gobyexample.com) that time, I thought of making a simple web app using Go that could store and serve a text snippet. I then started building conveniences on top of it — accessing its APIs via Shortcuts on iPhone, then binding keyboard shortcuts to interact with it on laptop (which I later changed to automatically doing it with usual keyboard shortcuts that I named Sync), and then finally making an installer. Building this way meant that I could rollback easily if I feel the approach isn't right, and I could stop whenever I'm satisfied with the outcome. And because it is built incrementally, it wasn't until quite later when I figured I could make a proper solution out of it.
 
-**It's very cool that you show your iterative approach to building the tool in your blog post. Did you have any moments where you got frustrated and almost decided that the solution was "good enough" where it was? How did you find your way out of it?**
+<Question>
+  It's very cool that you show your iterative approach to building the tool in your blog post. Did
+  you have any moments where you got frustrated and almost decided that the solution was "good
+  enough" where it was? How did you find your way out of it?
+</Question>
 
 Yeah! It did happen numerous times. Because I only use two devices, there wasn't really an incentive to build Telltail for other OSes. But my curiosity pulled me into looking for a solution for them.
 
@@ -41,7 +51,11 @@ I also didn't like the initial size of an executable. Thanks to the internet, I'
 
 One more: upon telling about what I built to a person I know, they suggested that I could run Linux on my home router and put Telltail Center (a web server) on it so that it keeps running even my laptop is closed. Cool idea but it is something I'm not going to do, haha.
 
-**You mention at the bottom of your post that this was your first time working with VPNs, systemd, golang, and more. That's amazing! What are some of the biggest things you learned about working with these tools for a project?**
+<Question>
+  You mention at the bottom of your post that this was your first time working with VPNs, systemd,
+  golang, and more. That's amazing! What are some of the biggest things you learned about working
+  with these tools for a project?
+</Question>
 
 Using Tailscale is surprisingly easy and it has most things I needed. Like once I was worried about how I would be able to install SSL certificates in my phone, and then I later discovered that Tailscale can, with a command, assign certs for a device. The only thing I couldn't do is to get the tailnet name using auth key, tsnet and iOS Shortcuts. It would've made the Telltail installation even easier. Even without it, the experience was good overall.
 
@@ -53,10 +67,16 @@ There isn't a universal way to mark a clipboard item so that clipboard history m
 
 Golang is good. I like that I can have separate files for each platform. Cross-platform compilation came in extremely handy. On the other side, struct fields being optional tripped me once in the code. Decoding JSON and getting a value back for something that wasn't present in the encoded form felt odd to me. Hopefully I could find linters and checkers that could assist with these.
 
-**If people want to follow any future development on Telltail or other things you're working on, what's the best way to find you online?**
+<Question>
+  If people want to follow any future development on Telltail or other things you're working on,
+  what's the best way to find you online?
+</Question>
 
 I'm [@hemarkable on Twitter](https://twitter.com/hemarkable) and [@ajit@hachyderm.io](https://hachyderm.io/@ajit) on Mastodon. I'd post updates and tell about new things there.
 
-**Finally, I noticed your site has a "last listened to" section. Do you have any favorite music to play while you're hacking?**
+<Question>
+  Finally, I noticed your site has a "last listened to" section. Do you have any favorite music to
+  play while you're hacking?
+</Question>
 
 I don't listen to music if I'm really focusing on something. Otherwise in day-to-day coding, I listen to my music library that ranges across genres: R&B and Soul (Bill Withers, dvsn, Daniel Caesar), Jazz (Chet Baker, BadBadNotGood) Electronic (Kaytranada, SG Lewis, Zedd), Rock (Kaleo, Royal Blood, The Black Keys), Pop (Zayn, Valley, The 1975), and obviously Indian (Bollywood, Punjabi and Indi-pop). Usually one of the genre remains in heavy rotation at a time, and right now it is Electronic.
