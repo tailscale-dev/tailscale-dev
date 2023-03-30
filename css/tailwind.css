@@ -817,6 +817,10 @@
   @apply border-b-0;
 }
 
+.Markdown .warn p {
+  @apply mt-0;
+}
+
 .Markdown .note {
   @apply relative rounded border border-solid border-gray-100 pt-3 pb-2 pr-3 pl-9 text-base leading-normal tracking-tight md:text-sm;
 }

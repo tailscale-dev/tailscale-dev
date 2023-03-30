@@ -6,6 +6,7 @@ import Wrapper from './wrapper';
 interface ImageComponentProps extends ImageProps {
   showCaption?: boolean;
   href?: string;
+  className?: string;
 }
 
 export default function Image(props: ImageComponentProps) {
@@ -15,7 +16,10 @@ export default function Image(props: ImageComponentProps) {
         condition={props.href}
         wrapper={(children) => <Link href={props.href}>{children}</Link>}
       >
-        <NextImage {...props} />
+        <div className={`rounded-xl ${props.className ? props.className : 'max-w-full'}`}>
+          <br />
+          <NextImage {...props} />
+        </div>
       </Wrapper>
       {props.showCaption && <figcaption className="text-center">{props.alt}</figcaption>}
     </>

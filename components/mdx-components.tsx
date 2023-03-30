@@ -7,8 +7,8 @@ import { TOCInline } from './toc-inline';
 import ExternalLink from './external-link';
 import { Pre } from './pre';
 import { NewsletterRepublishing } from './newsletter-republishing';
-
 import Image from './image';
+import Warning from './warning';
 
 export const Wrapper = ({ layout, content, ...rest }: MDXLayout) => {
   const Layout = require(`../layouts/${layout}`).default;
@@ -21,6 +21,7 @@ export const MDXComponents: ComponentMap = {
   ConvSnippet,
   TOCInline,
   NewsletterRepublishing,
+  Warning: Warning,
   a: ExternalLink,
   pre: Pre,
   wrapper: Wrapper,
