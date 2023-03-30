@@ -92,7 +92,12 @@ export default function Up() {
       <Script src="https://js.tito.io/v2" strategy="lazyOnload" />
 
       <Head>
-        <title>Tailscale Up - Bay Area, CA - May 31, 2023</title>
+        <title>Tailscale Up - San Francisco, CA - May 31, 2023</title>
+        <meta
+          name="description"
+          content="A conference for you to learn how others are using Tailscale at home and forge lasting
+          connections in the community."
+        />
       </Head>
 
       <header
@@ -197,7 +202,7 @@ export default function Up() {
               />
             </div>
 
-            <div className="col-span-2">
+            <div className="sm:col-span-2">
               We are putting a lot of thought into the food and drink that will be served throughout
               the day. This ain’t no regular conference food. We will announce specifics in the
               coming weeks but there will be a clean breakfast, a variety of food trucks for lunch,
@@ -212,13 +217,17 @@ export default function Up() {
             After hours
           </h2>
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-5">
-            <div className="col-span-4">
+            <div className="mx-auto sm:hidden">
+              <Image src="/static/up/beer.svg" alt="An image of beer" width={78} height={110} />
+            </div>
+
+            <div className="sm:col-span-4">
               We will stay onsite at Dogpatch to wrap up the conference with craft beer, natural
               wines, and immaculate vibes. There will be food, board games, graphic novels, and good
               company.
             </div>
 
-            <div>
+            <div className="hidden sm:block">
               <Image src="/static/up/beer.svg" alt="An image of beer" width={78} height={110} />
             </div>
           </div>
