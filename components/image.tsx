@@ -17,7 +17,6 @@ export default function Image(props: ImageComponentProps) {
         wrapper={(children) => <Link href={props.href}>{children}</Link>}
       >
         <div className={`rounded-xl ${props.className ? props.className : 'max-w-full'}`}>
-          <br />
           <NextImage {...props} />
         </div>
       </Wrapper>
