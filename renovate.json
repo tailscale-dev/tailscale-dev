@@ -1,6 +1,29 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base"
+  "extends": ["config:base"],
+  "baseBranches": ["main"],
+  "packageRules": [
+    {
+      "groupName": "react",
+      "matchPackagePatterns": ["^react", "react$"],
+      "matchPackageNames": ["eslint-plugin-react"]
+    },
+    {
+      "groupName": "eslint",
+      "matchPackagePatterns": ["^eslint", "^@typescript-eslint"],
+      "matchPackageNames": ["eslint-plugin-react"]
+    },
+    {
+      "groupName": "contentlayer",
+      "matchPackageNames": ["contentlayer", "next-contentlayer"]
+    },
+    {
+      "groupName": "next",
+      "matchPackagePatterns": ["^next", "^@next", "next$"]
+    },
+    {
+      "groupName": "typescript",
+      "matchPackagePatterns": ["^typescript", "^@typescript"]
+    }
   ]
 }
