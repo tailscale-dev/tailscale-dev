@@ -5,20 +5,20 @@ tags:
   - 'telltail'
   - 'golang'
   - 'oss'
-  - 'interview'
+  - 'tailscale q&a'
 authors: ['parker']
-summary: 'Tailscale chats with the developer behind Telltail, a universal text clipboard for multiple devices on your tailnet.'
+summary: 'Telltail is a Go application that allows different machines on your tailnet to copy and paste text with a shared clipboard. We caught up with its developer Ajit Singh for a Tailscale Q&A about how it came together.'
 ---
 
-We love cool projects that people build on top of Tailscale, so when we first saw Telltail — a mechanism for sharing a text clipboard between different machines on your tailnet — we had to know more. And we were excited when Ajit Singh, the developer behind Telltail, put together a great blog post that walked through the development process, showing how he iterated in steps towards the "final product" that he published.
+We love cool projects that people build on top of Tailscale, so when we first saw Telltail — a mechanism for sharing a text clipboard between different machines on your tailnet — we had to know more. And we were excited when Ajit Singh, the developer behind Telltail, put together a [great blog post walking through the development process](https://hemarkable.com/prose/telltail) and showing how he iterated in steps towards the final product that he published.
 
-We asked Ajit a few questions about Telltail, why he wanted it, how he built it, and what he learned along the way. We hope you enjoy reading his answers here — and if they inspire you to build something fun with Tailscale that you want to share with the community, shoot us a note at devrel@tailscale.com and let us know more.
+We asked Ajit a few questions about Telltail, why he wanted it, how he built it, and what he learned along the way. We hope you enjoy reading his answers here — and if they inspire you to build something fun with Tailscale that you want to share with the community, shoot us a note at devrel\@tailscale.com and let us know more!
 
 **Q: So first things first, can you tell me a little about yourself? Where are you based, and do you do programming professionally there? What kind of programming do you like to do?**
 
 A: Hi! I'm [Ajit Singh](https://hemarkable.com). I'm from India, and I work for a software company where I build frontend apps.
 
-Outside my job, rather that writing code, I like to learn about alternate possibilities in interfaces that exist or used to exist, like Emacs, [Acme](https://research.swtch.com/acme) and [Leap](https://leebyron.com/til/leap/) for editing text, the effort to bring a smartphone a decade earlier by [General Magic](https://www.generalmagicthemovie.com/), and [this interaction](https://youtu.be/HvKCMYVuvRM?t=277) in HTC HD2.
+Outside my job, rather than writing code, I like to learn about alternate possibilities in interfaces that exist or used to exist, like Emacs, [Acme](https://research.swtch.com/acme) and [Leap](https://leebyron.com/til/leap/) for editing text, the effort to bring a smartphone a decade earlier by [General Magic](https://www.generalmagicthemovie.com/), and [this interaction](https://youtu.be/HvKCMYVuvRM?t=277) in HTC HD2.
 
 **How'd you run into the problem you solved with Telltail? Was there a particular moment when you thought: I have to build a solution to this?**
 
