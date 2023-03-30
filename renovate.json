@@ -4,7 +4,7 @@
   "enabledManagers": ["npm"],
   "baseBranches": ["main"],
   "prConcurrentLimit": 0,
-  "rangeStrategy": "pin",
+  "rangeStrategy": "bump",
   "prHourlyLimit": 0,
   "packageRules": [
     {
