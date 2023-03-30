@@ -32,6 +32,10 @@
     {
       "groupName": "tailwindcss",
       "matchPackagePatterns": ["^tailwindcss", "^@tailwindcss", ".*tailwindcss$"]
+    },
+    {
+      "groupName": "mdx",
+      "matchPackagePatterns": ["^mdx", ".*mdx$"]
     }
   ]
 }
