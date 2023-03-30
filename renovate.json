@@ -28,6 +28,10 @@
     {
       "groupName": "typescript",
       "matchPackagePatterns": ["^typescript", "^@typescript"]
+    },
+    {
+      "groupName": "tailwindcss",
+      "matchPackagePatterns": ["^tailwindcss", "^@tailwindcss", ".*tailwindcss$"]
     }
   ]
 }
