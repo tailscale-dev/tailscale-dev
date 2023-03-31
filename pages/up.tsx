@@ -23,7 +23,7 @@ const featuredSpeakers = [
     name: 'Amye Scavarda Perrin',
     title: 'Director of Developer Programs',
     company: 'CNCF',
-    talk: 'Your Family Needs Tailscale',
+    talk: 'Your family needs Tailscale',
     description:
       'With the power of Tailscale and Pi-hole combined, you too can have your household internet free of pesky popups, attention grabbers and possibly misleading claims to have won an iPhone.',
     headshot: 'amye-scavarda-perrin.jpg',
@@ -48,7 +48,7 @@ const featuredSpeakers = [
     name: 'Corey Quinn',
     title: 'Chief Cloud Economist',
     company: 'The Duckbill Group',
-    talk: 'The Managed NAT Gateway Time Machine',
+    talk: 'The managed NAT gateway time machine',
     description:
       'Via the magic of Tailscale, the presenter will do the (financially) impossible: pass traffic through two AWS Managed NAT Gateways. This in turn creates a vortex that is so phenomenally expensive that it warps the very fabric of space and time. That vortex will then be used to take the audience on a living tour of the history of crappy VPNs, hilariously bad multicloud networking attempts, and bear living witness to the actual moment Cisco set off down its path to become a sad corporate dragon with no friends.',
     headshot: 'corey-quinn.jpg',
