@@ -23,7 +23,8 @@
     },
     {
       "groupName": "next",
-      "matchPackagePatterns": ["^next", "^@next", ".*next$"]
+      "matchPackagePatterns": ["^next", "^@next", ".*next$"],
+      "excludePackageNames": ["next-contentlayer"]
     },
     {
       "groupName": "typescript",
