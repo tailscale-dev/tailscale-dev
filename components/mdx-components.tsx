@@ -1,5 +1,6 @@
 /* eslint-disable react/display-name */
 import React, { ReactNode } from 'react';
+import AprilFoolsWarning from './april-fools-warning';
 import { ComponentMap, MDXLayout } from './mdx';
 import { HeroImage } from './hero-image';
 import { ConvSnippet } from './conv-snippet';
@@ -36,4 +37,5 @@ export const MDXComponents: ComponentMap = {
   wrapper: Wrapper,
   XesiteConv: XesiteConv,
   BlockQuote,
+  AprilFoolsWarning,
 };
