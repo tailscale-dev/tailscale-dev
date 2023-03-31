@@ -10,7 +10,7 @@ summary: |
   Tailscale is a great product, but it's not for everyone. Here's how to use it without using it.
 ---
 
-As a philosopher, I find it useful to keep up on the latest trends in technology; especially given how much that technology seems to shape our daily lives as of late. One of the premiere websites with which I use to do this is a site known as [Hacker News](https://news.ycombinator.com). My friends and coworkers worry about how I use this website, because it takes on it can be...special, and I tend to view it as a bit of a surrealist comedy. However, my dear philosopher friend xeonmc asked a question that that served as a fount of inspiration. He asked:
+As a philosopher, I find it useful to keep up on the latest trends in technology; especially given how much that technology seems to shape our daily lives as of late. One of the premier websites with which I use to do this is a site known as Hacker News. My friends and coworkers worry about how I use this website, because the takes on it can be...special, and I tend to view it as a bit of a surrealist comedy. However, my dear philosopher friend xeonmc asked a question that that served as a fount of inspiration. They asked:
 
 <BlockQuote>Is it possible to use [Funnel] to host a Headscale server from behind NAT?</BlockQuote>
 
@@ -30,9 +30,9 @@ However, in order to host this you need to expose something to the internet. If 
 Here are the things you need for this tutorial:
 
 - A Tailscale account on the [SaaS control plane](https://login.tailscale.com) (you can use some throwaway gmail address for this).
-- Somewhere to run virtual machines (I use [waifud](https://github.com/Xe/waifud)).
-- Machines to join to your Headscalenet (you can create more throwaway Ubuntus for this).
-- An imaginary domain name to use for your Headscalenet. I use `ts.plex-each` for this.
+- Somewhere to run virtual machines (I use something I made called [waifud](https://github.com/Xe/waifud)).
+- Machines to join to your headscalenet (you can create more throwaway Ubuntus for this).
+- An imaginary domain name to use for your headscalenet. I use `ts.plex-each` for this.
 
 <XesiteConv name="Mara" mood="hacker">
   `plex each` is how you spell "xe" with [Talon](https://talonvoice.com/).
@@ -73,7 +73,7 @@ waifuctl create -m 4096 -c 4 -H pneuma -s 25 -d nixos-unstable -z arsene/vms
 
 <Warning>
   Be sure to set your SSH keys as root if you are using the nixos-unstable-within image. This is a
-  known issue with that image, cloud-init, and NixOS conflicting on how user creation works.
+  known issue with how that image, cloud-init, and NixOS conflict on how user creation works.
 </Warning>
 
 SSH in as root and ensure you can get in:
