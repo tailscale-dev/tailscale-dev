@@ -20,7 +20,7 @@ export const Wrapper = ({ layout, content, ...rest }: MDXLayout) => {
 export const BlockQuote = ({ children }: { children: ReactNode }) => {
   return (
     <div className="mt-4 mb-2 rounded-lg bg-gray-100 p-4 text-gray-900 dark:bg-gray-800 dark:text-gray-50 md:max-w-lg">
-      {children}
+      &gt; {children}
     </div>
   );
 };

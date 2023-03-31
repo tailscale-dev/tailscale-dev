@@ -17,7 +17,7 @@ As a philosopher, I find it useful to keep up on the latest trends in technology
 <BlockQuote>Is it possible to use [Funnel] to host a Headscale server from behind NAT?</BlockQuote>
 
 <XesiteConv name="Aoi" mood="wut">
-  Wait, what? Is that person asking you how the use Tailscale in a way that makes you avoid using
+  Wait, what? Is that person asking you how to use Tailscale in a way that makes you avoid using
   Tailscale? That's like asking how to use a car without using a car.
 </XesiteConv>
 
@@ -74,7 +74,7 @@ waifuctl create -m 4096 -c 4 -H pneuma -s 25 -d nixos-unstable -z arsene/vms
 </XesiteConv>
 
 <Warning>
-  Be sure to set your SSH keys as root if you are using the nixos-unstable-within image. This is a
+  Be sure to set your SSH keys as root if you are using the `nixos-unstable-within` image. This is a
   known issue with how that image, cloud-init, and NixOS conflict on how user creation works.
 </Warning>
 
@@ -97,7 +97,7 @@ $ e /ssh:root@10.77.131.232:/etc/nixos/configuration.nix
 <details>
 <summary>If the file doesn't exist</summary>
 
-If that file doesn't exist (because you are using the nixos-unstable-within image), create it with this template:
+If that file doesn't exist (because you are using the `nixos-unstable-within` image), create it with this template:
 
 ```nix
 { lib, pkgs, config, ... }:
