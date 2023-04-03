@@ -20,7 +20,7 @@ export default function XesiteConv({ name, mood, children }: XesiteConvProps) {
           />
           <br />
         </div>
-        <div className="min-w-0 self-center">
+        <div className="conversation-chat min-w-0 self-center">
           &lt;<b>{name}</b>&gt; {children}
         </div>
       </div>
