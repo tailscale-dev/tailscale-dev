@@ -1,0 +1,76 @@
+---
+title: How to avoid random line breaks in MDX components
+date: 2023-04-03
+authors: ['xe']
+tags:
+  - mdx
+  - javascript
+summary: "MDX is a tool that this blog uses to let us mix React components and Markdown. There is just one minor issue: MDX adds random line breaks to your components. Here's how to avoid that."
+---
+
+I have to admit, I'm really bad at frontend code. I've historically avoided it because it's not the easiest to get started with from scratch. Especially when you use Nix stuff. However, in my quest to become a truly Full Stack Developer™️, I've been trying to learn it anyways. Sometimes this leads you down frustrating rabbit holes, but sometimes you learn something useful.
+
+Here's an example of something that doesn't work:
+
+<XesiteConv name="Aoi" mood="cheer">
+  Hello there!
+</XesiteConv>
+
+Notice the issue? It adds a random line break after the name `Aoi`. Here is what this looks like in the code:
+
+```jsx
+<XesiteConv name="Aoi" mood="cheer">
+  Hello there!
+</XesiteConv>
+```
+
+I'm pretty sure that what's happening here is that MDX is wrapping markdown text in `<p>` tags. This is a common thing to do, but it's not what I want. I want these little conversation tags to look something like a hybrid of IRC and Discord screenshots. Basically, I want this:
+
+<XesiteConv name="Aoi" mood="cheer">
+  {'Hello there!'}
+</XesiteConv>
+
+Which looks like this in the code:
+
+```jsx
+<XesiteConv name="Aoi" mood="cheer">
+  {'Hello there!'}
+</XesiteConv>
+```
+
+This is because MDX [automatically inserts `<p>` tags around bare words](https://github.com/mdx-js/mdx/issues/1798) in an attempt to follow the semantics of how Markdown is used in the wild. This is not what we want though, I'm more thinking about this from a "I am used to writing HTML and I want this to Just Work™️" perspective.
+
+What I want to be able to write is this:
+
+```jsx
+<Foo>bar baz bar</Foo>
+```
+
+But Prettier will recognize this, and according to the formatting rules, it will come out like this:
+
+{/* prettier-ignore */}
+```jsx
+<Foo>
+  bar baz bar
+</Foo>
+```
+
+Which triggers the core problem. I can work around this by adding a `{/* prettier-ignore */}` around the component (which I've had to do a few times in this document to avoid the autoformatter going to war against my formatting choices) to demonstate the formatter messing up the code, but that's not a great solution.
+
+So in the meantime, I am going to just rewrite all my conversation snippet tags to look like this:
+
+```jsx
+<XesiteConv name="Mara" mood="hacker">
+  {'The '}
+  <code>{'serverUrl'}</code>
+  {" must be the same as your machine's hostname combined with your "}
+  <a href="https://tailscale.com/kb/1217/tailnet-name/">tailnet domain</a>
+  {'. The '}
+  <code>{'shark-harmonic.ts.net'}</code>
+  {' part is the tailnet domain. The '}
+  <code>{'baelzeb-weedle'}</code>
+  {' part is the hostname for your NixOS machine.'}
+</XesiteConv>
+```
+
+I really don't know how I feel about this as a solution, but it does get me what I _expect_ to get. I've been talking with my teammates about a better solution (maybe changing the style of the `<p>` tag in the `ConvSnippet` and `XesiteConv` tags to be `display: inline` or something) but I would really just prefer to have the tool do the thing I expect.
