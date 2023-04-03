@@ -660,6 +660,10 @@
   @apply mt-4;
 }
 
+.xesite-body p {
+  display: inline;
+}
+
 .Markdown p,
 .Markdown ul,
 .Markdown ol,
