@@ -82,12 +82,6 @@ module.exports = () => {
     },
     images: {
       formats: ['image/webp', 'image/avif'],
-      remotePatterns: [
-        {
-          protocol: 'https',
-          hostname: 'cdn.xeiaso.net',
-        },
-      ],
     },
     webpack: (config) => {
       config.module.rules.push({
