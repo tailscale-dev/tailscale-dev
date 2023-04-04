@@ -120,7 +120,7 @@
   }
 
   .link {
-    @apply text-blue-500 transition-colors hover:text-blue-700;
+    @apply text-blue-500 transition-colors hover:text-blue-700 dark:text-blue-500;
   }
 
   .link-underline {
@@ -1345,3 +1345,8 @@ ul.sentanceCase > li:first-of-type:nth-last-of-type(2)::after {
 }
 
 /********************************************************************/
+
+.search-results em {
+  @apply rounded-sm bg-yellow-100 not-italic;
+  color: inherit;
+}
