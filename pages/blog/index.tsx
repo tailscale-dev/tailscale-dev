@@ -1,7 +1,7 @@
 import React from 'react';
-import { siteMetadata } from '@/data/siteMetadata';
-import ListLayout from '@/layouts/ListLayout';
-import { PageSEO } from '@/components/SEO';
+import { siteMetadata } from '@/data/site-metadata';
+import ListLayout from '@/layouts/list-layout';
+import { PageSEO } from '@/components/seo';
 import { sortedBlogPost, allCoreContent } from '@/lib/utils/contentlayer';
 import { InferGetStaticPropsType } from 'next';
 import { allBlogs } from 'contentlayer/generated';

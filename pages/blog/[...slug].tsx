@@ -1,12 +1,12 @@
 import React from 'react';
-import { MDXLayoutRenderer } from '@/components/mdx-components';
-import { MDXComponents } from '@/components/MDXComponents';
+import { MDXLayoutRenderer } from '@/components/mdx';
+import { MDXComponents } from '@/components/mdx-components';
 import { sortedBlogPost, coreContent } from '@/lib/utils/contentlayer';
 import { InferGetStaticPropsType } from 'next';
 import { allBlogs, allAuthors } from 'contentlayer/generated';
 import type { Blog } from 'contentlayer/generated';
 
-const DEFAULT_LAYOUT = 'PostLayout';
+const DEFAULT_LAYOUT = 'post-layout';
 
 export async function getStaticPaths() {
   return {

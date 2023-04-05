@@ -1,5 +1,5 @@
 import { generateSitemap } from '@/lib/utils/generate-sitemap.js';
-import { siteMetadata } from '../data/siteMetadata.js';
+import { siteMetadata } from '../data/site-metadata.js';
 import { allBlogs } from '../.contentlayer/generated/index.mjs';
 
 const sitemap = () => {

@@ -14,6 +14,14 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  html.dark {
+    /**
+     * We can't use the dark: modifier here because it only applies to
+     * children of the html element, not the html element itself.
+     */
+    @apply bg-gray-900 text-white;
+  }
+
   body {
     @apply flex h-full flex-col justify-start text-base;
   }
@@ -748,6 +756,10 @@
   font-size: 1rem;
 }
 
+.conversation-chat p:first-of-type {
+  display: inline;
+}
+
 .Markdown h1 > code,
 .Markdown h2 > code,
 .Markdown h3 > code,
@@ -807,6 +819,10 @@
 
 .Markdown table thead th {
   @apply border-b-0;
+}
+
+.Markdown .warn p {
+  @apply mt-0;
 }
 
 .Markdown .note {

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { PageSEO } from '@/components/SEO';
+import { PageSEO } from '@/components/seo';
 
 export default function FourZeroFour() {
   return (

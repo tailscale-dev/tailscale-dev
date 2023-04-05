@@ -1,6 +1,6 @@
 import React from 'react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
-import { siteMetadata } from '@/data/siteMetadata';
+import { siteMetadata } from '@/data/site-metadata';
 
 class MyDocument extends Document {
   render() {
@@ -18,7 +18,7 @@ class MyDocument extends Document {
             }}
           />
         </Head>
-        <body className="min-h-screen bg-white text-black antialiased dark:bg-gray-900 dark:text-white">
+        <body className="min-h-screen">
           <Main />
           <NextScript />
         </body>
