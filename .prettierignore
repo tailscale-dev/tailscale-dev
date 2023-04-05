@@ -2,6 +2,6 @@
 .next
 node_modules
 dist
-fly.toml
+.direnv
 # cannot prettier augmented-ui, it breaks rendering
 public/wireguard-internals/augmented-ui.min.css

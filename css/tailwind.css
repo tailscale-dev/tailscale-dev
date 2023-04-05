@@ -756,6 +756,10 @@
   font-size: 1rem;
 }
 
+.conversation-chat p:first-of-type {
+  display: inline;
+}
+
 .Markdown h1 > code,
 .Markdown h2 > code,
 .Markdown h3 > code,
