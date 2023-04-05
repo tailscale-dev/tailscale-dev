@@ -1,6 +1,7 @@
 import React, { MouseEventHandler, ReactNode } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import type { LinkProps } from 'next/link';
 import type { Blog, Authors } from 'contentlayer/generated';
 import { CoreContent } from '@/lib/utils/contentlayer';
 import { BlogSEO } from '@/components/seo';
@@ -23,7 +24,7 @@ interface LayoutProps {
 
 interface ShareLinkButtonProps {
   onClick?: MouseEventHandler<HTMLAnchorElement>;
-  href?: any; // XXX(Xe): the type of the next/link href prop is a bit weird, can't figure out how to import it
+  href?: LinkProps['href'];
   children: ReactNode;
 }
 
@@ -33,7 +34,7 @@ const ShareLinkButton = ({ children, href = '#', onClick }: ShareLinkButtonProps
       <div className="mx-1 shrink-0">
         <Link
           href={href}
-          className="w-42 mt-2 flex rounded bg-blue-500 px-6 py-3 text-gray-200 no-underline hover:cursor-pointer hover:bg-blue-600 hover:text-gray-100 hover:underline"
+          className="w-42 mt-2 flex rounded  p-2 text-gray-200 no-underline hover:cursor-pointer hover:bg-blue-600 hover:text-gray-100 hover:underline"
           onClick={onClick}
         >
           {children}
@@ -214,7 +215,6 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                   text: content.summary,
                   url: guessForPageURL,
                 };
-                console.log(data);
                 if (navigator.share) {
                   navigator.share(data);
                 } else {
