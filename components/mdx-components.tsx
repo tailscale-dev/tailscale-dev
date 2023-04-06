@@ -10,6 +10,8 @@ import { Pre } from './pre';
 import { NewsletterRepublishing } from './newsletter-republishing';
 import Image from './image';
 import Warning from './warning';
+import { Question } from './question';
+import { Answer } from './answer';
 import XesiteConv from './xesite-conv';
 
 export const Wrapper = ({ layout, content, ...rest }: MDXLayout) => {
@@ -35,6 +37,8 @@ export const MDXComponents: ComponentMap = {
   a: ExternalLink,
   pre: Pre,
   wrapper: Wrapper,
+  Question,
+  Answer,
   XesiteConv: XesiteConv,
   BlockQuote,
   AprilFoolsWarning,

@@ -10,7 +10,7 @@ const ContentSecurityPolicy = `
   script-src 'self' 'unsafe-eval' 'unsafe-inline' cdn.rudderlabs.com js.tito.io;
   style-src 'self' 'unsafe-inline' js.tito.io;
   img-src * blob: data:;
-  media-src 'self';
+  media-src 'self' stream.mux.com;
   connect-src *;
   font-src 'self';
 `;
