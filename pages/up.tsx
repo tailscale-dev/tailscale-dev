@@ -94,6 +94,7 @@ export default function Up() {
       <PageSEO
         title="Tailscale Up - San Francisco, CA - May 31, 2023"
         description="A conference for you to learn how others are using Tailscale at home and forge lasting connections in the community."
+        image="/static/up/social.png"
       />
       <Script src="https://js.tito.io/v2" strategy="lazyOnload" />
 
