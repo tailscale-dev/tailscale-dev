@@ -6,6 +6,8 @@ import * as React from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 
+import { PageSEO } from '@/components/seo';
+
 interface TitoWidgetProps extends React.HTMLAttributes<HTMLElement> {
   event: string;
 }
@@ -89,6 +91,11 @@ function Bio(props: { speaker: (typeof featuredSpeakers)[0] }) {
 export default function Up() {
   return (
     <>
+      <PageSEO
+        title="Tailscale Up - San Francisco, CA - May 31, 2023"
+        description="A conference for you to learn how others are using Tailscale at home and forge lasting connections in the community."
+        image="/static/up/social.png"
+      />
       <Script src="https://js.tito.io/v2" strategy="lazyOnload" />
 
       <Head>
