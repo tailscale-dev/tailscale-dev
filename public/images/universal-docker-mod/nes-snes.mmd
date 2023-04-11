@@ -1,0 +1,15 @@
+flowchart TD
+    subgraph 8-bit
+        NES
+        NESGame[NES Game]
+        NES --> NESGame
+    end
+
+    subgraph 16-bit
+        SNES
+        SNESGame[SNES Game]
+        SNES --> SNESGame
+    end
+
+    NES --x SNESGame
+    SNES --x NESGame

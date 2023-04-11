@@ -1,0 +1,17 @@
+flowchart TD
+    InitModsEnd[init-mods-end]
+    InitModsPackageInstall[init-mods-package-install]
+    InitModUniversalTailscale[init-mod-universal-tailscale]
+    InitModUniversalTailscalePostinstall[init-mod-universal-tailscale-postinstall]
+    SvcTailscale[svc-tailscale]
+    SvcTailscaleUp[svc-tailscale-up]
+    DockerCommand[main container program]
+
+    DockerCommand --> InitModsEnd
+    InitModsEnd --> InitModUniversalTailscalePostinstall
+    InitModsEnd --> SvcTailscale
+    InitModsEnd --> SvcTailscaleUp
+    InitModsPackageInstall --> InitModUniversalTailscale
+    InitModUniversalTailscalePostinstall --> InitModsPackageInstall
+    SvcTailscale --> InitModUniversalTailscalePostinstall
+    SvcTailscaleUp --> SvcTailscale

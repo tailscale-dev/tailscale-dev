@@ -5,3 +5,6 @@ dist
 .direnv
 # cannot prettier augmented-ui, it breaks rendering
 public/wireguard-internals/augmented-ui.min.css
+
+# Mermaid diagrams, not Miku Miku Dance model files
+*.mmd

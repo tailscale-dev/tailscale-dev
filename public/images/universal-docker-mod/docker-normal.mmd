@@ -1,0 +1,24 @@
+flowchart TD
+    subgraph DockerImage[Docker Image]
+        DockerImageCode[code]
+        DockerImagePackages[packages]
+    end
+
+    subgraph HostOS[Host OS]
+        subgraph DockerContainer[Docker Container]
+            Code
+            Packages
+            Data
+            TempState[Temporary\nData]
+        end
+    end
+
+    subgraph Disk
+        Volumes
+    end
+
+    Data --> |persistent| Volumes
+    DockerImage --> Disk
+    TempState --> |cleared on container restart| Disk
+    Code --> DockerImageCode
+    Packages --> DockerImagePackages
