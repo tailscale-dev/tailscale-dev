@@ -330,7 +330,7 @@ export default function Up() {
                 <br />
                 Ticket sales are limited, so act quickly! Early-bird tickets are available for $75.
                 <br />
-                Standard tickets will go on sale for $200 starting April 11th.
+                Standard tickets will go on sale for $200 starting April 29th.
               </div>
               <NoSSRWrapper>
                 <tito-widget event="tailscaleup/2023"></tito-widget>
