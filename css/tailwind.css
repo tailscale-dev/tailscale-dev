@@ -795,7 +795,7 @@
 }
 
 .Markdown figcaption {
-  @apply mx-auto mt-2 w-3/4 text-center text-sm text-gray-600;
+  @apply mx-auto mt-2 w-3/4 text-center text-sm text-gray-600 dark:text-gray-300;
 }
 
 .Markdown aside {
