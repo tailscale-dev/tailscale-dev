@@ -1,0 +1,44 @@
+---
+title: 'Improving Tailscale via Apple’s open source'
+date: '2023-04-13'
+tags:
+  - 'oss'
+authors: ['mihai']
+images: ['/images/darwin-spelunking/social.png']
+summary: 'Spelunking through the Darwin kernel and userland helps Tailscale work better on macOS and iOS.'
+---
+
+The ability to peek under the hood of the operating system can be a powerful tool for debugging. [Spelunking Apple’s Open Source](https://bitsplitting.org/2023/03/17/spelunking-apples-open-source/), a recent blog post by [Daniel Jalkut’s](https://redsweater.com/about/DanielJalkut.html), struck a very familiar chord with me, reminding me of times I spent [poring through WebKit internals](https://blog.persistent.info/search/label/WebKit) at my previous employer. I've been able to continue that pattern at Tailscale, now more focused on [Darwin](<https://en.wikipedia.org/wiki/Darwin_(operating_system)>) (the operating system at the core of macOS and iOS), its [kernel](https://en.wikipedia.org/wiki/XNU) and its [userland](https://en.wikipedia.org/wiki/User_space_and_kernel_space) tools.
+
+Just recently, Apple's open source came in handy when debugging an issue for the Tailscale 1.36 release. We were investigating two network-interface related bugs – one where Tailscale traffic was [looping on itself](https://github.com/tailscale/tailscale/issues/5156) (instead of being passed through to the actual physical network connection) and another where Tailscale was [sending traffic over the phone’s cellular interface](https://github.com/tailscale/tailscale/issues/6565) (even though Wi-Fi was available). The [fix](https://github.com/tailscale/tailscale/pull/6566) for both of these involved more consistently “binding” Tailscale’s network requests to the active network interface (and re-binding them when it changes).
+
+Normally figuring out what the active network interface is pretty straightforward — it is the interface that is [associated with the default route](https://github.com/tailscale/tailscale/blob/9c2ad7086c0daef9c914ef1e59d0142b50f789f3/net/interfaces/interfaces_bsd.go#L38-L51). However, when Tailscale is configured to [use an exit node](https://tailscale.com/kb/1103/exit-nodes/), it becomes the default route, thus putting us back in danger of looping traffic. We want to know what the interface would be if Tailscale was not present (but without actually disabling it, since that is [disruptive](https://bugs.chromium.org/p/chromium/issues/detail?id=1076619)). I initially had an approach that [lived in our closed-source repo](https://github.com/tailscale/tailscale/blob/42c3052006141aab7d2573b2019c996641384014/net/interfaces/interfaces_bsd.go#L85-L93) and relied on private APIs (that I should probably [plead the 5th](https://en.wikipedia.org/wiki/Fifth_Amendment_to_the_United_States_Constitution#Self-incrimination) instead of discussing further). Worse yet, we started to get reports that users were [having](https://github.com/tailscale/tailscale/issues/7184) [issues](https://github.com/tailscale/tailscale/issues/7188) because we were sometimes detecting the wrong interface.
+
+[Brad](http://bradfitz.com/) mentioned we should see how the `ifconfig` outputs changes in various states: when Tailscale is the default route, when the default physical interface changes (e.g. from Ethernet to Wi-Fi), and combinations of the two. While the default output didn’t have anything interesting, getting more verbose information (via the `-v` flag) had a clue: an “effective interface” field appeared for the virtual Tailscale `utunN` interface, with the name of the actual physical interface (`en0`, `en10`, etc.) that should be handling the traffic.
+
+```
+utun5: flags=8051<UP,POINTOPOINT,RUNNING,MULTICAST> mtu 1280 index 34
+    eflags=5002080<TXSTART,NOAUTOIPV6LL,ECN_ENABLE,CHANNEL_DRV>
+    inet 100.118.111.67 --> 100.118.111.67 netmask 0xffffffff
+    ...
+    effective interface: en4
+    ...
+```
+
+`ifconfig` is part of the code that Apple open-sources, and a [quick search](https://github.com/search?q=org%3Aapple-oss-distributions%20%22effective%20interface%22&type=code) through it turned up the [implementation](https://github.com/apple-oss-distributions/network_cmds/blob/6ccdc225ad5aa0d23ea5e7d374956245d2462427/ifconfig.tproj/ifconfig.c#L2183-L2187) of that line:
+
+```c
+if (ioctl(s, SIOCGIFDELEGATE, &ifr) != -1 && ifr.ifr_delegated) {
+    char delegatedif[IFNAMSIZ+1];
+    if (if_indextoname(ifr.ifr_delegated, delegatedif) != NULL)
+        printf("\teffective interface: %s\n", delegatedif);
+}
+```
+
+[`ioctl`](https://en.wikipedia.org/wiki/Ioctl) is kind of a Swiss Army knife system call, in this particular case the `SIOCGIFDELEGATE` option allows the underlying physical interface to be obtained. The [Darwin Networking chapter](http://newosxbook.com/bonus/vol1ch16.html) of the [\*OS Internals](http://newosxbook.com/home.html) book has more details.
+
+Now that we knew what `ifconfig` did, it was a matter of trying to replicate it in Tailscale’s client. Go ends up using various `ioctl`s to implement standard library functionality on Darwin (e.g. to [get the MTU](https://github.com/golang/sys/blob/4fee21c923398823434653737e3d413027fe4cdd/unix/syscall_darwin.go#L392-L399) associated with an interface), but it didn’t happen to have a wrapper for `SIOCGIFDELEGATE`. Luckily it was not too much boilerplate to [do the equivalent](https://github.com/tailscale/tailscale/blob/fa932fefe7ba1c826231171418bf1b6de9884649/net/interfaces/interfaces_darwin.go#L69-L91) within Tailscale’s code.
+
+I ran the code on my MacBook and it worked! But what about iOS? `ifconfig` (and the Darwin userland tools in general) is not available on iOS (except for [creative hacks](https://github.com/steventroughtonsmith/MobileTerminal)), and the iOS sandbox may be more restrictive when it comes to which `ioctl`s it allows. I was betting on this being a [shared implementation](https://github.com/apple-oss-distributions/xnu/blob/5c2921b07a2480ab43ec66f5b9e41cb872bc554f/bsd/net/if.c#L3860-L3865) on Apple’s side, and thus that it worked on all of their platforms. The moment of truth came a few minutes later when I tried it on my iPhone, and luckily it worked there too.
+
+[The final implementation](https://github.com/tailscale/tailscale/pull/7248) ended up being pretty concise, and it was satisfying to have it an [unstable build](https://tailscale.com/kb/1083/install-unstable/) the next day and have [users](https://github.com/tailscale/tailscale/issues/7184#issuecomment-1426894237) [confirm](https://github.com/tailscale/tailscale/issues/7188#issuecomment-1426861574) that the problem was fixed.
