@@ -8,32 +8,77 @@ tags:
 summary: "We created a universal Docker mod for Tailscale, which lets you slap tailscale in on the side of existing Docker containers. In this article, Xe explains how you can use this and why it's funny."
 ---
 
-If you use Docker containers from [linuxserver.io](https://linuxserver.io), you can seamlessly add Tailscale to them using our new [universal Docker mod](TODO://Xe/fixme). This lets you graft Tailscale into the existing linuxserver.io containers so you can use Tailscale to access the services, let you SSH into a container, serve those services over HTTPS to your tailnet, or even to the world with Funnel.
+{/* 1, 2 */}
+
+Imagine a world where you could add applications to your tailnet the same way you add machines to it. This would mean that `http://wiki` would go to your internal wiki, `http://code` would take you to an IDE, and `http://chat` would take you to your internal chat server. This is the world that Tailscale lets you create, but historically the details on how you would actually do this are left as an exercise for the reader.
+
+{/* 3, 4 */}
+
+Today, we're introducing a new way to add Tailscale to your Docker containers: our brand new [universal Docker mod](https://github.com/linuxserver/docker-mods/blob/master/README.md). This lets you add Tailscale to any Docker container based on [linuxserver.io](https://linuxserver.io) images. This lets you have applications join your tailnet just as easily as machines can. You can set up a wiki on `http://wiki`, an IDE at `http://code`, and a chat server at `http://chat` and have them all be accessible over your tailnet. You can even use this to expose your internal applications to the public internet with [Funnel](https://tailscale.com/kb/1112/funnel/).
+
+<ConvSnippet authors={props.authorDetails} name="Xe Iaso">
+  You can even use this to SSH into containers!
+</ConvSnippet>
+<XesiteConv name="Aoi" mood="coffee">
+  You can _what_ into a container?
+</XesiteConv>
+<ConvSnippet authors={props.authorDetails} name="Xe Iaso">
+ Yep! [Tailscale SSH](https://tailscale.com/kb/1193/ssh/) lets you SSH into containers when you enable the `TAILSCALE_USE_SSH` setting and [permit access in the ACLs](https://tailscale.com/kb/1193/tailscale-ssh/#ensure-tailscale-ssh-is-permitted-in-acls). This is a great way to get into a container without having to SSH into the docker host and run `docker exec -it <container> bash`.
+</ConvSnippet>
+
+{/* 5 */}
 
 To add this to your existing Docker containers with linuxserver.io images, add the following environment variables to your docker-compose.yml file:
 
 ```yaml
-- DOCKER_MODS=ghcr.io/xe/ts-mod:latest # TODO, change this to the real URL
-# tailscale information
-- TS_STATE_DIR=/var/lib/tailscale # make sure this is persisted in a volume
-- TAILSCALE_SERVE_PORT=80
+- DOCKER_MODS=ghcr.io/tailscale-dev/docker-mod:main
+# tailscale configuration
+
+# make sure this is persisted in a volume
+- TAILSCALE_STATE_DIR=/var/lib/tailscale
 - TAILSCALE_SERVE_MODE=https
+- TAILSCALE_SERVE_PORT=80
+- TAILSCALE_USE_SSH=1
+- TAILSCALE_HOSTNAME=wiki
+
 ## uncomment to enable funnel
+## remember that if you do, it's exposed to the internet, so be careful!
 #- TAILSCALE_FUNNEL=on
-- TS_USE_SSH=1
-- TS_HOSTNAME=wiki
-- TS_AUTHKEY=tskey-auth-hunter2CNTRL-hunter2hunter2 # TODO(user): replace this with your authkey from the admin panel
+
+# replace this with your authkey from the admin panel
+- TAILSCALE_AUTHKEY=tskey-auth-hunter2CNTRL-hunter2hunter2
 ```
 
-This will add Tailscale to a [dokuwiki](https://fleet.linuxserver.io/image?name=linuxserver/dokuwiki) container so that you can access it over your tailnet. If you run `docker compose up -d` with the authkey changed out for [a valid authkey](https://login.tailscale.com/admin/settings/keys), you'll be able to access your dokuwiki instance over Tailscale.
+This will add Tailscale to your container so that you can access it over your tailnet. If you run `docker compose up -d` with the authkey changed out for [a valid authkey](https://login.tailscale.com/admin/settings/keys), you'll be able to access your apps over Tailscale.
 
-In general, these are the environment variables you need to set to configure this:
+{/* 6 */}
 
-These variables will be explained in detail below. The rest of this article is going to describe some more fun things about using it, and why I think docker mods are kind of funny from a philosophical sense.
+## Docker and Docker mods
 
-## What is humor?
+Docker allows you to create snapshots of operating system installs with a given state, such as "having the [Go](https://go.dev) compiler available" or "install this program and all its dependencies" and distribute those preconfigured images on the Internet. When you consume the same Docker image at two time intervals T0 and T1, you get the same image with the same code, just as you expect.
 
-Before we get into the meat of what a Docker mod is, I want to start with a bit of a lighter topic: the philosophy of humor.
+When a Docker container is run, it usually runs on top of an ephemeral filesystem that gets destroyed when the container is stopped. This means that restarting the container will reset it back to the state that was there when the image was created. This is normally convenient when working on applications that make temporary changes to the filesystem, such as an image converter that uses temporary files to do the conversion logic.
+
+This is less convenient when you want to run things like database servers in Docker. However, most of the time when you do things that need persistent state, that persistent state is usually limited to a single file or directory. Docker provides external persistent state with [volumes](https://docs.docker.com/storage/volumes/). They're basically directories that are plunked into the container at runtime, but it maintains the state between container runs. This is great for things like databases because you wouldn't want to lose all your data when you restart the container.
+
+<Image
+  className="mx-auto"
+  src="/images/universal-docker-mod/docker-normal.svg"
+  width={623}
+  height={490}
+  alt="The expected hierarchies of Docker containers and their statefulness"
+/>
+
+So, from here we can create a hierarchy for docker and statefulness. You expect docker containers to have state for _data_, and you also expect the docker container to be running the same code every time you run the same image. You don't expect anything else to be running, everything is deterministic at T0, T1, or TN.
+
+<ConvSnippet authors={props.authorDetails} name="Xe Iaso">
+  This is a valid hierarchy because it's what you expect from docker. You expect the same code to
+  run every time you run the same image.
+</ConvSnippet>
+
+{/* 7 */}
+
+### What is humor?
 
 Humor is a complicated concept that is almost universal throughout human cultures. It's a way of conveying concepts like absurdity, irony, the absurdity of irony, and normally frustrating things in ways that aren't quite as much of a downer. It's really about being able to communicate subtle things like common errors that everyone makes when learning things (such as English and its rule of all the rules having exceptions, even for the exceptions). It's also a tool that you can use to help describe the abstract and nonphysical things like emotions, feelings, ideas, the human condition, and how Kubernetes works.
 
@@ -64,41 +109,7 @@ In his famous presentation [Reverse emulating the NES](https://youtu.be/ar9WRwCi
   alt="The expected hierarchies of NES and SNES consoles and their games"
 />
 
-## Docker
-
-Docker allows you to create snapshots of operating system installs with a given state, such as "having the [Go](https://go.dev) compiler available" or "install this program and all its dependencies" and distribute those preconfigured images on the Internet. When you consume the same Docker image at two time intervals T0 and T1, you get the same image with the same code, just as you expect.
-
-When a Docker container is run, it usually runs on top of an ephemeral filesystem that gets destroyed when the container is stopped. This means that restarting the container will reset it back to the state that was there when the image was created. This is normally convenient when working on applications that make temporary changes to the filesystem, such as an image converter that uses temporary files to do the conversion logic.
-
-This is less convenient when you want to run things like database servers in Docker. However, most of the time when you do things that need persistent state, that persistent state is usually limited to a single file or directory. Docker provides external persistent state with [volumes](https://docs.docker.com/storage/volumes/). They're basically directories that are plunked into the container at runtime, but it maintains the state between container runs. This is great for things like databases because you wouldn't want to lose all your data when you restart the container.
-
-<Image
-  className="mx-auto"
-  src="/images/universal-docker-mod/docker-normal.svg"
-  width={623}
-  height={490}
-  alt="The expected hierarchies of Docker containers and their statefulness"
-/>
-
-So, from here we can create a hierarchy for docker and statefulness. You expect docker containers to have state for _data_, and you also expect the docker container to be running the same code every time you run the same image. You don't expect anything else to be running, everything is deterministic at T0, T1, or TN.
-
-<ConvSnippet authors={props.authorDetails} name="Xe Iaso">
-  This is a valid hierarchy because it's what you expect from docker. You expect the same code to
-  run every time you run the same image.
-</ConvSnippet>
-
-Docker also has an [`ONBUILD`](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#onbuild) hook that lets you declare a series of commands that are automagically executed when the image is customized. You can use this to create a base image that has Go and Node.js installed so you can automagically build your code without any extra steps.
-
-This is amazingly useful when in prescriptivist ecosystems like Ruby on Rails or such things, because the install commands are _almost always identical_, allowing you to get all of the benefits of a docker image without the cognitive complexity having to write a custom dockerfile for every single project.
-
-<ConvSnippet authors={props.authorDetails} name="Xe Iaso">
-  It's slightly sad to see this not used as much anymore. It's amazingly conveninent, but it's also
-  a great way to hang yourself. The `ONBUILD` hooks run before your Dockerfile directives run, so if
-  you run into a case where you _absolutely have to_ install an arbitrary dependency (IE: the Go
-  compiler in a Rails app), you're out of luck.
-</ConvSnippet>
-
-## Docker mods
+### Docker mods
 
 Docker mods let you install extra packages and services into containers at runtime. If the `ONBUILD` hook lets you run a series of commands when an image is built, you can think of docker mods as a missing `ONRUN` hook that lets you customize an image at runtime.
 
@@ -115,6 +126,8 @@ Docker mods let you install extra packages and services into containers at runti
   deterministic between invocations and this allows you to make something _nondeterministic_. This
   is funny.
 </ConvSnippet>
+
+{/* 8 */}
 
 ### Docker mods and s6
 
@@ -158,6 +171,117 @@ Each of these is connected together like this (arrows indicate dependencies):
   all of the hilarous hacks you can do with buildpacks at dyno boot time.
 </ConvSnippet>
 
+{/* 9 */}
+
+## Configuration
+
+The Docker mod exposes a bunch of environment variables that you can use to configure it. You can see the full list of environment variables in the [documentation](TODO://Xe/link), but here are the important ones:
+
+| Environment Variable   | Description                                                                                                                                                                                                                                                                                                   | Example                                  |
+| :--------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :--------------------------------------- |
+| `DOCKER_MODS`          | The list of additional mods to layer on top of the running container, separated by pipes.                                                                                                                                                                                                                     | `ghcr.io/tailscale-dev/docker-mod:main`  |
+| `TAILSCALE_STATE_DIR`  | The directory where the Tailscale state will be stored, this should be pointed to a Docker volume. If it is not, then the node will set itself as ephemeral, making the node disappear from your tailnet when the container exits.                                                                            | `/var/lib/tailscale`                     |
+| `TAILSCALE_AUTHKEY`    | The authkey for your tailnet. You can create one in the [admin panel](https://login.tailscale.com/admin/settings/keys). See [here](https://tailscale.com/kb/1085/auth-keys/) for more information about authkeys and what you can do with them.                                                               | `tskey-auth-hunter2CNTRL-hunter2hunter2` |
+| `TAILSCALE_HOSTNAME`   | The hostname that you want to set for the container. If you don't set this, the hostname of the node on your tailnet will be a bunch of random hexadecimal numbers, which many humans find hard to remember.                                                                                                  | `wiki`                                   |
+| `TAILSCALE_USE_SSH`    | Set this to `1` to enable SSH access to the container.                                                                                                                                                                                                                                                        | `1`                                      |
+| `TAILSCALE_SERVE_PORT` | The port number that you want to expose on your tailnet. This will be the port of your DokuWiki, Transmission, or other container.                                                                                                                                                                            | `80`                                     |
+| `TAILSCALE_SERVE_MODE` | The mode you want to run Tailscale serving in. This should be `https` in most cases, but there may be times when you need to enable `tls-terminated-tcp` to deal with some weird edge cases like HTTP long-poll connections. See [here](https://tailscale.com/kb/1242/tailscale-serve/) for more information. | `https`                                  |
+| `TAILSCALE_FUNNEL`     | Set this to `true`, `1`, or `t` to enable [funnel](https://tailscale.com/kb/1243/funnel/). For more information about the accepted syntax, please read the [strconv.ParseBool documentation](https://pkg.go.dev/strconv#ParseBool) in the Go standard library.                                                | `on`                                     |
+
+Something important to keep in mind is that you really should set up a separate volume for Tailscale state. Here is how to do that with the docker commandline:
+
+```sh
+docker volume create dokuwiki-tailscale
+```
+
+Then you can mount it into a container by using the volume name instead of a host path:
+
+```bash
+docker run \
+  ... \
+  -v dokuwiki-tailscale:/var/lib/tailscale \
+  ...
+```
+
+If you want to use kernel networking mode, you will need to add the `NET_ADMIN` and `NET_RAW` capabilities to the container, as well as pass the [`/dev/net/tun`](https://www.kernel.org/doc/Documentation/networking/tuntap.txt) device into the container. Here is an example of how to do that with the docker commandline:
+
+```bash
+docker run \
+  ... \
+  --cap-add=NET_ADMIN \
+  --cap-add=NET_RAW \
+  --device=/dev/net/tun \
+  ...
+```
+
+In a `compose.yaml` file, it will look like this:
+
+```yaml
+version: '2.1'
+services:
+  dokuwiki:
+    image: lscr.io/linuxserver/dokuwiki:latest
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    # ...
+```
+
+This can be useful when you are running applications on your tailnet _without_ [tailscale serve](https://tailscale.com/kb/1242/tailscale-serve/), and you want the underlying service to know the exact remote IP address (such as when running a Minecraft server).
+
+{/* 10 */}
+
+## Fun things you can do
+
+Normally when I write these articles, I tend to give you one functional example so that you can fill in the blanks here. This time, I want to give you a few functional and genuninely useful examples so that you can get started with our Docker mod right away.
+
+If you want to test this with a simple command-line shell, you can run this docker command to create a volume for Tailscale state, and then run a container with the Docker mod installed:
+
+```bash
+docker volume create trap-sun-state
+```
+
+<ConvSnippet authors={props.authorDetails} name="Xe Iaso">
+  `trap-sun` is the name of the container that we will be running. You can name it whatever you
+  want, but you should use the same name in both your volume and your container. I'm setting the
+  name here in case you get stuck and need to arbirarily kill the container with `docker kill
+  trap-sun`.
+</ConvSnippet>
+
+```bash
+docker run \
+  --rm \
+  -v trap-sun-state:/var/lib/tailscale \
+  -e TAILSCALE_STATE_DIR=/var/lib/tailscale \
+  -e TAILSCALE_SERVE_PORT=3000 \
+  -e TAILSCALE_SERVE_MODE=https \
+  -e TAILSCALE_FUNNEL=on \
+  -e TAILSCALE_USE_SSH=1 \
+  -e TAILSCALE_HOSTNAME=trap-sun \
+  -e TAILSCALE_AUTHKEY=tskey-auth-hunter2CNTRL-hunter2hunter2 \
+  -e DOCKER_MODS=ghcr.io/tailscale-dev/docker-mod:main \
+  --name trap-sun \
+  -it \
+  --cap-add=NET_ADMIN \
+  --cap-add=NET_RAW \
+  -v /dev/net/tun:/dev/net/tun \
+  lsiobase/alpine:3.17 \
+  sh
+```
+
+<ConvSnippet authors={props.authorDetails} name="Xe Iaso">
+  You can also base your Docker images on the `lsiobase/alpine:3.17` image, which is a minimal
+  [Alpine Linux](https://alpinelinux.org) with Docker mod support. This can be used to adapt your
+  existing containers into nodes on your tailnet. You can also use [Ubuntu](https://ubuntu.com) with
+  `lsiobase/ubuntu:jammy` as the base image. The cloud's the limit!
+</ConvSnippet>
+
+### DokuWiki
+
+If you want to set up a wiki for your tailnet with [DokuWiki](https://www.dokuwiki.org/dokuwiki), you can use this Docker compose file:
+
 ```yaml
 # docker-compose.yaml
 version: '2.1'
@@ -171,14 +295,14 @@ services:
       - TZ=Etc/UTC
       - DOCKER_MODS=ghcr.io/xe/ts-mod:latest
       # tailscale information
-      - TS_STATE_DIR=/var/lib/tailscale
+      - TAILSCALE_STATE_DIR=/var/lib/tailscale
       - TAILSCALE_SERVE_PORT=80
       - TAILSCALE_SERVE_MODE=https
-      ## uncomment to enable funnel
+      ## uncomment to enable funnel, may be a bad idea for some use cases
       #- TAILSCALE_FUNNEL=on
-      - TS_USE_SSH=1
-      - TS_HOSTNAME=wiki
-      - TS_AUTHKEY=tskey-auth-hunter2CNTRL-hunter2hunter2
+      - TAILSCALE_USE_SSH=1
+      - TAILSCALE_HOSTNAME=wiki
+      - TAILSCALE_AUTHKEY=tskey-auth-hunter2CNTRL-hunter2hunter2
 
     volumes:
       - dokuwiki-data:/config
@@ -190,55 +314,18 @@ volumes:
   dokuwiki-tailscale:
 ```
 
-## Configuration
-
-The Docker mod exposes a bunch of environment variables that you can use to configure it. You can see the full list of environment variables in the [documentation](TODO://Xe/link), but here are the important ones:
-
-| Environment Variable   | Description                                                                                                                                                                                                                                                                                                   | Example                                  |
-| :--------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :--------------------------------------- |
-| `TS_STATE_DIR`         | The directory where the Tailscale state will be stored, this should be pointed to a Docker volume. If it is not, then the node will set itself as ephemeral, making the node disappear from your tailnet when the container exits.                                                                            | `/var/lib/tailscale`                     |
-| `TS_AUTHKEY`           | The authkey for your tailnet. You can create one in the [admin panel](https://login.tailscale.com/admin/settings/keys). See [here](https://tailscale.com/kb/1085/auth-keys/) for more information about authkeys and what you can do with them.                                                               | `tskey-auth-hunter2CNTRL-hunter2hunter2` |
-| `TS_HOSTNAME`          | The hostname that you want to set for the container. If you don't set this, the hostname of the node on your tailnet will be a bunch of random hexadecimal numbers, which many humans find hard to remember.                                                                                                  | `wiki`                                   |
-| `TS_USE_SSH`           | Set this to `1` to enable SSH access to the container.                                                                                                                                                                                                                                                        | `1`                                      |
-| `TAILSCALE_SERVE_PORT` | The port number that you want to expose on your tailnet. This will be the port of your DokuWiki, Transmission, or other container.                                                                                                                                                                            | `80`                                     |
-| `TAILSCALE_SERVE_MODE` | The mode you want to run Tailscale serving in. This should be `https` in most cases, but there may be times when you need to enable `tls-terminated-tcp` to deal with some weird edge cases like HTTP long-poll connections. See [here](https://tailscale.com/kb/1242/tailscale-serve/) for more information. | `https`                                  |
-| `TAILSCALE_FUNNEL`     | Set this to `true`, `1`, or `t` to enable [funnel](https://tailscale.com/kb/1243/funnel/). For more information about the accepted syntax, please read the [strconv.ParseBool documentation](https://pkg.go.dev/strconv#ParseBool) in the Go standard library.                                                | `on`                                     |
-
-Something important to keep in mind is that you really should set up a separate volume for Tailscale state. Here is how to do that with the docker commandline:
-
-```sh
-docker volume create dokuwiki-tailscale
-```
-
-Then you can mount it into a container by using the volume name instead of a host path:
-
-```yaml
-volumes:
-  - dokuwiki-data:/config
-  - dokuwiki-tailscale:/var/lib/tailscale
-```
-
-- Configuration
-  - We're going to start out by setting up a basic interactive container connected to your tailnet.
-  - Enabling the docker mod
-  - Setting an authkey
-  - Setting a hostname for the container
-  - The magic of state and why you need a volume or host mount for the tailscale state
-    - If you don't set it, the container will be ephemeral by default and you'll lose your tailscale state every time you restart the container. This is undesirable if you restart the container a lot and use HTTPS serving, which requires your container to re-fetch a new HTTPS certificate on every restart. This will make you run out of Let's Encrypt rate limit calls.
-  - setting a custom hostname
-  - enabling SSH
-    - Xe\ This is another example of an invalid hierarchy because you don't expect to be able to SSH into containers but here we are.
-  - `tailscale serve` commands
-  - Funnel
 - Some fun things you can do
   - Set up a wiki with dokuwiki
     - TODO(Xe): copy above docker compose file
   - Set up an IRC bouncer with ZNC
     - We have an IRC channel on [libera.chat](https://libera.chat) in `#tailscale`. If you want to join, you can configure a copy of ZNC like this:
     - TODO(Xe): add basic instructions
-  - Set up an exit node for your favorite VPN provider with the wireguard image
-    - TODO(Xe): Test with Mullvad and write instructions
   - Set up your own code-server instance
     - TODO(Xe): write instructions
   - Check out [Awesome-LSIO](https://docs.linuxserver.io/general/awesome-lsio) for more ideas!
-- Conclusion / call to action
+
+---
+
+At Tailscale, we want to recreate the Internet around the idea of small, trusted networks with your friends, family, and coworkers. When you set up applications on your tailnet like this, you can slowly start to use your own private infrastructure instead of relying on the public Internet. This is a great way to start using Tailscale, and we hope that you will find this Docker mod useful.
+
+If you have any questions, feel free to reach out to us on [Twitter](https://twitter.com/tailscale) or [the Fediverse](https://hachyderm.io/@tailscale). We are always happy to help!
