@@ -293,7 +293,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Etc/UTC
-      - DOCKER_MODS=ghcr.io/xe/ts-mod:latest
+      - DOCKER_MODS=ghcr.io/tailscale-dev/docker-mod:main
       # tailscale information
       - TAILSCALE_STATE_DIR=/var/lib/tailscale
       - TAILSCALE_SERVE_PORT=80
@@ -314,17 +314,49 @@ volumes:
   dokuwiki-tailscale:
 ```
 
-- Some fun things you can do
-  - Set up a wiki with dokuwiki
-    - TODO(Xe): copy above docker compose file
-  - Set up an IRC bouncer with ZNC
-    - We have an IRC channel on [libera.chat](https://libera.chat) in `#tailscale`. If you want to join, you can configure a copy of ZNC like this:
-    - TODO(Xe): add basic instructions
-  - Set up your own code-server instance
-    - TODO(Xe): write instructions
-  - Check out [Awesome-LSIO](https://docs.linuxserver.io/general/awesome-lsio) for more ideas!
+Then use `docker compose up -d` to start the DokuWiki container with Tailscale grafted in. You can then access your DokuWiki instance at `https://wiki.yourtailnet.ts.net`. You will want to do the setup wizard, and then you can start using your own private wiki!
+
+### Your private cloud development environment with code-server
+
+Want to have all the fun of [GitHub Codespaces](https://docs.github.com/en/codespaces/overview) without having to use GitHub's servers for development? Set up your own private cloud with [code-server](https://github.com/coder/code-server) and Tailscale!
+
+```yaml
+version: '2.1'
+services:
+  code-server:
+    image: lscr.io/linuxserver/code-server:latest
+    container_name: code-server
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - PASSWORD=hunter2
+      - PROXY_DOMAIN=code.shark-harmonic.ts.net
+      - DOCKER_MODS=ghcr.io/tailscale-dev/docker-mod:main|linuxserver/mods:code-server-nodejs|linuxserver/mods:code-server-npmglobal
+      # tailscale information
+      - TAILSCALE_STATE_DIR=/var/lib/tailscale
+      - TAILSCALE_SERVE_PORT=8443
+      - TAILSCALE_SERVE_MODE=tls-terminated-tcp
+      - TAILSCALE_USE_SSH=1
+      - TAILSCALE_HOSTNAME=code
+      - TAILSCALE_AUTHKEY=tskey-auth-hunter2CNTRL-hunter2hunter2
+    volumes:
+      - code-server-data:/config
+      - code-server-tailscale:/var/lib/tailscale
+    restart: unless-stopped
+
+volumes:
+  code-server-data:
+  code-server-tailscale:
+```
+
+Then use `docker compose up -d` to start the code-server container with Tailscale grafted in. You can then access your code-server instance at `https://code.shark-harmonic.ts.net`. You may want to change the password from [`hunter2`](http://bash.org/?244321) to something more secure.
+
+code-server also has support for cloning repositories from GitHub directly, so with this you can get started hacking on a project on one machine, then seamlessly pick up where you left off on another! You can start hacking at something in your office and then walk over to the local Tim Horton's to finish it up!
 
 ---
+
+There's a bunch of other containers in the [linuxserver.io fleet](https://fleet.linuxserver.io), you can use Tailscale with those as well. You can also check out [Awesome-LSIO](https://docs.linuxserver.io/general/awesome-lsio) for more ideas!
 
 At Tailscale, we want to recreate the Internet around the idea of small, trusted networks with your friends, family, and coworkers. When you set up applications on your tailnet like this, you can slowly start to use your own private infrastructure instead of relying on the public Internet. This is a great way to start using Tailscale, and we hope that you will find this Docker mod useful.
 
