@@ -1,11 +1,12 @@
 ---
 title: 'Introducing the Tailscale Universal Docker Mod'
-date: 9999-12-31
+date: 2023-04-14
 authors: ['xe']
 tags:
   - docker
   - philosophy
-summary: "We created a universal Docker mod for Tailscale, which lets you slap tailscale in on the side of existing Docker containers. In this article, Xe explains how you can use this and why it's funny."
+summary: "We created a universal Docker mod for Tailscale, which lets you slap Tailscale on the side of existing Docker containers from linuxserver.io. In this article, Xe explains how you can use this and why it's funny."
+images: ['/images/hero/shipyard-vibes.png']
 ---
 
 {/* 1, 2 */}
@@ -50,6 +51,14 @@ To add this to your existing Docker containers with linuxserver.io images, add t
 ```
 
 This will add Tailscale to your container so that you can access it over your tailnet. If you run `docker compose up -d` with the authkey changed out for [a valid authkey](https://login.tailscale.com/admin/settings/keys), you'll be able to access your apps over Tailscale.
+
+<HeroImage
+  src="/images/hero/shipyard-vibes.png"
+  desc="flat color, shipyard, containers, mountains, no humans, space needle"
+  generator="Linge Claire v1.5"
+  width={1280}
+  height={512}
+/>
 
 {/* 6 */}
 
