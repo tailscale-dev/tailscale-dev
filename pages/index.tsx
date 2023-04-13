@@ -35,56 +35,25 @@ export default function Home({ posts, events }: InferGetStaticPropsType<typeof g
           hope that you don&apos;t get hacked and just focus on what you do best.
         </p>
       </header>
-      <main className="container max-w-4xl">
-        <div>
-          <h2 className="pt-6 pb-4 text-3xl font-bold leading-8 tracking-tight">Upcoming Events</h2>
-          <ul>
-            {!events.length && 'No events found.'}
-            {events.slice(0, MAX_EVENTS_DISPLAY).map((event) => (
-              <ListItem
-                key={event.slug}
-                title={event.title}
-                slug={event.slug}
-                path={event.path}
-                location={event.location}
-                summary={event.summary}
-                date={event.displayDate}
-              />
-            ))}
-          </ul>
-        </div>
-        {events.length > MAX_EVENTS_DISPLAY && (
-          <div className="flex justify-end text-base font-medium leading-6">
-            <Link
-              href="/events"
-              className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-              aria-label="all events"
-            >
-              All Events &rarr;
-            </Link>
+      <main className="container md:flex md:max-w-5xl md:flex-row md:gap-20">
+        <div className="md:basis-2/3">
+          <div>
+            <h2 className="pb-4 text-3xl font-bold leading-8 tracking-tight">Latest Posts</h2>
+            <ul>
+              {!posts.length && 'No posts found.'}
+              {posts.slice(0, MAX_POSTS_DISPLAY).map((post) => (
+                <ListItem
+                  key={post.slug}
+                  title={post.title}
+                  slug={post.slug}
+                  path={post.path}
+                  tags={post.tags}
+                  summary={post.summary}
+                  date={post.date}
+                />
+              ))}
+            </ul>
           </div>
-        )}
-      </main>
-      <main className="container max-w-4xl">
-        <div>
-          <h2 className="pt-8 pb-4 text-3xl font-bold leading-8 tracking-tight">Latest Posts</h2>
-
-          <ul>
-            {!posts.length && 'No posts found.'}
-            {posts.slice(0, MAX_POSTS_DISPLAY).map((post) => (
-              <ListItem
-                key={post.slug}
-                title={post.title}
-                slug={post.slug}
-                path={post.path}
-                tags={post.tags}
-                summary={post.summary}
-                date={post.date}
-              />
-            ))}
-          </ul>
-        </div>
-        {posts.length > MAX_POSTS_DISPLAY && (
           <div className="flex justify-end text-base font-medium leading-6">
             <Link
               href="/blog"
@@ -94,7 +63,39 @@ export default function Home({ posts, events }: InferGetStaticPropsType<typeof g
               All Posts &rarr;
             </Link>
           </div>
-        )}
+        </div>
+        <div className="md:basis-1/3">
+          <div>
+            <h2 className="pt-6 pb-4 text-3xl font-bold leading-8 tracking-tight">
+              Upcoming Events
+            </h2>
+            <ul>
+              {!events.length && 'No events found.'}
+              {events.slice(0, MAX_EVENTS_DISPLAY).map((event) => (
+                <ListItem
+                  key={event.slug}
+                  title={event.title}
+                  slug={event.slug}
+                  path={event.path}
+                  location={event.location}
+                  summary={event.summary}
+                  date={event.displayDate}
+                />
+              ))}
+            </ul>
+          </div>
+          {events.length > MAX_EVENTS_DISPLAY && (
+            <div className="flex justify-end text-base font-medium leading-6">
+              <Link
+                href="/events"
+                className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                aria-label="all events"
+              >
+                All Events &rarr;
+              </Link>
+            </div>
+          )}
+        </div>
       </main>
     </>
   );
