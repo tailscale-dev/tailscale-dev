@@ -38,7 +38,7 @@ export default function Home({ posts, events }: InferGetStaticPropsType<typeof g
       <main className="container md:flex md:max-w-5xl md:flex-row md:gap-20">
         <div className="md:basis-2/3">
           <div>
-            <h2 className="pb-4 text-3xl font-bold leading-8 tracking-tight">Latest Posts</h2>
+            <h2 className="pt-6 pb-2 text-3xl font-bold leading-8 tracking-tight">Latest Posts</h2>
             <ul>
               {!posts.length && 'No posts found.'}
               {posts.slice(0, MAX_POSTS_DISPLAY).map((post) => (
@@ -66,7 +66,7 @@ export default function Home({ posts, events }: InferGetStaticPropsType<typeof g
         </div>
         <div className="md:basis-1/3">
           <div>
-            <h2 className="pt-6 pb-4 text-3xl font-bold leading-8 tracking-tight">
+            <h2 className="pt-6 pb-2 text-3xl font-bold leading-8 tracking-tight">
               Upcoming Events
             </h2>
             <ul>
