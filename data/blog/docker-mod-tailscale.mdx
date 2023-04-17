@@ -281,10 +281,11 @@ docker run \
 ```
 
 <ConvSnippet authors={props.authorDetails} name="Xe Iaso">
-  You can also base your Docker images on the `lsiobase/alpine:3.17` image, which is a minimal
-  [Alpine Linux](https://alpinelinux.org) with Docker mod support. This can be used to adapt your
-  existing containers into nodes on your tailnet. You can also use [Ubuntu](https://ubuntu.com) with
-  `lsiobase/ubuntu:jammy` as the base image. The cloud's the limit!
+  You can also base your Docker images on the `lscr.io/linuxserver/baseimage-alpine:3.17` image,
+  which is a minimal [Alpine Linux](https://alpinelinux.org) with Docker mod support. This can be
+  used to adapt your existing containers into nodes on your tailnet. You can also use
+  [Ubuntu](https://ubuntu.com) with `lscr.io/linuxserver/baseimage-ubuntu:jammy` as the base image.
+  The cloud's the limit!
 </ConvSnippet>
 
 ### DokuWiki
@@ -341,7 +342,7 @@ services:
       - TZ=Etc/UTC
       - PASSWORD=hunter2
       - PROXY_DOMAIN=code.shark-harmonic.ts.net
-      - DOCKER_MODS=ghcr.io/tailscale-dev/docker-mod:main|linuxserver/mods:code-server-nodejs|linuxserver/mods:code-server-npmglobal
+      - DOCKER_MODS=ghcr.io/tailscale-dev/docker-mod:main|ghcr.io/linuxserver/mods:code-server-nodejs|ghcr.io/linuxserver/mods:code-server-npmglobal
       # tailscale information
       - TAILSCALE_STATE_DIR=/var/lib/tailscale
       - TAILSCALE_SERVE_PORT=8443
