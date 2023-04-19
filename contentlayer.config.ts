@@ -24,6 +24,8 @@ import rehypePresetMinify from 'rehype-preset-minify';
 import { remarkCodeHike } from '@code-hike/mdx';
 import codeHikeTheme from './css/codeHikeTheme.json';
 
+import { siteMetadata } from './data/site-metadata';
+
 const computedFields: ComputedFields = {
   slug: {
     type: 'string',
@@ -58,6 +60,7 @@ export const Blog = defineDocumentType(() => ({
   },
   computedFields: {
     ...computedFields,
+    url: { type: 'string', resolve: (doc) => `${siteMetadata.siteUrl}/${doc._raw.flattenedPath}` },
     readingTime: { type: 'json', resolve: (doc) => readingTime(doc.body.raw) },
   },
 }));
