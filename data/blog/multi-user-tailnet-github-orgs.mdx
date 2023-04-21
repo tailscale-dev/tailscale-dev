@@ -1,0 +1,23 @@
+---
+title: 'Creating a multi-user tailnet with Github organizations'
+date: '2023-04-21'
+tags:
+  - 'tailnet'
+  - 'github'
+authors: ['parker']
+summary: "Tailscale's new Free plan allows up to three users on a tailnet. Here's how you can use Github organizations to make that happen."
+---
+
+Tailnets are more fun with friends. Which is why Tailscale's new Free plan, which now offers multi-user tailnets, is pretty exciting. Under the new plans, you can go beyond [the existing node sharing options](https://tailscale.com/kb/1084/sharing/), and create a tailnet with your roommates, family members, professional collaborators, or your gaming clan to share access to common devices and services, all for free. In order to take advantage of this new option, though, you have to be on a "multi-user tailnet."
+
+If you used a custom domain when you signed up for Tailscale, then you've already got a multi-user tailnet. Congratulations! You can [invite users on the same custom domain](https://tailscale.com/kb/1064/invite-team-members/) to join your tailnet immediately. If you haven't signed up yet but you've got a custom domain that uses one of Tailscale's [supported SSO options or a custom OIDC provider](https://tailscale.com/kb/1013/sso-providers/), your new tailnet will also be multi-user out of the gate.
+
+But if you don't have your own custom domain and you still want a multi-user tailnet, a free option is to use a [GitHub organization](https://docs.github.com/en/organizations/collaborating-with-groups-in-organizations/about-organizations). It requires a (free) GitHub account, and takes a few steps:
+
+- Create a new organization in your GitHub account
+- Optionally [invite the friends or collaborators](https://docs.github.com/en/organizations/managing-membership-in-your-organization/inviting-users-to-join-your-organization) you want to include on your tailnet. If you don't want to do this now, you can do it later
+- Then, when sign up for a new account on Tailscale, select "Sign in with GitHub," grant access to your new organization, select "Authorize Tailscale," and then select your new organization as a multi-user tailnet
+
+You should then be logged in and prompted to add your first devices. Once you get through to the Dashboard, you should see your new tailnet's name as `your-new-organization.org.github`. Once your friends or collaborators have been added to the GitHub organization, they can also log in, authenticate with GitHub, and select the organization to be added to the multi-user tailnet.
+
+Under the new pricing plans, you can have up to three users—and up to 100 devices!—on a free plan. Better still, Free accounts have virtually all the same features as accounts on the Starter or Premium plans, so if you need an even bigger tailnet, you can make sure Tailscale works for you and your team before you ever sign up for a paid offering.
