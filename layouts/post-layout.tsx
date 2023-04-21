@@ -61,7 +61,7 @@ const ShareLinkButton = ({ children, iconName, href = '#', onClick }: ShareLinkB
       <div className="mx-1 shrink-0">
         <Link
           href={href}
-          className="w-42 mt-2 flex rounded  p-2 text-gray-200 no-underline hover:cursor-pointer hover:bg-blue-600 hover:text-gray-100 hover:underline"
+          className="w-42 mt-2 flex rounded bg-blue-500 p-2 text-gray-200 no-underline hover:cursor-pointer hover:bg-blue-600 hover:text-gray-100 hover:underline dark:bg-blue-800"
           onClick={onClick}
         >
           {icon}
