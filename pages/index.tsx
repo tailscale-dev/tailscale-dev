@@ -41,17 +41,20 @@ export default function Home({ posts, events }: InferGetStaticPropsType<typeof g
             <h2 className="pt-6 pb-4 text-3xl font-bold leading-8 tracking-tight">Latest Posts</h2>
             <ul>
               {!posts.length && 'No posts found.'}
-              {posts.slice(0, MAX_POSTS_DISPLAY).map((post) => (
-                <ListItem
-                  key={post.slug}
-                  title={post.title}
-                  slug={post.slug}
-                  path={post.path}
-                  tags={post.tags}
-                  summary={post.summary}
-                  date={post.date}
-                />
-              ))}
+              {posts
+                .slice(0, MAX_POSTS_DISPLAY)
+                .filter((post) => new Date(post.date) <= new Date())
+                .map((post) => (
+                  <ListItem
+                    key={post.slug}
+                    title={post.title}
+                    slug={post.slug}
+                    path={post.path}
+                    tags={post.tags}
+                    summary={post.summary}
+                    date={post.date}
+                  />
+                ))}
             </ul>
           </div>
           <div className="flex justify-end text-base font-medium leading-6">

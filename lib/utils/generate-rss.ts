@@ -1,4 +1,4 @@
-import { writeFileSync, mkdirSync } from 'fs';
+import { mkdirSync, writeFileSync } from 'fs';
 import path from 'path';
 import GithubSlugger from 'github-slugger';
 import { escape } from './html-escaper';
@@ -31,7 +31,8 @@ const generateRss = (
   allAuthors: MDXAuthor[],
   posts: MDXBlog[],
   page = 'feed.xml'
-) => `<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+) =>
+  `<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
       <title>${escape(config.title)}</title>
       <link>${config.siteUrl}/blog</link>
@@ -40,6 +41,7 @@ const generateRss = (
       <lastBuildDate>${new Date(posts[0].date).toUTCString()}</lastBuildDate>
       <atom:link href="${config.siteUrl}/${page}" rel="self" type="application/rss+xml"/>
       ${posts
+        .filter((post) => new Date(post.date) <= new Date())
         .map((post) => {
           const authorList = post.authors || ['default'];
           const authorDetails = authorList.map((author) => {

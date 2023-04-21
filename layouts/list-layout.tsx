@@ -68,6 +68,8 @@ export default function ListLayout({
     return searchContent.toLowerCase().includes(searchValue.toLowerCase());
   });
 
+  initialDisplayPosts = initialDisplayPosts.filter((post) => new Date(post.date) <= new Date());
+
   // If initialDisplayPosts exist, display it if no searchValue is specified
   const displayPosts =
     initialDisplayPosts.length > 0 && !searchValue ? initialDisplayPosts : filteredBlogPosts;
