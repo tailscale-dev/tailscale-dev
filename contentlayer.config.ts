@@ -1,7 +1,7 @@
 import {
+  ComputedFields,
   defineDocumentType,
   defineNestedType,
-  ComputedFields,
   makeSource,
 } from 'contentlayer/source-files';
 import readingTime from 'reading-time';
@@ -9,10 +9,10 @@ import readingTime from 'reading-time';
 // Remark packages
 import remarkGfm from 'remark-gfm';
 import {
-  remarkExtractFrontmatter,
-  remarkCodeTitles,
-  remarkImgToJsx,
   extractTocHeadings,
+  remarkCodeTitles,
+  remarkExtractFrontmatter,
+  remarkImgToJsx,
 } from './lib/mdx-plugins';
 
 // Rehype packages
@@ -50,7 +50,7 @@ export const Blog = defineDocumentType(() => ({
     title: { type: 'string', required: true },
     date: { type: 'date', required: true },
     summary: { type: 'string', required: true },
-    tags: { type: 'list', of: { type: 'string' } },
+    tags: { type: 'list', of: { type: 'string' }, required: true },
     lastmod: { type: 'date' },
     images: { type: 'list', of: { type: 'string' } },
     authors: { type: 'list', of: { type: 'string' } },
@@ -60,7 +60,10 @@ export const Blog = defineDocumentType(() => ({
   },
   computedFields: {
     ...computedFields,
-    url: { type: 'string', resolve: (doc) => `${siteMetadata.siteUrl}/${doc._raw.flattenedPath}` },
+    url: {
+      type: 'string',
+      resolve: (doc) => `${siteMetadata.siteUrl}/${doc._raw.flattenedPath}`,
+    },
     readingTime: { type: 'json', resolve: (doc) => readingTime(doc.body.raw) },
   },
 }));
