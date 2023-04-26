@@ -62,6 +62,7 @@ module.exports = {
       },
       white: '#fff',
       transparent: 'transparent',
+      offwhite: '#EFEEEC',
       current: 'currentColor',
     },
     stroke: ({ theme }) => ({
