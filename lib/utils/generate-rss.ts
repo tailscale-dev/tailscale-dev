@@ -22,7 +22,7 @@ const generateRssItem = (config: CoreConfig, post: MDXBlog, authorDetails) => `
     ${post.summary && `<description>${escape(post.summary)}</description>`}
     <pubDate>${new Date(post.date).toUTCString()}</pubDate>
     <author>${authorDetails.join(', ')}</author>
-    ${post.tags && post.tags.map((t) => `<category>${t}</category>`).join('')}
+    ${post.tags && post.tags.map((t) => `<category>${escape(t)}</category>`).join('')}
   </item>
 `;
 
