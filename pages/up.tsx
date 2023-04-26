@@ -259,15 +259,13 @@ export default function Up() {
               </div>
             </div>
             <div className="col-span-2">
-              <NoSSRWrapper>
-                <iframe
-                  width="600"
-                  height="350"
-                  loading="lazy"
-                  className="w-full rounded-md"
-                  src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBHkIqBo-eTUgZEgAQ9Y7OjkB-bMxQ_hLQ&amp;q=Dogpatch+Studios&amp;center=37.7598449,-122.3914863&amp;zoom=14"
-                ></iframe>
-              </NoSSRWrapper>
+              <iframe
+                width="600"
+                height="350"
+                loading="lazy"
+                className="w-full rounded-md"
+                src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&q=Dogpatch+Studios&center=37.7598449,-122.3914863&zoom=14`}
+              ></iframe>
             </div>
           </div>
         </div>
