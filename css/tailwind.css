@@ -5,7 +5,7 @@
 /* Global styles automatically moved into base layer */
 @layer base {
   html {
-    @apply bg-white font-sans text-sm text-gray-800 antialiased md:text-base;
+    @apply bg-[#F5F5F5] font-sans text-sm text-gray-800 antialiased md:text-base;
     letter-spacing: -0.015em;
     line-height: 1.4;
     text-rendering: optimizeLegibility;
@@ -1348,4 +1348,9 @@ ul.sentanceCase > li:first-of-type:nth-last-of-type(2)::after {
 
 .blog-qa-question p {
   margin-top: 0 !important;
+}
+
+.full-width {
+  @apply bg-black;
+  @apply text-offwhite;
 }

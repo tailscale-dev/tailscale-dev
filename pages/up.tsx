@@ -57,37 +57,6 @@ const featuredSpeakers = [
   },
 ];
 
-function Headshot(props: { speaker: (typeof featuredSpeakers)[0] }) {
-  return (
-    <div className="hidden sm:block">
-      <div className="flex w-64 flex-none items-center justify-center">
-        <Image
-          src={`/static/up/headshots/${props.speaker.headshot}`}
-          alt={`Headshot of ${props.speaker.name}`}
-          className="rounded-full  border-gray-200 dark:border-gray-700"
-          width={170}
-          height={170}
-        />
-      </div>
-    </div>
-  );
-}
-
-function Bio(props: { speaker: (typeof featuredSpeakers)[0] }) {
-  return (
-    <div className="hidden w-64 flex-none lg:block">
-      <div className="h-full">
-        <div className="text-3xl font-medium">{props.speaker.name}</div>
-        <div className="pt-4">
-          {props.speaker.title && <span className="font-medium">{props.speaker.title}</span>}
-          {props.speaker.company && <div>@ {props.speaker.company}</div>}
-          <br />
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function Up() {
   return (
     <>
@@ -107,164 +76,239 @@ export default function Up() {
         />
       </Head>
 
-      <header
-        className=" bg-gray-900 py-20 text-center text-gray-100"
-        style={{
-          backgroundImage: 'url(/static/up/skyline.svg)',
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center bottom',
-        }}
-      >
-        <div>
-          <Image
-            src="/static/up/logo-white.svg"
-            className="mx-auto"
-            alt="Tailscale Up"
-            width={300}
-            height={75}
-          />
-        </div>
-
-        <h1 className="mx-auto max-w-xl py-6 text-3xl font-medium leading-tight tracking-tight">
-          A conference for you to learn how others are using Tailscale at home and forge lasting
-          connections in the community.
-        </h1>
-        <div className="text-lg">
-          May 31, 2023
-          <br />
-          San Francisco, CA USA
-        </div>
-
-        <Link
-          href="https://ti.to/tailscaleup/2023"
-          target="_blank"
-          className="cta-button button-large mt-6 block whitespace-nowrap text-white"
+      <header className="full-width text-center text-white">
+        <div
+          className="container max-w-6xl pb-12 lg:pb-32"
+          style={{
+            backgroundImage: 'url(/shapes/large.svg)',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center bottom',
+            backgroundSize: 'contain',
+          }}
         >
-          Register
-        </Link>
+          <div className="flex h-[500px] flex-col items-center justify-center lg:flex-row">
+            <div className="lg:w-1/2">
+              <Image
+                src="/static/up/logo-white.svg"
+                className="mx-auto"
+                alt="Tailscale Up"
+                width={426}
+                height={82}
+              />
+            </div>
+            <div className="text-left lg:w-1/2">
+              <h1 className="text-light max-w-[582px] py-6 text-2xl">
+                A conference for you to learn how others are using Tailscale at home and forge
+                lasting connections in the community.
+              </h1>
+
+              <div className="flex justify-center lg:justify-start">
+                <Link
+                  href="https://ti.to/tailscaleup/2023"
+                  target="_blank"
+                  className="cta-button button-large text-white"
+                >
+                  Register Now
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
       </header>
 
-      <main className="container max-w-5xl">
-        <div className="mx-auto max-w-2xl pt-6">
-          On May 31 Tailscale Up will be Tailscale&apos;s first-ever in-person conference for the
-          Tailscale community. Providing attendees the opportunity to meet with the tailscalars and
-          each other, talk about their projects and integrations, and leave connected and inspired.
-          A single track will be comprised of community speakers.
-          <br />
-          <br />
-          To stay updated on the latest developments and announcements about Tailscale Up, check
-          back regularly or follow our{' '}
-          <Link href="https://twitter.com/tailscale" className="text-blue-500" target="_blank">
-            Twitter
-          </Link>{' '}
-          and our{' '}
-          <Link href="https://hachyderm.io/@tailscale" className="text-blue-500" target="_blank">
-            Fediverse
-          </Link>{' '}
-          account. You won&apos;t want to miss out on this unique opportunity to meet and learn from
-          others in the Tailscale community as well as Tailscale team members.
-        </div>
-        <div>
-          <h2 className="pt-10 pb-4 text-center text-3xl font-bold leading-8 tracking-tight">
-            Featured Speakers
-          </h2>
-          <div className="pb-2 text-center">Stay tuned for our full speaker lineup</div>
-
-          <div className="divide-y divide-gray-200 dark:divide-gray-700">
-            {featuredSpeakers.map((speaker, index) => (
-              <div key={speaker.name} className="flex py-6">
-                {index % 2 === 0 ? <Bio speaker={speaker} /> : <Headshot speaker={speaker} />}
-
-                <div className="flex-auto px-6">
-                  <div className="lg:hidden">
-                    <div className="text-3xl font-medium">{speaker.name}</div>
-                    <div className="pt-4">
-                      <span className="font-medium">
-                        {speaker.title}
-                        {speaker.company && <> @ {speaker.company}</>}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="text-xl font-bold text-blue-600">{speaker.talk}</div>
-                  <div className="pt-4">{speaker.description}</div>
+      <main>
+        <div className="bg-[#EFEEEC] dark:text-black">
+          <div className="container max-w-6xl">
+            <div className="flex flex-col py-24 lg:flex-row">
+              <div className="pb-12 text-5xl font-semibold tracking-[-.04em] lg:w-1/2">
+                Our first-ever, in-person conference!
+              </div>
+              <div className="text-lg lg:w-1/2">
+                <div>
+                  On May 31st Tailscale Up will be Tailscale&apos;s first-ever in-person conference
+                  for the Tailscale community. Providing attendees the opportunity to meet with the
+                  tailscalars and each other, talk about their projects and integrations, and leave
+                  connected and inspired. A single track will be comprised of community speakers.
                 </div>
 
-                {index % 2 !== 0 ? <Bio speaker={speaker} /> : <Headshot speaker={speaker} />}
+                <div className="pt-4">
+                  To stay updated on the latest developments and announcements about Tailscale Up,
+                  check back regularly or follow our{' '}
+                  <Link className="text-[#3A7BF3]" href="https://twitter.com/tailscale">
+                    Twitter
+                  </Link>{' '}
+                  and our{' '}
+                  <Link className="text-[#3A7BF3]" href="https://hachyderm.io/@tailscale">
+                    Fediverse
+                  </Link>{' '}
+                  account. You won&apos;t want to miss out on this unique opportunity to meet and
+                  learn from others in the Tailscale community as well as Tailscale team members.
+                </div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
 
-        <div>
-          <h2 className="pt-10 pb-6 text-center text-3xl font-bold leading-8 tracking-tight">
-            Food &amp; Drinks
-          </h2>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
-            <div className="mx-auto">
+        <div className="full-width">
+          <div className="container max-w-6xl">
+            <div className="pb-16 pt-24">
+              <div className="inline text-5xl font-semibold tracking-[-.04em] text-offwhite">
+                Featured speakers
+              </div>
+
               <Image
-                src="/static/up/food-truck.svg"
-                alt="An image of a food truck"
-                width={209}
-                height={110}
+                src="/shapes/small.svg"
+                width={200}
+                height={50}
+                className="float-right hidden sm:block"
+                alt="Tailscale shapes"
               />
             </div>
 
-            <div className="sm:col-span-2">
-              We are putting a lot of thought into the food and drink that will be served throughout
-              the day. This ain’t no regular conference food. We will announce specifics in the
-              coming weeks but there will be a clean breakfast, a variety of food trucks for lunch,
-              and dinner with craft beer and mocktails at the after-hours social event. And an all
-              day coffee cart, of course.
+            <div className="flex flex-wrap pb-24">
+              {featuredSpeakers.map((speaker) => (
+                <div key={speaker.name} className="p-4 lg:w-1/2">
+                  <div className="flex">
+                    <div className="w-[100px]">
+                      <Image
+                        src={`/static/up/headshots/${speaker.headshot}`}
+                        alt={`Headshot of ${speaker.name}`}
+                        width={100}
+                        height={100}
+                      />
+                    </div>
+
+                    <div className="flex-1 pl-6 text-offwhite">
+                      <div className="text-3xl font-semibold tracking-[-.04em]">{speaker.talk}</div>
+                      <div className="pt-4 text-lg">{speaker.description}</div>
+                      <div className="pt-4 text-lg">{speaker.name}</div>
+                      <div className="text-lg text-gray-400">
+                        {speaker.title}
+                        {speaker.company && <> @ {speaker.company}</>}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
 
-        <div>
-          <h2 className="pt-10 pb-6 text-center text-3xl font-bold leading-8 tracking-tight">
-            After hours
-          </h2>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-5">
-            <div className="mx-auto sm:hidden">
-              <Image src="/static/up/beer.svg" alt="An image of beer" width={78} height={110} />
+        <div className="bg-[#EFEEEC] dark:text-black">
+          <div className="container max-w-6xl">
+            <div className="flex flex-col pt-24 sm:flex-row">
+              <div className="hidden lg:block lg:w-1/2">
+                <Image
+                  src="/shapes/small.svg"
+                  width={200}
+                  height={50}
+                  className="pb-16"
+                  alt="Tailscale shapes"
+                />
+              </div>
+              <div className="lg:w-1/2">
+                <div className="pb-16 text-5xl font-semibold tracking-[-.04em]">Buy Tickets</div>
+              </div>
             </div>
-
-            <div className="sm:col-span-4">
-              We will stay onsite at Dogpatch to wrap up the conference with craft beer, natural
-              wines, and immaculate vibes. There will be food, board games, graphic novels, and good
-              company.
-            </div>
-
-            <div className="hidden sm:block">
-              <Image src="/static/up/beer.svg" alt="An image of beer" width={78} height={110} />
+            <div className="flex flex-col pb-24 lg:flex-row">
+              <div className="lg:w-1/2">
+                <div className="pb-6 text-lg lg:pr-6">
+                  Ticket sales are limited, so act quickly! Early-bird tickets are available for
+                  $75. Standard tickets will go on sale for $200 starting April 11th.
+                </div>
+              </div>
+              <div className="lg:w-1/2">
+                <NoSSRWrapper>
+                  <tito-widget event="tailscaleup/2023"></tito-widget>
+                </NoSSRWrapper>
+              </div>
             </div>
           </div>
         </div>
 
-        <div>
-          <h2 className="pt-10 pb-6 text-center text-3xl font-bold leading-8 tracking-tight">
-            The Venue
-          </h2>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
-            <div className="w-full">
-              <div className="pb-4 text-xl font-bold">Dogpatch Studios</div>
-              <div>
-                991 Tennessee St
-                <br />
-                San Francisco, CA 94107
+        <div className="full-width">
+          <div className="container max-w-6xl">
+            <div className="pb-16 pt-24">
+              <Image
+                src="/shapes/small.svg"
+                width={200}
+                height={50}
+                className="float-right hidden sm:block"
+                alt="Tailscale shapes"
+              />
+              <div className="text-5xl font-semibold tracking-[-.04em] text-offwhite">
+                The Venue
               </div>
-              <div className="pt-4">
-                Located on the hip side of Potrero Hill just one mile south of the Giants’ ballpark,
-                Dogpatch is easily accessed by bus, train, car, taxi, rideshare, MUNI (T-Line), or
-                even by boat!
+              <div className="text-5xl font-light tracking-[-.04em] text-gray-500">
+                DogPatch Studios
               </div>
             </div>
-            <div className="col-span-2">
+
+            <div className="flex h-[410px] justify-center">
+              <Image
+                src="/static/up/dogpatch-one.jpg"
+                alt="An image of DogPatch Studios"
+                className="hidden xl:inline xl:pr-6"
+                width={437}
+                height={398}
+              />
+              <Image
+                src="/static/up/dogpatch-two.jpg"
+                alt="An image of DogPatch Studios"
+                className="float-right"
+                width={606}
+                height={398}
+              />
+            </div>
+            <div className="flex flex-col py-24 lg:flex-row">
+              <div className="lg:w-1/2">
+                <div className="text-2xl font-bold tracking-[-.04em]">Food &amp; Drinks</div>
+                <div className="py-4 pr-4 text-lg">
+                  We are putting a lot of thought into the food and drink that will be served
+                  throughout the day. This ain’t no regular conference food. We will announce
+                  specifics in the coming weeks but there will be a clean breakfast, a variety of
+                  food trucks for lunch, and dinner with craft beer and mocktails at the after-hours
+                  social event. And an all day coffee cart, of course.
+                </div>
+              </div>
+              <div className="lg:w-1/2">
+                <div className="pt-12 text-2xl font-bold tracking-[-.04em] lg:pt-0">
+                  After Hours
+                </div>
+                <div className="py-4 pr-4  text-lg">
+                  We will stay onsite at Dogpatch to wrap up the conference with craft beer, natural
+                  wines, and immaculate vibes. There will be food, board games, graphic novels, and
+                  good company.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-[#EFEEEC] dark:text-black">
+          <div className="container max-w-6xl">
+            <div className="pt-20 text-3xl font-semibold tracking-[-.04em]">Getting There</div>
+            <div className="flex flex-col pt-4 text-lg lg:flex-row">
+              <div className="pr-6 lg:w-1/2">
+                <div>
+                  Located just one mile south of the Giants’ ballpark, Dogpatch is easily accessed
+                  by bus, train, car, taxi, rideshare, MUNI (T-Line), or even by boat!
+                </div>
+              </div>
+              <div className="pt-6 lg:w-1/2 lg:pt-0">
+                Getting to the venue from the hotel is easy. The hotel is located just 1.4 miles
+                from the venue. You can walk, use a rideshare service like Uber or Lyft, or take
+                public transit. For public transit, take the T-train from 4th and King Street to
+                20th Street and pay ahead of time with Clipper.
+              </div>
+            </div>
+            <div className="py-24">
               <NoSSRWrapper>
                 <iframe
                   width="600"
-                  height="350"
+                  height="400"
                   loading="lazy"
-                  className="w-full rounded-md"
+                  className="w-full"
                   src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBHkIqBo-eTUgZEgAQ9Y7OjkB-bMxQ_hLQ&amp;q=Dogpatch+Studios&amp;center=37.7598449,-122.3914863&amp;zoom=14"
                 ></iframe>
               </NoSSRWrapper>
@@ -272,115 +316,88 @@ export default function Up() {
           </div>
         </div>
 
-        <div>
-          <h2 className="pt-10 pb-6 text-center text-3xl font-bold leading-8 tracking-tight">
-            Accommodations
-          </h2>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
-            <div className="mx-auto">
-              <Link href="https://www.hotelvia.com/">
-                <Image
-                  src="/static/up/hotel-via.svg"
-                  alt="Hotel Via logo"
-                  width={288}
-                  height={197}
-                />
-              </Link>
+        <div className="container max-w-6xl">
+          <div className="pb-16 pt-24">
+            <Image
+              src="/shapes/small.svg"
+              width={200}
+              height={50}
+              className="float-right hidden sm:block"
+              alt="Tailscale shapes"
+            />
+            <div className="text-5xl font-semibold tracking-[-.04em] dark:text-offwhite">
+              Accomodations
             </div>
-
-            <div className="col-span-2">
-              <div>
-                We have partnered up with Hotel VIA to provide a negotiated rate for attendees.
-                Please book your room as soon as possible as the hotel is expected to sell out. The
-                deadline to book at the negotiated rate is Saturday, April 29th.
-              </div>
-              <Link
-                className="cta-button button-large my-6 mx-auto block whitespace-nowrap text-white"
-                target="_blank"
-                href="https://res.windsurfercrs.com/ibe/details.aspx?propertyid=14840&nights=1&checkin=5/30/2023&group=8135285&lang=en-us"
-              >
-                Book now
-              </Link>
-              <div>
-                Getting to the venue from the hotel is easy. The hotel is located just 1.4 miles
-                from the venue. You can walk, use a rideshare service like Uber or Lyft, or take
-                public transit. For public transit, take the T-train from 4th and King Street to
-                20th Street and pay ahead of time with{' '}
-                <Link
-                  href="https://www.clippercard.com/ClipperWeb/pay-with-phone"
-                  className="text-blue-500"
-                >
-                  Clipper
-                </Link>
-                .
+          </div>
+          <div className="flex flex-col pb-24 lg:flex-row">
+            <div className="lg:w-1/2">
+              <div className="text-3xl font-semibold tracking-[-.04em]">Hotel VIA</div>
+              <div className="pb-12 pr-8 pt-6 text-lg lg:pb-0">
+                We have partnered with{' '}
+                <Link className="text-[#3A7BF3]" href="https://www.hotelvia.com/">
+                  Hotel VIA
+                </Link>{' '}
+                to provide a <strong>discounted rate</strong> for attendees. Please book your room
+                as soon as possible as the hotel is expected to sell out. The deadline to book at
+                the negotiated rate is Saturday, April 29th.
               </div>
             </div>
+            <div className="flex justify-center lg:w-1/2">
+              <Image
+                src="/static/up/hotel-via.jpg"
+                width={574}
+                height={316}
+                className="float-right"
+                alt="Hotel VIA image and logo"
+              />
+            </div>
           </div>
         </div>
 
-        <div id="tickets">
-          <h2 className="pt-10 pb-6 text-center text-3xl font-bold leading-8 tracking-tight">
-            Tickets
-          </h2>
-          <div>
-            <div className="mx-auto max-w-2xl">
-              <div className="pb-4">
-                Tickets are on sale now!
-                <br />
-                <br />
-                Ticket sales are limited, so act quickly! Early-bird tickets are available for $75.
-                <br />
-                Standard tickets will go on sale for $200 starting April 29th.
+        <div className="full-width">
+          <div className="container max-w-6xl">
+            <div className="flex flex-col py-24 lg:flex-row">
+              <div className="lg:w-1/2">
+                <div className="text-3xl font-semibold tracking-[-.04em]">Partnerships</div>
+                <div className="pt-6 pr-8 text-lg">
+                  Building something that&apos;s the peanut butter to Tailscale&apos;s chocolate? If
+                  you&apos;re interested in exploring potential partnership opportunities with us,
+                  we invite you to email us at up@tailscale.com. We are open to discussing different
+                  options for collaboration and finding creative ways to work together.
+                </div>
               </div>
-              <NoSSRWrapper>
-                <tito-widget event="tailscaleup/2023"></tito-widget>
-              </NoSSRWrapper>
+              <div className="pt-12 lg:w-1/2 lg:pt-0">
+                <div className="text-3xl font-semibold tracking-[-.04em]">Code of Conduct</div>
+                <div className="pt-6 text-lg">
+                  Promoting a respectful and inclusive environment is a top priority for Tailscale
+                  Up.Everyone will be expected to follow our{' '}
+                  <Link
+                    className="text-[#3A7BF3]"
+                    href="https://tailscale.dev/events/code-of-conduct"
+                  >
+                    Code of Conduct
+                  </Link>
+                  .
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <div>
-          <h2 className="pt-10 pb-6 text-center text-3xl font-bold leading-8 tracking-tight">
-            Partnerships
-          </h2>
-          <div className="mx-auto max-w-2xl">
-            <div>
-              Building something that&apos;s the peanut butter to Tailscale&apos;s chocolate? If
-              you&apos;re interested in exploring potential partnership opportunities with us, we
-              invite you to email us at <code>up@tailscale.com</code>. We are open to discussing
-              different options for collaboration and finding creative ways to work together.
+        <div className="bg-[#EFEEEC] dark:text-black">
+          <div className="container max-w-6xl py-24">
+            <div className="text-3xl font-semibold tracking-[-.04em]">
+              Coronavirus (COVID-19) Information
             </div>
-          </div>
-        </div>
-
-        <div>
-          <h2 className="pt-10 pb-6 text-center text-3xl font-bold leading-8 tracking-tight">
-            Code of Conduct
-          </h2>
-          <div className="mx-auto max-w-2xl">
-            Promoting a respectful and inclusive environment is a top priority for Tailscale Up.
-            <br />
-            Everyone will be expected to follow our{' '}
-            <Link className="text-blue-500" href="https://tailscale.dev/events/code-of-conduct">
-              Code of Conduct
-            </Link>
-            .
-          </div>
-        </div>
-
-        <div>
-          <h2 className="pt-10 pb-6 text-center text-3xl font-bold leading-8 tracking-tight">
-            Coronavirus (COVID-19) information
-          </h2>
-          <div className="mx-auto max-w-2xl">
-            <div>
+            <div className="pt-6 pr-8 text-lg">
               At Tailscale Up, we’ll implement the following safety measures to prevent the spread
               of Covid. We encourage all attendees to wear a mask and will be providing masks at the
               venue check-in table. We will require a negative test completed on the same day (tests
               provided to all attendees by mail before the event). Please do not attend if you are
               exhibiting symptoms.
             </div>
-            <div className="pt-4">
+
+            <div className="pt-6 pr-8 text-lg">
               We offer a full refund if you are unable to attend. These measures will be reviewed
               and updated to reflect the changing situation and number of cases as we approach the
               conference date.
