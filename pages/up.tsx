@@ -214,7 +214,7 @@ export default function Up() {
               <div className="lg:w-1/2">
                 <div className="pb-6 text-lg lg:pr-6">
                   Ticket sales are limited, so act quickly! Early-bird tickets are available for
-                  $75. Standard tickets will go on sale for $200 starting April 11th.
+                  $75. Standard tickets will go on sale for $125 starting April 29th.
                 </div>
               </div>
               <div className="lg:w-1/2">
