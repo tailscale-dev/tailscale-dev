@@ -334,7 +334,7 @@ export default function Up() {
               <div className="text-3xl font-semibold tracking-[-.04em]">Hotel VIA</div>
               <div className="pb-12 pr-8 pt-6 text-lg lg:pb-0">
                 We have partnered with{' '}
-                <Link className="text-[#3A7BF3]" href="https://www.hotelvia.com/">
+                <Link className="text-[#3A7BF3]" href="https://res.windsurfercrs.com/ibe/details.aspx?propertyid=14840&nights=1&checkin=5/30/2023&group=8135285&lang=en-us">
                   Hotel VIA
                 </Link>{' '}
                 to provide a <strong>discounted rate</strong> for attendees. Please book your room
@@ -370,7 +370,7 @@ export default function Up() {
                 <div className="text-3xl font-semibold tracking-[-.04em]">Code of Conduct</div>
                 <div className="pt-6 text-lg">
                   Promoting a respectful and inclusive environment is a top priority for Tailscale
-                  Up.Everyone will be expected to follow our{' '}
+                  Up. Everyone will be expected to follow our{' '}
                   <Link
                     className="text-[#3A7BF3]"
                     href="https://tailscale.dev/events/code-of-conduct"
