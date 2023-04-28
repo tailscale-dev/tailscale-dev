@@ -41,6 +41,7 @@ const featuredSpeakers = [
   },
   {
     name: 'Emily Trau',
+    title: 'Security Researcher',
     talk: 'All the buttons',
     description:
       "What kind of user experiences can you build if you use every trick in the Tailscale book - features that are old, new, and even unreleased? We built a hacking attack/defense simulation platform, and want to show you what's possible when you commit Tailscale crimes.",
@@ -334,7 +335,10 @@ export default function Up() {
               <div className="text-3xl font-semibold tracking-[-.04em]">Hotel VIA</div>
               <div className="pb-12 pr-8 pt-6 text-lg lg:pb-0">
                 We have partnered with{' '}
-                <Link className="text-[#3A7BF3]" href="https://res.windsurfercrs.com/ibe/details.aspx?propertyid=14840&nights=1&checkin=5/30/2023&group=8135285&lang=en-us">
+                <Link
+                  className="text-[#3A7BF3]"
+                  href="https://res.windsurfercrs.com/ibe/details.aspx?propertyid=14840&nights=1&checkin=5/30/2023&group=8135285&lang=en-us"
+                >
                   Hotel VIA
                 </Link>{' '}
                 to provide a <strong>discounted rate</strong> for attendees. Please book your room
