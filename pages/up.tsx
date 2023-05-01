@@ -214,8 +214,7 @@ export default function Up() {
             <div className="flex flex-col pb-24 lg:flex-row">
               <div className="lg:w-1/2">
                 <div className="pb-6 text-lg lg:pr-6">
-                  Ticket sales are limited, so act quickly! Early-bird tickets are available for
-                  $75. Standard tickets will go on sale for $125 starting April 29th.
+                  Tickets are now available for $125. Ticket sales are limited, so act quickly!
                 </div>
               </div>
               <div className="lg:w-1/2">
