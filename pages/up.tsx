@@ -295,12 +295,6 @@ export default function Up() {
                   by bus, train, car, taxi, rideshare, MUNI (T-Line), or even by boat!
                 </div>
               </div>
-              <div className="pt-6 lg:w-1/2 lg:pt-0">
-                Getting to the venue from the hotel is easy. The hotel is located just 1.4 miles
-                from the venue. You can walk, use a rideshare service like Uber or Lyft, or take
-                public transit. For public transit, take the T-train from 4th and King Street to
-                20th Street and pay ahead of time with Clipper.
-              </div>
             </div>
             <div className="py-24">
               <NoSSRWrapper>
@@ -312,47 +306,6 @@ export default function Up() {
                   src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBHkIqBo-eTUgZEgAQ9Y7OjkB-bMxQ_hLQ&amp;q=Dogpatch+Studios&amp;center=37.7598449,-122.3914863&amp;zoom=14"
                 ></iframe>
               </NoSSRWrapper>
-            </div>
-          </div>
-        </div>
-
-        <div className="container max-w-6xl">
-          <div className="pb-16 pt-24">
-            <Image
-              src="/shapes/small.svg"
-              width={200}
-              height={50}
-              className="float-right hidden sm:block"
-              alt="Tailscale shapes"
-            />
-            <div className="text-5xl font-semibold tracking-[-.04em] dark:text-offwhite">
-              Accomodations
-            </div>
-          </div>
-          <div className="flex flex-col pb-24 lg:flex-row">
-            <div className="lg:w-1/2">
-              <div className="text-3xl font-semibold tracking-[-.04em]">Hotel VIA</div>
-              <div className="pb-12 pr-8 pt-6 text-lg lg:pb-0">
-                We have partnered with{' '}
-                <Link
-                  className="text-[#3A7BF3]"
-                  href="https://res.windsurfercrs.com/ibe/details.aspx?propertyid=14840&nights=1&checkin=5/30/2023&group=8135285&lang=en-us"
-                >
-                  Hotel VIA
-                </Link>{' '}
-                to provide a <strong>discounted rate</strong> for attendees. Please book your room
-                as soon as possible as the hotel is expected to sell out. The deadline to book at
-                the negotiated rate is Saturday, April 29th.
-              </div>
-            </div>
-            <div className="flex justify-center lg:w-1/2">
-              <Image
-                src="/static/up/hotel-via.jpg"
-                width={574}
-                height={316}
-                className="float-right"
-                alt="Hotel VIA image and logo"
-              />
             </div>
           </div>
         </div>
