@@ -58,6 +58,106 @@ const featuredSpeakers = [
   },
 ];
 
+const schedule = [
+  {
+    title: 'Check in & breakfast',
+    time: '8:30-9:30am',
+  },
+  {
+    title: 'Welcome & Introduction',
+    who: 'MCs',
+    time: '9:30am',
+  },
+  {
+    title: 'All the buttons',
+    who: 'Emily Trau',
+    time: '9:50am',
+  },
+  {
+    title: 'Build your own game streaming service',
+    who: 'Justin Garrison',
+    time: '10:15am',
+  },
+  {
+    title: 'Adding out of band resilience to an ISP network',
+    who: 'Moritz Frenzel',
+    time: '10:40am',
+  },
+  {
+    title: 'Break',
+    time: '11:00am',
+  },
+  {
+    title: 'Tailscale Self-Hosted Remote Cloud Gaming',
+    who: 'Seaver Thorn',
+    time: '11:20am',
+  },
+  {
+    title: 'Your Family Needs Tailscale',
+    who: 'Amye Scavarda Perrin',
+    time: '11:45am',
+  },
+  {
+    title: 'The subtle magic of embedding Tailscale into your services',
+    who: 'Xe Iaso',
+    time: '11:55pm',
+  },
+  {
+    title: 'Lunch and hang',
+    time: '12:20pm',
+  },
+  {
+    title: 'Lightning round... Ding ding ding',
+    time: '2:00pm',
+  },
+  {
+    title: 'Building a Never Ending Fantasy World With Tailscale',
+    who: 'Oliver Judge',
+    time: '2:30pm',
+  },
+  {
+    title: 'Opportunity, connectivity and Tailscale',
+    who: 'David Rio Deiros',
+    time: '2:55pm',
+  },
+  {
+    title: 'Tailscale as a Networking Layer for Modern Apps',
+    who: 'Tarun Pothulapati',
+    time: '3:20pm',
+  },
+  {
+    title: 'Break',
+    time: '3:40pm',
+  },
+  {
+    title: 'Prison break: Free your Kubernetes clusters from firewalls with Tailscale and Pulumi',
+    who: 'Guinevere Sanger & Aaron Friel',
+    time: '4:00pm',
+  },
+  {
+    title: 'The Managed NAT Gateway Time Machine',
+    who: 'Corey Quinn',
+    time: '4:20pm',
+  },
+  {
+    title: 'Thank you',
+    who: 'MCs',
+    time: '5:00pm',
+  },
+  {
+    title: 'Fiesta! with dinner / bevs',
+    time: '5:00pm',
+  },
+  {
+    title: 'Last call',
+    time: '7:30pm',
+  },
+  {
+    title: 'Finish',
+    time: '8:00pm',
+  },
+];
+
 export default function Up() {
   return (
     <>
@@ -228,6 +328,43 @@ export default function Up() {
 
         <div className="full-width">
           <div className="container max-w-6xl">
+            <div className="pt-24">
+              <div className="inline text-5xl font-semibold tracking-[-.04em] text-offwhite">
+                <a id="schedule">Schedule</a>
+              </div>
+
+              <Image
+                src="/shapes/small.svg"
+                width={200}
+                height={50}
+                className="float-right hidden sm:block"
+                alt="Tailscale shapes"
+              />
+            </div>
+            <div className="py-16 text-black sm:px-16">
+              <div className="overflow-hidden rounded-md bg-white shadow">
+                <ul className="divide-y divide-gray-200">
+                  {schedule.map((item, index) => (
+                    <li key={index} className="px-4 py-4 sm:px-6">
+                      <div className="flex items-center justify-between">
+                        <div className="min-w-0 flex-1">
+                          <p className="">{item.title}</p>
+                          {item.who && <p className="truncate text-gray-600">{item.who}</p>}
+                        </div>
+                        <div className="ml-4 flex-shrink-0">
+                          <p className="text-gray-600">{item.time}</p>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-[#EFEEEC] text-black">
+          <div className="container max-w-6xl">
             <div className="pb-16 pt-24">
               <Image
                 src="/shapes/small.svg"
@@ -236,12 +373,8 @@ export default function Up() {
                 className="float-right hidden sm:block"
                 alt="Tailscale shapes"
               />
-              <div className="text-5xl font-semibold tracking-[-.04em] text-offwhite">
-                The Venue
-              </div>
-              <div className="text-5xl font-light tracking-[-.04em] text-gray-500">
-                DogPatch Studios
-              </div>
+              <div className="tracking-[-.04em text-5xl font-semibold">The Venue</div>
+              <div className="text-5xl font-light tracking-[-.04em]">DogPatch Studios</div>
             </div>
 
             <div className="flex h-[410px] justify-center">
@@ -285,7 +418,7 @@ export default function Up() {
           </div>
         </div>
 
-        <div className="bg-[#EFEEEC] dark:text-black">
+        <div className="full-width">
           <div className="container max-w-6xl">
             <div className="pt-20 text-3xl font-semibold tracking-[-.04em]">Getting There</div>
             <div className="flex flex-col pt-4 text-lg lg:flex-row">
