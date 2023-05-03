@@ -62,6 +62,7 @@ const schedule = [
   {
     title: 'Check in & breakfast',
     time: '8:30-9:30am',
+    break: true,
   },
   {
     title: 'Welcome & Introduction',
@@ -86,6 +87,7 @@ const schedule = [
   {
     title: 'Break',
     time: '11:00am',
+    break: true,
   },
   {
     title: 'Tailscale Self-Hosted Remote Cloud Gaming',
@@ -105,6 +107,7 @@ const schedule = [
   {
     title: 'Lunch and hang',
     time: '12:20pm',
+    break: true,
   },
   {
     title: 'Lightning round... Ding ding ding',
@@ -128,6 +131,7 @@ const schedule = [
   {
     title: 'Break',
     time: '3:40pm',
+    break: true,
   },
   {
     title: 'Prison break: Free your Kubernetes clusters from firewalls with Tailscale and Pulumi',
@@ -147,14 +151,17 @@ const schedule = [
   {
     title: 'Fiesta! with dinner / bevs',
     time: '5:00pm',
+    break: true,
   },
   {
     title: 'Last call',
     time: '7:30pm',
+    break: true,
   },
   {
     title: 'Finish',
     time: '8:00pm',
+    break: true,
   },
 ];
 
@@ -342,18 +349,19 @@ export default function Up() {
               />
             </div>
             <div className="py-16 text-black sm:px-16">
-              <div className="overflow-hidden rounded-md bg-white shadow">
-                <ul className="divide-y divide-gray-200">
+              <div className="overflow-hidden bg-offwhite">
+                <ul className="divide-y divide-gray-700">
                   {schedule.map((item, index) => (
-                    <li key={index} className="px-4 py-4 sm:px-6">
+                    <li
+                      key={index}
+                      className={`px-4 py-4 sm:px-6 ${item.break ? 'bg-black text-white' : ''}`}
+                    >
                       <div className="flex items-center justify-between">
                         <div className="min-w-0 flex-1">
                           <p className="">{item.title}</p>
                           {item.who && <p className="truncate text-gray-600">{item.who}</p>}
                         </div>
-                        <div className="ml-4 flex-shrink-0">
-                          <p className="text-gray-600">{item.time}</p>
-                        </div>
+                        <div className="ml-4 flex-shrink-0">{item.time}</div>
                       </div>
                     </li>
                   ))}
