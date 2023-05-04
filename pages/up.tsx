@@ -102,7 +102,7 @@ const schedule = [
   {
     title: 'The subtle magic of embedding Tailscale into your services',
     who: 'Xe Iaso',
-    time: '11:55pm',
+    time: '11:55am',
   },
   {
     title: 'Lunch and hang',
