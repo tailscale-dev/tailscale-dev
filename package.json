@@ -24,7 +24,7 @@
     "date-fns": "^2.29.3",
     "esbuild": "^0.17.4",
     "github-slugger": "^1.4.0",
-    "gray-matter": "^4.0.2",
+    "gray-matter": "^4.0.3",
     "image-size": "1.0.0",
     "mdx-bundler": "^9.0.0",
     "next": "^13.1.5",
