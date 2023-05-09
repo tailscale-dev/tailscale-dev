@@ -59,7 +59,7 @@
     "eslint-plugin-react": "^7.32.1",
     "eslint-plugin-unicorn": "^46.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "file-loader": "^6.0.0",
+    "file-loader": "^6.2.0",
     "globby": "11.0.3",
     "html-loader": "^4.2.0",
     "husky": "^8.0.3",
