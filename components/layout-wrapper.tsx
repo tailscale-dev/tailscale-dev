@@ -1,5 +1,5 @@
 import React from 'react';
-import { Inter } from '@next/font/google';
+import { Inter } from 'next/font/google';
 import { leftHeaderNavLinks, rightHeaderNavLinks } from '@/data/header-nav-links';
 import Link from 'next/link';
 import Footer from './footer';
