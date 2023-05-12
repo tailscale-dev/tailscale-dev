@@ -10,12 +10,10 @@
     {
       groupName: 'react',
       matchPackagePatterns: ['^react', '.*react$'],
-      matchPackageNames: ['eslint-plugin-react'],
     },
     {
       groupName: 'eslint',
       matchPackagePatterns: ['^eslint', '^@typescript-eslint'],
-      matchPackageNames: ['eslint-plugin-react'],
     },
     {
       groupName: 'contentlayer',
