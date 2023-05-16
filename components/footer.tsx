@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="pt-24 pb-12 text-base">
           The official community site of Tailscale.
           <br />
-          WireGuard is a registeredtrademark of Jason A. Donenfeld.
+          WireGuard is a registered trademark of Jason A. Donenfeld.
           <br />
           &copy; Tailscale Inc.
         </div>
