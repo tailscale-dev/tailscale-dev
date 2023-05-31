@@ -70,8 +70,8 @@ const schedule = [
     time: '9:30am',
   },
   {
-    title: 'All the buttons',
-    who: 'Emily Trau',
+    title: 'The subtle magic of embedding Tailscale into your services',
+    who: 'Xe Iaso',
     time: '9:50am',
   },
   {
@@ -100,8 +100,8 @@ const schedule = [
     time: '11:45am',
   },
   {
-    title: 'The subtle magic of embedding Tailscale into your services',
-    who: 'Xe Iaso',
+    title: 'All the buttons',
+    who: 'Emily Trau',
     time: '11:55am',
   },
   {
