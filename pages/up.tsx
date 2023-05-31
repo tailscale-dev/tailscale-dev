@@ -114,11 +114,6 @@ const schedule = [
     time: '2:00pm',
   },
   {
-    title: 'Building a Never Ending Fantasy World With Tailscale',
-    who: 'Oliver Judge',
-    time: '2:30pm',
-  },
-  {
     title: 'Opportunity, connectivity and Tailscale',
     who: 'David Rio Deiros',
     time: '2:55pm',
