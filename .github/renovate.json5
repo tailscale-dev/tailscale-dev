@@ -17,7 +17,7 @@
     },
     {
       groupName: 'contentlayer',
-      matchPackageNames: ['contentlayer', 'next-contentlayer'],
+      matchPackageNames: ['contentlayer', 'next-contentlayer', '^rehype'],
     },
     {
       groupName: 'next',
