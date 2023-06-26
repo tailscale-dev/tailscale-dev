@@ -1,0 +1,118 @@
+---
+title: 'Manage passwords over your tailnet with vaultwarden'
+date: '2023-06-26'
+tags:
+  - 'vaultwarden'
+  - 'bitwarden'
+  - 'passwords'
+  - 'how-to'
+authors: ['parker']
+images: ['/images/vaultwarden-tailnet/social.png']
+summary: 'Learn how to install vaultwarden on a machine in your tailnet to give all your devices access to a secure password manager backend.'
+---
+
+Password managers solve a lot of the problems inherent to passwords: They make it easy to generate extremely strong credentials that are unique to each of your accounts, and help you resist phishing schemes with clients that only fill in the appropriate fields on the right domains.
+
+But managing a database of passwords, and making it available on every device where you need them, is not necessarily a simple task. And the risks of relying on a company to handle the cloud syncing have been cast into stark relief over the past year by a [high-profile breach of LastPass customer data](https://www.theverge.com/2023/2/28/23618353/lastpass-security-breach-disclosure-password-vault-encryption-update).
+
+Fortunately, there are some powerful free software solutions available to keep everything in sync yourself. In this article, we'll show you how to set up the popular open source package [vaultwarden](https://github.com/dani-garcia/vaultwarden) as a self-hosted server for [Bitwarden clients](https://bitwarden.com/), and how to use Tailscale to make it available over HTTPS to devices in your tailnet or, if you want, on the public internet.
+
+## Prerequisites
+
+- A server or virtual machine [with Docker installed](https://docs.docker.com/get-docker/) to run vaultwarden. This can be an inexpensive VPS from any cloud provider, a Raspberry Pi on your home network, or nearly any computer that's always on. You don't quite need "data center" availability: If your Bitwarden client can't reach the vaultwarden server, it can still work in [offline mode](https://bitwarden.com/help/using-bitwarden-offline/), so you won't be locked out of your accounts. This guide assumes that this target machine is running some flavor of Linux, but it should work just about anywhere that Tailscale and Docker run.
+- A Tailscale account. If you don't have one yet, you can [create one in just a few seconds](https://login.tailscale.com/start). This tutorial uses [`serve`](https://tailscale.com/kb/1242/tailscale-serve/) and optionally [Tailscale SSH](https://tailscale.com/kb/1193/tailscale-ssh/) and [Funnel](https://tailscale.com/kb/1223/tailscale-funnel/), all of which are available on the [Free, Premium, and Enterprise plans](https://tailscale.com/pricing).
+
+## Install Tailscale on the target machine
+
+First up, log in to the machine you want to install vaultwarden on and [install Tailscale](https://tailscale.com/download/). Under most circumstances, the one-command install should do the trick. Once you've got it installed and set up, you should see this machine in your [Tailscale Admin dashboard](https://login.tailscale.com/admin/machines).
+
+## Recommended: Set up Tailscale SSH on the target machine
+
+At this point, you can [set up Tailscale SSH](https://tailscale.com/kb/1193/tailscale-ssh/). This is not a strict requirement, but it will make it easier to access and maintain your vaultwarden install. Under most circumstances, this will be as simple as running
+
+```
+tailscale up --ssh
+```
+
+on the target machine. From that point, you can access the target machine from other devices on the tailnet using its machine name. So for example, if you've called this machine `vault`, you'll be able to run
+
+```
+tailscale ssh vault
+```
+
+to access it from another computer on your tailnet without worrying about managing SSH keys. Note that Tailscale SSH might be restricted by [ACL rules](https://tailscale.com/kb/1018/acls/).
+
+## Deploy the vaultwarden Docker image
+
+For this section, we'll mostly be following the directions on the [vaultwarden GitHub repository](https://github.com/dani-garcia/vaultwarden).
+
+First, decide where vaultwarden should store its data. If you're not sure, we suggest using a path in your home directory to avoid permission issues. For this tutorial we're going to use `/home/<username>/vw-data/`, but make sure to fill in your own username there.
+
+Make the directory:
+
+```
+mkdir /home/<username>/vw-data
+```
+
+And then run this command to start vaultwarden:
+
+```
+docker run -d --name vaultwarden -v /home/<username>/vw-data/:/data/ -p 127.0.0.1:8080:80 --restart unless-stopped vaultwarden/server:latest
+```
+
+This command is slightly different from the one provided by vaultwarden:
+
+- Instead of publishing the container's port 80 to your machine's port 80, our version binds it locally to port 8080. We'll use that in the next step!
+- We've added `--restart unless-stopped` to keep the server running in case it runs into an issue.
+- Finally, we've stored the application data in the home directory instead of `/vw-data`.
+
+## Use Tailscale to serve vaultwarden to your tailnet over HTTPS
+
+Out of the box, vaultwarden only serves over HTTP, which is not intended for actual use. In practice, you want this server available over HTTPS, which requires some kind of reverse proxy and a mechanism to manage certificates. Fortunately, Tailscale can handle all that!
+
+First, make sure [HTTPS is enabled](https://tailscale.com/kb/1153/enabling-https/) for your Tailscale account.
+
+Then, use this command to proxy the vaultwarden server to your tailnet:
+
+```
+tailscale serve https / 127.0.0.1:8080
+```
+
+You can confirm that worked with the command:
+
+```
+tailscale serve status
+```
+
+Which should show something like the following:
+
+```
+https://vault.pango-lin.ts.net (tailnet only)
+|-- / proxy http://127.0.0.1:8080
+```
+
+You should now be able to access vaultwarden from any device on your tailnet by opening a browser at the URL shown there — `https://<machinename>.<tailnet-name>.ts.net`, but with your own machine name and tailnet name. (The very first visit might take a few extra seconds as Tailscale obtains and configures your HTTPS certificate.) You can also check that URL from a device that is not connected to your tailnet, and you'll see it does not resolve.
+
+## Create your vaultwarden account and access with a bitwarden client
+
+From that page in your browser, you can create a new vaultwarden account. Set a secure password that you will remember!
+
+You should now be able to [install a Bitwarden client](https://bitwarden.com/download/) on any device on your tailnet — and of course you can install Tailscale on more devices now to add them to your tailnet. For each client, you'll need to [provide your vaultwarden URL](https://bitwarden.com/help/change-client-environment/) as the "Self-hosted" option from the drop-down region menu.
+
+## Customize vaultwarden, and optionally open a Funnel
+
+Everything should be working now, but the [vaultwarden wiki](https://github.com/dani-garcia/vaultwarden/wiki) has a bunch of information about what to do next with your install. For example, you may want to configure back-ups or take some steps to harden its security.
+
+If you ever need to access your vault from outside your tailnet, you can open a Tailscale Funnel. Make sure [Funnel is configured for your Tailscale account](https://tailscale.com/kb/1223/tailscale-funnel/), and then from the target machine, run:
+
+```
+tailscale funnel 443 on
+```
+
+While the Funnel is on, your instance will be available on the public internet, so keep that in mind if it affects your risk profile!
+
+---
+
+This guide should be enough to get you off the ground with a self-hosted vaultwarden install on your tailnet, but there are of course a bunch of ways to tinker with it. And of course, the same general steps would be a good starting point for making many kinds of servers privately available to the devices in your tailnet.
+
+What are you accessing over Tailscale? Did this article help you get connected? Let us know on [Twitter](https://twitter.com/tailscale) or the [Fediverse](https://hachyderm.io/@tailscale)!
