@@ -1,0 +1,210 @@
+---
+title: Strawberry Jamming with Tailscale SSH
+authors:
+  - xe
+date: 2023-06-27
+summary: 'Run Tailscale SSH on your Steam Deck to install mods like Strawberry Jam for Celeste.'
+tags:
+  - Steam Deck
+  - Celeste
+  - SSH
+  - sftp
+  - modding
+  - Strawberry Jam
+images: ['/images/strawberry-jam-steam-deck/social.jpg']
+---
+
+Last year I released a tutorial for how you can run [Tailscale on the
+Steam Deck](https://tailscale.com/blog/steam-deck/). This article
+continues to be widely referenced across the internet as people have
+found new and interesting ways to use Tailscale in new and interesting
+ways. Today, I wanted to show you some new and interesting ways that
+we've figured out how to use Tailscale so we can inspire you to do
+even more fun things.
+
+First, let's take a little step back and look over the moving parts.
+Tailscale recently introduced [Tailscale
+SSH](https://tailscale.com/tailscale-ssh/), which allows you to use
+Tailscale to authenticate to your devices over SSH instead of having
+to rely on passwords, key rotation, copying over authorized keys and
+more. When you run Tailscale on the Steam Deck, you can use Tailscale
+SSH to connect to and manage your Steam Deck like any other Linux
+system. One of the things you can do is copy over files with `scp` and
+run downloaded programs with the shell.
+
+With Tailscale SSH, you can make installing modifications ("mods") to
+games like [Celeste](https://www.celestegame.com/) a lot easier.
+Celeste is an action-platformer game where you play as pride month
+icon Madeline and you work your way up Mt. Celeste as you conquer
+Madeline's anxieties. It's widely regarded as one of the best
+platformer games ever made and has made many innovations that have
+spilled over into the rest of the industry. When games get to be that
+big, the main thing that keeps them big is the underground scene of
+modders that find new and exciting ways to use mechanics. Then
+sometimes they all get together and produce things that the original
+developers would never have thought was possible. This has happened to
+Celeste and it's brought us the [Strawberry Jam
+Collab](https://gamebanana.com/mods/424541).
+
+<HeroImage
+  src="/images/strawberry-jam-steam-deck/hero.png"
+  desc="flat colors, red hair, long hair, brown eyes, hoodie, sweatpants, backpack, mountain, climbing, strawberry"
+  width={1024}
+  height={512}
+  generator="Ligne Claire and other models"
+/>
+
+This mod won't work on consoles because you can't modify console
+games\* once they are installed on the target hardware, but remember:
+the Steam Deck is just a Linux PC. You can mod PC games. Therefore,
+you can run Strawberry Jam on your Steam deck. Today I'm going to show
+you a practical use of Tailscale SSH: copying files and running
+commands on your Steam Deck so that you can mod your games on the go.
+
+<XesiteConv name="Aoi" mood="coffee">
+  \*Okay, okay, technically you _can_ modify console games, but it's generally something that's very
+  unsupported, is regularly broken by updates on the console manufacturer side, and runs the risk of
+  getting you banned from online services in a day and age where consoles are shipping without disc
+  drives. Let's just pretend that you can't mod the console version of Celeste because the mod
+  manager doesn't run on consoles.
+</XesiteConv>
+
+## Prerequisites
+
+To follow along at home, you'll need to have the following things:
+
+- A Steam Deck or another device running SteamOS or
+  [HoloISO](https://github.com/HoloISO/holoiso) (Anbernic Win600, ROG
+  Ally, GPD devices, etc).
+- A copy of Celeste from
+  [Steam](https://store.steampowered.com/app/504230/Celeste/), or
+  [itch.io](https://mattmakesgames.itch.io/celeste).
+- A free [Tailscale](https://tailscale.com) account.
+- A desktop or laptop computer running Windows, macOS, or Linux.
+- [The Strawberry Jam mod](https://gamebanana.com/mods/424541)
+  downloaded from Gamebanana to your computer.
+
+The first step is going to be purchasing and downloading Celeste from
+your storefront of choice. I have tested this article against both the
+Steam and Itch versions of Celeste. Once it's downloaded, launch the
+game once, get past the tutorial, and then close it. This will set
+everything up so that the mods can load correctly, and it proves that
+the game works at all.
+
+Next, switch to the desktop by opening the Steam menu with the Steam
+button, going down to "Power" at the bottom, and then selecting
+"Switch to Desktop". This will open [KDE](https://kde.org/), the
+default desktop environment on SteamOS. Once that is open, download
+[tailscale.sh](https://gist.github.com/legowerewolf/1b1670457cfac9201ee9d67840952147)
+to a USB flash drive and copy it over to your Steam Deck, ideally in
+your home directory. You can also get it there by opening Firefox,
+searching for "legowerewolf Tailscale install Gist" and clicking on
+the link. Open the terminal program Konsole by going to Start ->
+System -> Konsole. When in the terminal program, you can press Steam+X
+to bring up an on-screen keyboard.
+
+If you don't have a sudo password set up yet, run the `passwd` command
+to set one. Any password is fine, even something as simple as
+`hunter2`. We won't be exposing your Deck's SSH port to the local
+network or using OpenSSH to get access, so the password should ideally
+be easy to type with the dual touchpads.
+
+Run the tailscale installer script with `sudo bash ./tailscale.sh` and
+let it think for a moment. Once it's done, maximize your terminal and
+run this command:
+
+```
+tailscale up --ssh --qr
+```
+
+This will generate a QR code that you can scan with your phone to
+authenticate you to your tailnet. Follow the normal process to join
+your Deck to your tailnet, and then you should be able to connect to
+it over SSH on your other computer. Your phone should show you the
+name of the device in the authentication flow, but it is `steamdeck`
+by default. You can change the hostname in the settings screen of game
+mode.
+
+```
+ssh deck@steamdeck
+```
+
+This will make things a lot easier.
+
+## Modding Celeste
+
+Now that we have shell access to your Deck, let's start modding
+Celeste. We will need to do the following things:
+
+- Download and install Olympus, the mod manager for Celeste
+- Use Olympus to install Everest, the mod runtime for Celeste
+- Install the Strawberry Jam mod
+
+Olympus can be downloaded from [the Celeste Mod Loader
+website](https://everestapi.github.io/#installing-everest). Download
+the .zip for Linux systems and unzip the first archive. The second
+archive is what you will need on your Deck. Run these commands on your
+computer:
+
+```
+unzip linux.main.zip
+scp dist.zip deck@steamdeck:Downloads/Olympus.zip
+```
+
+Then go back into your Deck over SSH, extract and install the Olympus
+installer:
+
+```
+ssh deck@steamdeck
+cd Downloads
+mkdir olympus
+cd olympus
+unzip ../Olympus.zip
+./install.sh
+```
+
+This will unzip olympus into its own folder and install it, setting up
+the launcher file and the URL handlers so that you can install the
+mod.
+
+Open Olympus with Start -> Games -> Olympus. Hit the "manage" button
+to select your Celeste install. It should be automatically detected.
+Then install the stable version of Everest. Once you are done, close
+Olympus and copy the Strawberry Jam file you downloaded to
+`/home/deck/.local/share/Steam/steamapps/common/Celeste/Mods` with
+scp:
+
+```
+scp strawberryjammappack_v108.zip deck@steamdeck:/home/deck/.local/share/Steam/steamapps/common/Celeste/Mods
+```
+
+This will take a moment, but when it's done you can go back into game
+mode with the icon on your desktop and start Celeste. The mod loader
+will complain about missing dependencies. Let it do its thing and you
+should end up with Celeste modded to heck and back! You'll have to
+select the Strawberry Jam mod in the bottom of the file creation
+screen.
+
+<figure className="float-none text-center">
+  <Image
+    src="/images/strawberry-jam-steam-deck/gameplay1.png"
+    width={1280}
+    height={800}
+    alt="A screenshot of Strawberry Jam gameplay, Madeline is in the lower left corner of the screen with a bird prompting her to walldash with the help of the dream gem."
+  />
+  <figcaption>
+    A screenshot of Strawberry Jam gameplay, Madeline is in the lower left corner of the screen with
+    a bird prompting her to walldash with the help of the dream gem.
+  </figcaption>
+</figure>
+
+Tailscale SSH made the installation of these mods so much simpler. You
+didn't need to type out complicated commands on the Deck. All you
+needed to do was SSH in, copy files over, and then you're off to the
+strawberry races.
+
+How do you use Tailscale SSH? What other fun things have you
+discovered in the process? Reach out to us on the Fediverse at
+[@tailscale@hachyderm.io](https://hachyderm.io/@tailscale) or post in
+our subreddit [/r/Tailscale](https://reddit.com/r/tailscale). Most
+importantly though, have fun!
