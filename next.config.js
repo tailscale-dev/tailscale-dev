@@ -13,6 +13,7 @@ const ContentSecurityPolicy = `
   media-src 'self' stream.mux.com;
   connect-src *;
   font-src 'self';
+  frame-src youtube.com www.youtube.com;
 `;
 
 const securityHeaders = [

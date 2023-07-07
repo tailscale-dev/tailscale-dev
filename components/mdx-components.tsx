@@ -9,6 +9,7 @@ import ExternalLink from './external-link';
 import { Pre } from './pre';
 import { NewsletterRepublishing } from './newsletter-republishing';
 import Image from './image';
+import Figure from './figure';
 import Warning from './warning';
 import { Question } from './question';
 import { Answer } from './answer';
@@ -32,6 +33,7 @@ export const MDXComponents: ComponentMap = {
   HeroImage,
   ConvSnippet,
   TOCInline,
+  Figure,
   NewsletterRepublishing,
   Warning: Warning,
   a: ExternalLink,
