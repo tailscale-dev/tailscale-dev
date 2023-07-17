@@ -1,7 +1,4 @@
 const { Client } = require('@elastic/elasticsearch');
-const dotenv = require('dotenv');
-
-dotenv.config({ path: '.env.elastic' }); // ignore errors
 
 const mappings = {
   dynamic: 'false',
@@ -9,6 +6,7 @@ const mappings = {
     body_content: {
       type: 'text',
       term_vector: 'with_positions_offsets',
+      analyzer: 'partial_match_analyzer',
       fields: {
         raw: {
           type: 'keyword',
@@ -23,6 +21,8 @@ const mappings = {
     },
     tags: {
       type: 'text',
+      term_vector: 'with_positions_offsets',
+      analyzer: 'partial_match_analyzer',
       fields: {
         raw: {
           type: 'keyword',
@@ -31,6 +31,8 @@ const mappings = {
     },
     title: {
       type: 'text',
+      term_vector: 'with_positions_offsets',
+      analyzer: 'partial_match_analyzer',
       fields: {
         raw: {
           type: 'keyword',
@@ -39,6 +41,8 @@ const mappings = {
     },
     summary: {
       type: 'text',
+      term_vector: 'with_positions_offsets',
+      analyzer: 'partial_match_analyzer',
       fields: {
         raw: {
           type: 'keyword',
@@ -104,6 +108,29 @@ const mappings = {
   },
 };
 
+const settings = {
+  index: {
+    number_of_shards: 1,
+    number_of_replicas: 1,
+    max_ngram_diff: 5,
+  },
+  analysis: {
+    analyzer: {
+      partial_match_analyzer: {
+        tokenizer: 'ngram_tokenizer',
+        filter: ['lowercase'],
+      },
+    },
+    tokenizer: {
+      ngram_tokenizer: {
+        type: 'ngram',
+        min_gram: 2,
+        max_gram: 6,
+      },
+    },
+  },
+};
+
 const client = new Client({
   node: {
     url: new URL(process.env.ELASTIC_URL),
@@ -114,7 +141,6 @@ const client = new Client({
   },
   maxRetries: 5,
   requestTimeout: 60000,
-  sniffOnStart: true,
 });
 
 function getCurrentDate(): string {
@@ -122,31 +148,28 @@ function getCurrentDate(): string {
   const year = now.getFullYear().toString().substr(-2);
   const month = (now.getMonth() + 1).toString().padStart(2, '0');
   const day = now.getDate().toString().padStart(2, '0');
-  const hours = now.getHours().toString().padStart(2, '0');
-  const minutes = now.getMinutes().toString().padStart(2, '0');
-  return `${month}${year}${day}${hours}${minutes}`;
+  return `${year}${month}${day}`;
 }
 
 (async () => {
   const { allBlogs } = await import('../.contentlayer/generated/index.mjs');
   const { execa } = await import('execa');
 
-  const index = `site-search-dev-blog-${getCurrentDate()}`;
+  const index = `site-search-dev-blog-${getCurrentDate()}-${
+    process.env.GITHUB_SHA ? process.env.GITHUB_SHA.substr(0, 8) : 'unknown'
+  }`;
 
   try {
     await client.indices.create({
       index,
+      mappings,
+      settings,
     });
   } catch (e) {
     if (!e.message.includes('resource_already_exists_exception')) {
       throw e;
     }
   }
-
-  await client.indices.putMapping({
-    index,
-    body: mappings,
-  });
 
   allBlogs.forEach(async (blog) => {
     const body = blog.body.raw.replace(/<\/?[^>]+(>|$)/g, '');
@@ -175,37 +198,20 @@ function getCurrentDate(): string {
     });
   });
 
-  const actions: unknown[] = [
-    {
-      add: {
-        index: index,
-        alias: 'site-search-dev-blog',
-      },
-    },
-  ];
-
-  try {
-    const aliasMeta = await client.indices.resolveIndex({
-      name: 'site-search-dev-blog',
-    });
-    console.log(aliasMeta);
-    aliasMeta.aliases[0].indices.forEach((iindex) => {
-      if (iindex == index) {
-        return;
-      }
-      actions.push({
+  await client.indices.updateAliases({
+    actions: [
+      {
         remove: {
-          index: iindex,
+          index: '*',
           alias: 'site-search-dev-blog',
         },
-      });
-    });
-  } catch (e) {
-    if (!e.message.includes('index_not_found_exception')) {
-      throw e;
-    }
-  }
-
-  console.log(actions);
-  await client.indices.updateAliases({ actions });
+      },
+      {
+        add: {
+          index,
+          alias: 'site-search-dev-blog',
+        },
+      },
+    ],
+  });
 })();
