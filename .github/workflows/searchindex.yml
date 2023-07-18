@@ -1,0 +1,26 @@
+on:
+  push:
+    branches: [main]
+jobs:
+  index:
+    name: Index documents to ElasticSearch
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Install Pandoc
+        run: sudo apt-get install pandoc
+      - name: Build site
+        run: yarn build
+      - name: Index documents
+        run: yarn ci:searchindex
+        env:
+          ELASTIC_URL: ${{ secrets.ELASTICSEARCH_URL }}
+          ELASTIC_USERNAME: ${{ secrets.ELASTICSEARCH_USERNAME }}
+          ELASTIC_PASSWORD: ${{ secrets.ELASTICSEARCH_PASSWORD }}
