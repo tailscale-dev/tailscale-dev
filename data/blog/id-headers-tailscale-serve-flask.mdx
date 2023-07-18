@@ -1,0 +1,79 @@
+---
+title: Tapping into Tailscale's identity headers with serve
+date: 2023-07-19
+authors: ['parker', 'sonia']
+tags:
+  - serve
+  - headers
+  - python
+  - flask
+  - funnel
+summary: When you use Tailscale serve to proxy requests, you can use its identity headers to change what content you serve.
+images: ['/images/id-headers-tailscale-serve-flask/social.png']
+---
+
+If you’ve got multiple users on your tailnet, or if you’ve shared a node out to multiple tailnets, you may want to serve different content based on who’s asking. For personal uses, though, implementing an actual log-in system is cumbersome and tricky to persist across devices.
+
+Under the hood, Tailscale traffic is made up of encrypted WireGuard connections. That means that every connection over your tailnet is authenticated — and that the Tailscale software running on your computer knows which user or device it’s talking to. Since version 1.44, the Tailscale `serve` process now fills this information into headers while proxying requests back to your service.
+
+(One important distinction on that point: the Tailscale software knows about every connection, but that doesn’t mean Tailscale the company does! Every Tailscale connection is end-to-end encrypted, so we can never see any of the content you transmit. We collect some limited metadata, and some features allow you to submit more information. More details are of course in our [Privacy Policy](https://tailscale.com/privacy-policy/), which is newly [available in diff form](https://tailscale.com/blog/subscribe-terms/).)
+
+Want to see these headers in action? We’ve set up a live demo at [https://id-headers-demo.pango-lin.ts.net](https://id-headers-demo.pango-lin.ts.net), served over Tailscale Funnel and `serve`. When you first access this page, you’ll be connecting over the public internet (using Funnel!), and the app won’t know who you are. The page should look something like this:
+
+<Figure
+  src="/images/id-headers-tailscale-serve-flask/funnel-view.png"
+  width={872}
+  height={443}
+  alt={`A friendly emoji cowboy greets the unknown browser.`}
+/>
+
+You can see that page lists an invite to add that machine to your tailnet. If you click the link, you can accept the invitation, and you can see that the machine now appears as a “[shared node](https://tailscale.com/kb/1084/sharing/)” on your Tailscale admin console. Now, as long as Tailscale is running on your machine, you can refresh the page at [https://id-headers-demo.pango-lin.ts.net](https://id-headers-demo.pango-lin.ts.net) and it will greet you personally. (DNS caches can occasionally be a little sticky, so you might have to refresh more than once. DNS-over-HTTPS can be even stickier, so if it still doesn’t work you may want to try a second browser!)
+
+<Figure
+  src="/images/id-headers-tailscale-serve-flask/tailnet-view.png"
+  width={880}
+  height={375}
+  alt={`A new greeting acknowledges the browser by their Tailscale log-in name.`}
+/>
+
+If you turn Tailscale off, or access from another device, you should see the original “logged out” page.
+
+This trick is accomplished in just a handful of lines of code, and all of it is [available in a repo in our GitHub community org](https://github.com/tailscale-dev/id-headers-demo). Our example code uses [Flask](https://flask.palletsprojects.com/), a popular Python web framework, but the same principles would work with whatever stack you feel most comfortable with. The important thing is that you are able to listen for incoming requests and read their headers.
+
+There’s more information in the README, but the basics are:
+
+- A very simple `listener.py` runs a Flask app that listens for requests on `127.0.0.1:5000`.
+- We use Tailscale’s `serve` command to proxy that service out to our tailnet,
+- And then Funnel to make it available on the internet. (That step is optional. If you want to try, [make sure you’ve got Funnel enabled on your account](https://tailscale.com/kb/1223/tailscale-funnel/#setup).)
+
+If you’re following along with the repo, the commands for those steps are:
+
+```
+$ python listener.py &
+$ tailscale serve https / 127.0.0.1:5000
+$ tailscale funnel 443 on
+```
+
+(Depending on your set-up, those Tailscale commands may have to be run as root, using `sudo tailscale …`.)
+
+You can check that everything is working by running `tailscale serve status`, which should produce output like this:
+
+```
+$ tailscale serve status
+# Funnel on:
+# 	- https://<your-tcd-name>.ts.net
+
+https://<your-tcd-name>.ts.net (Funnel on)
+|-- / proxy http://127.0.0.1:5000
+```
+
+The Flask app listens for incoming re quests coming through the `serve` process, and checks for the `Tailscale-User-Name` and `Tailscale-User-Login` headers, serving different content based on whether or not they’re present.
+
+A few important notes:
+
+- For security purposes, the listening service should really only be listening on localhost. Otherwise these headers could be trivially spoofed by somebody connecting to it directly.
+- Whenever you’re handling user strings, you should make sure they’re properly escaped. In our case, that’s handled by Flask and Jinja.
+
+This example is intentionally just covering the basics, but we are excited to see more people experiment with what these kinds of identity headers make possible for apps and services inside and outside of tailnets, and we’re hoping to share some exciting applications soon.
+
+How are you using Tailscale’s identity headers? Let us know on [Twitter](https://twitter.com/tailscale), [Reddit](https://www.reddit.com/r/Tailscale/), or [in the fediverse](https://hachyderm.io/@tailscale)!
