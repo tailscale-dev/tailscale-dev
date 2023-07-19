@@ -235,6 +235,7 @@ function getCurrentDate(): string {
         published_time: blog.date,
         tags: blog.tags,
         title: blog.title,
+        summary: blog.summary,
         url: blog.url,
         url_host: url.host,
         url_path: url.pathname,
