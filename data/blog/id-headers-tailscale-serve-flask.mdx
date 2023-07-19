@@ -38,7 +38,7 @@ You can see that page lists an invite to add that machine to your tailnet. If yo
   alt={`A new greeting acknowledges the browser by their Tailscale log-in name.`}
 />
 
-If you turn Tailscale off, or access from another device, you should see the original “logged out” page.
+If you turn Tailscale off, or access from another device, you should see the original “logged out” page. DNS caches may make this finicky at times. If you are uncertain if this is the case for you, either restart your browser or open another browser.
 
 This trick is accomplished in just a handful of lines of code, and all of it is [available in a repo in our GitHub community org](https://github.com/tailscale-dev/id-headers-demo). Our example code uses [Flask](https://flask.palletsprojects.com/), a popular Python web framework, but the same principles would work with whatever stack you feel most comfortable with. The important thing is that you are able to listen for incoming requests and read their headers.
 
