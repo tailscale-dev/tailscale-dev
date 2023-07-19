@@ -1,4 +1,9 @@
 import { Client as ESClient } from '@elastic/elasticsearch';
+import { allAuthors, allBlogs, Authors } from 'contentlayer/generated';
+
+const idToPost = (id: string) => allBlogs.find((p) => p.slug === id) || null;
+
+const authorFromHandle = (handle: string) => allAuthors.find((a) => a.slug === handle) || null;
 
 const client = new ESClient({
   node: {
@@ -12,12 +17,35 @@ const client = new ESClient({
   requestTimeout: 60000,
 });
 
+export interface AuthorView {
+  slug: string;
+  avatar: string;
+  name: string;
+}
+
+const authorToView = (author: Authors) => ({
+  slug: author.slug,
+  avatar: author.avatar,
+  name: author.name,
+});
+
 export interface SearchResult {
+  id: string;
   title: string;
   description: string;
   permalink: string;
   score: number;
   tags: string[];
+  summary: string;
+  date: string;
+  authors: AuthorView[];
+}
+
+export interface SearchResponse {
+  status: string;
+  error?: string;
+  query: string;
+  data: SearchResult[];
 }
 
 export default async function handler(req, resp) {
@@ -79,12 +107,22 @@ export default async function handler(req, resp) {
           return hit.fields.body_content[0].substr(0, 200);
         }
       })();
+
+      const post = idToPost(hit._id);
+      const authors = post?.authors
+        ? post?.authors.map((a) => authorFromHandle(a))
+        : [authorFromHandle('default')];
+
       data.push({
+        id: hit._id,
         title: hit.fields.title[0],
+        summary: post?.summary,
         description: desc,
+        date: new Date(post?.date).toISOString().substr(0, 10),
         permalink: hit.fields.url[0],
         score: hit._score,
         tags: hit.fields.tags,
+        authors: authors.map((a) => authorToView(a)),
       });
     });
   } catch (e) {
