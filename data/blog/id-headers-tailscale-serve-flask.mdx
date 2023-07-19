@@ -16,7 +16,7 @@ You may have heard about [Funnel](https://tailscale.com/kb/1247/funnel-serve-use
 
 However, let's take a moment to step back and think about the parts we are using here. We're connected over Tailscale. In order to authenticate with Tailscale, you have to pass a two-factor auth check, and your identity provider tells Tailscale who you are. This means there's a mapping of IP addresses to names so you can _completely bypass_ the need to find new and interesting ways to tell your application who the client is because Tailscale already knows that. Today we're going to be talking about how you can use Tailscale as your authentication system for internal services with the magic of HTTP headers.
 
-Under the hood, Tailscale traffic is made up of encrypted WireGuard connections. That means that every connection over your tailnet is authenticated — and that the Tailscale software running on your computer knows which user or device it’s talking to. Since version 1.44, the Tailscale `serve` process now fills this information into headers while proxying requests back to your service.
+Since version 1.44, the Tailscale `serve` process now fills this information into headers while proxying requests back to your service.
 
 (One important distinction on that point: the Tailscale software knows about every connection, but that doesn’t mean Tailscale the company does! Every Tailscale connection is end-to-end encrypted, so we can never see any of the content you transmit. We collect some limited metadata, and some features allow you to submit more information. More details are of course in our [Privacy Policy](https://tailscale.com/privacy-policy/), which is newly [available in diff form](https://tailscale.com/blog/subscribe-terms/).)
 
