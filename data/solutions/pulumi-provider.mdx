@@ -1,0 +1,75 @@
+---
+title: Manage Tailscale resources using Pulumi
+#slug: 1211/pulumi-provider
+date: 2022-08-30
+summary: Learn how to use the Pulumi Tailscale provider to interact with the Tailscale API.
+tags:
+  - infrastructure-as-code
+  - pulumi
+#menu:
+#  docs:
+#    identifier: pulumi-provider
+#    name: Pulumi
+#    parent: infrastructure-as-code
+#    weight: 2
+---
+
+[Pulumi][pulumi] is an infrastructure as code tool that allows you to deploy infrastructure programmatically.
+
+The [Tailscale Pulumi provider][pulumi-provider] is maintained and published in the Pulumi registry by Pulumi.
+
+### Features
+
+Use the Pulumi provider for Tailscale to:
+
+- Define your [tailnet policy file][acls], using the [`Acl` resource][acl-resource]
+- Set [DNS settings][dns], including:
+  - global nameservers, using the [`DnsNameservers` resource][dns-nameservers-resource]
+  - restricted nameservers for split DNS, using the [`DnsSearchPaths` resource][dns-search-paths-resource]
+  - enabling or disabling [MagicDNS][magicdns], using the
+    [`DnsPreferences` resource][dns-preferences-resource]
+- Generate an [auth key][auth-key], including setting whether it’s reusable, ephemeral, pre-authorized, and tagged,
+  using the [`TailnetKey` resource][key-resource]
+- Manage properties of a device, including:
+  - approving the device, using the [`DeviceAuthorization` resource][device-authorization-resource]
+  - disabling key expiry, using the [`DeviceKey` resource][device-key-resource]
+  - setting tags, using the [`DeviceTags` resource][device-tags-resource]
+  - advertising subnet routes, using the [`DeviceSubnetRoutes` resource][device-subnet-routes-resource]
+
+### Installation steps
+
+To use Pulumi with Tailscale:
+
+1. Install the package for the Tailscale Pulumi provider in [Node.js, Python, Go, or .NET][package].
+
+1. Set the Tailscale configuration for Pulumi with an [API access token](/kb/1101/api/) for Tailscale and with the name of your tailnet. You can either
+   [set these as environment variables or as part of your Pulumi configuration][config-options]. To set these in your Pulumi configuration:
+
+   ```shell
+   pulumi config set tailscale:apiKey tskey-1234567CNTRL-abcdefghijklmnopqrstu --secret
+   pulumi config set tailscale:tailnet example.com
+   ```
+
+### Support
+
+The Tailscale Pulumi provider is maintained and published in the Pulumi registry by Pulumi.
+If you have an issue or feature request, [file a GitHub issue][github-issue].
+
+[acl-resource]: https://www.pulumi.com/registry/packages/tailscale/api-docs/acl/
+[acls]: /kb/1018/acls/
+[auth-key]: /kb/1085/auth-keys/
+[config-options]: https://www.pulumi.com/registry/packages/tailscale/installation-configuration/#configuring-the-provider
+[device-authorization-resource]: https://www.pulumi.com/registry/packages/tailscale/api-docs/deviceauthorization/
+[device-key-resource]: https://www.pulumi.com/registry/packages/tailscale/api-docs/devicekey/
+[device-subnet-routes-resource]: https://www.pulumi.com/registry/packages/tailscale/api-docs/devicesubnetroutes/
+[device-tags-resource]: https://www.pulumi.com/registry/packages/tailscale/api-docs/devicetags/
+[dns-nameservers-resource]: https://www.pulumi.com/registry/packages/tailscale/api-docs/dnsnameservers/
+[dns-preferences-resource]: https://www.pulumi.com/registry/packages/tailscale/api-docs/dnspreferences/
+[dns-search-paths-resource]: https://www.pulumi.com/registry/packages/tailscale/api-docs/dnssearchpaths/
+[dns]: /kb/1054/dns/
+[github-issue]: https://github.com/pulumi/pulumi-tailscale/issues
+[key-resource]: https://www.pulumi.com/registry/packages/tailscale/api-docs/tailnetkey/
+[magicdns]: /kb/1081/magicdns/
+[package]: https://github.com/pulumi/pulumi-tailscale/blob/master/README.md#installing
+[pulumi-provider]: https://www.pulumi.com/registry/packages/tailscale/
+[pulumi]: https://www.pulumi.com/

@@ -14,6 +14,8 @@ import Warning from './warning';
 import { Question } from './question';
 import { Answer } from './answer';
 import XesiteConv from './xesite-conv';
+import DownloadTailscale from './download-tailscale';
+import { Note } from './note';
 
 export const Wrapper = ({ layout, content, ...rest }: MDXLayout) => {
   const Layout = require(`../layouts/${layout}`).default;
@@ -31,6 +33,8 @@ export const BlockQuote = ({ children }: { children: ReactNode }) => {
 export const MDXComponents: ComponentMap = {
   Image,
   HeroImage,
+  DownloadTailscale,
+  Note,
   ConvSnippet,
   TOCInline,
   Figure,
