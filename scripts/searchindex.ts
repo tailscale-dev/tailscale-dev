@@ -181,7 +181,7 @@ function getCurrentDate(): string {
     const url = new URL(blog.url);
     await client.index({
       index,
-      id: blog.slug,
+      id: `blog/${blog.slug}`,
       body: {
         body_content: result.stdout,
         id: blog.path,
