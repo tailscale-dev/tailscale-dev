@@ -16,7 +16,7 @@ If you want to share an application with the whole internet, chances are you'll 
 
 You may have heard about [Funnel](https://tailscale.com/kb/1247/funnel-serve-use-cases/), a secure tunnel that lets you share local services over the internet. Did you know Tailscale can also help you share those services privately? [Tailscale Serve](https://tailscale.com/kb/1242/tailscale-serve/) exposes local services to your tailnet (and behind the scenes, it's what powers Funnel connections). Serve and Funnel work together to serve private traffic to your tailnet and public traffic to the internet.
 
-Even better, for traffic that's served with Tailscale Serve, you've got all the parts you need to skip the hard work of login. Traffic is connected through Tailscale, which means it is an authenticated Wireguard connection with a known user. The Tailscale software on your computer knows who it's talking to—now you just need to get that info up to your application.
+Even better, for traffic that's served with Tailscale Serve, you've got all the parts you need to skip the hard work of login. Traffic is connected through Tailscale, which means it is an authenticated WireGuard connection with a known user. The Tailscale software on your computer knows who it's talking to—now you just need to get that info up to your application.
 
 Since version 1.44, the Tailscale Serve process fills identity information into headers while proxying requests back to your service. Today we're going to be talking about how you can use Tailscale as your authentication system for internal services with the magic of HTTP headers.
 
@@ -45,8 +45,8 @@ This trick is accomplished in just a handful of lines of code, and all of it is 
 There’s more information in the README, but the basics are:
 
 - A very simple `listener.py` runs a Flask app that listens for requests on `127.0.0.1:5000`.
-- We use Tailscale’s `serve` command to proxy that service out to our tailnet,
-- And then Funnel to make it available on the internet. (That step is optional. If you want to try, [make sure you’ve got Funnel enabled on your account](https://tailscale.com/kb/1223/tailscale-funnel/#setup).)
+- We use Tailscale’s `serve` command to proxy that service out to our tailnet.
+- And then Funnel to make it available on the internet. (That step is optional. If you want to try, [make sure you’ve got Funnel enabled on your tailnet](https://tailscale.com/kb/1223/tailscale-funnel/#setup).)
 
 If you’re following along with the repo, the commands for those steps are:
 
