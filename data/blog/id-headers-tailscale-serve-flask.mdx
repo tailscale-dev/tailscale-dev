@@ -12,17 +12,13 @@ summary: When you use Tailscale serve to proxy requests, you can use its identit
 images: ['/images/id-headers-tailscale-serve-flask/social.png']
 ---
 
-If you've got an application you want to share with the whole internet, chances are you'll have to implement some kind of login system. But login systems are fraught with peril, and are one of the most complicated things that we programmers have to implement over and over and over again. It's especially frustrating when you don't actually need to expose the application to the whole internet; say, a service you only want to share with friends or co-workers.
+If you want to share an application with the whole internet, chances are you'll have to implement some kind of login system. But login systems are fraught with peril, and are one of the most complicated things that we programmers have to implement over and over and over again. And it's frustrating when you don't actually need to expose the application to the whole internet—say, a service you only want to share with friends or co-workers.
 
-You may have heard about [Funnel](https://tailscale.com/kb/1247/funnel-serve-use-cases/), a secure tunnel that lets you share local services over the internet. Did you know Tailscale can also help you share those services privately? [Tailscale Serve](https://tailscale.com/kb/1242/tailscale-serve/) exposes local services to your tailnet (and behind the scenes, it's what powers Funnel connections).
+You may have heard about [Funnel](https://tailscale.com/kb/1247/funnel-serve-use-cases/), a secure tunnel that lets you share local services over the internet. Did you know Tailscale can also help you share those services privately? [Tailscale Serve](https://tailscale.com/kb/1242/tailscale-serve/) exposes local services to your tailnet (and behind the scenes, it's what powers Funnel connections). Serve and Funnel work together to serve private traffic to your tailnet and public traffic to the internet.
 
-Funnel and Serve work together to serve public traffic to the internet and private traffic to your tailnet. But for traffic served over Tailscale Serve, you've got all the parts you need to skip the hard work of login.
+Even better, for traffic that's served with Tailscale Serve, you've got all the parts you need to skip the hard work of login. Traffic is connected through Tailscale, which means it is an authenticated Wireguard connection with a known user. The Tailscale software on your computer knows who it's talking to—now you just need to get that info up to your application.
 
-We're connected over Tailscale. In order to authenticate with Tailscale, you have to pass a two-factor auth check, and your identity provider tells Tailscale who you are. This means every connection comes with a username, so you can _completely bypass_ the need to find new and interesting ways to tell your application who the client is. Tailscale already knows!
-
-Since version 1.44, the Tailscale Serve process now fills this information into headers while proxying requests back to your service. Today we're going to be talking about how you can use Tailscale as your authentication system for internal services with the magic of HTTP headers.
-
-(One important distinction on that point: the Tailscale software knows about every connection, but that doesn’t mean Tailscale the company does! Every Tailscale connection is end-to-end encrypted, so we can never see any of the content you transmit. We collect some limited metadata, and some features allow you to submit more information. More details are of course in our [Privacy Policy](https://tailscale.com/privacy-policy/), which is newly [available in diff form](https://tailscale.com/blog/subscribe-terms/).)
+Since version 1.44, the Tailscale Serve process fills identity information into headers while proxying requests back to your service. Today we're going to be talking about how you can use Tailscale as your authentication system for internal services with the magic of HTTP headers.
 
 Want to see these headers in action? We’ve set up a live demo at [https://id-headers-demo.pango-lin.ts.net](https://id-headers-demo.pango-lin.ts.net), served over Tailscale Funnel and `serve`. When you first access this page, you’ll be connecting over the public internet (using Funnel!), and the app won’t know who you are. The page should look something like this:
 
@@ -33,7 +29,7 @@ Want to see these headers in action? We’ve set up a live demo at [https://id-h
   alt={`A friendly emoji cowboy greets the unknown browser.`}
 />
 
-You can see that page lists an invite to add that machine to your tailnet. If you click the link, you can accept the invitation, and you can see that the machine now appears as a “[shared node](https://tailscale.com/kb/1084/sharing/)” on your Tailscale admin console. Now, as long as Tailscale is running on your machine, you can refresh the page at [https://id-headers-demo.pango-lin.ts.net](https://id-headers-demo.pango-lin.ts.net) and it will greet you personally. (DNS caches can occasionally be a little sticky, so you might have to refresh more than once. DNS-over-HTTPS can be even stickier, so if it still doesn’t work you may want to try a second browser!)
+You can see that page lists an invite to add that machine to your tailnet. If you click the link, you can accept the invitation, and you can see that the machine now appears as a “[shared node](https://tailscale.com/kb/1084/sharing/)” on your Tailscale admin console. Now, as long as Tailscale is running on your machine, you can refresh the page at [https://id-headers-demo.pango-lin.ts.net](https://id-headers-demo.pango-lin.ts.net) and it will greet you personally. (DNS caching can make this a little finicky: If it didn't work for you after a hard refresh or two, you may need to restart your browser or try in a different one.)
 
 <Figure
   src="/images/id-headers-tailscale-serve-flask/tailnet-view.png"
@@ -42,7 +38,7 @@ You can see that page lists an invite to add that machine to your tailnet. If yo
   alt={`A new greeting acknowledges the browser by their Tailscale log-in name.`}
 />
 
-If you turn Tailscale off, or access from another device, you should see the original “logged out” page. DNS caches may make this finicky at times. If you are uncertain if this is the case for you, either restart your browser or open another browser.
+If you turn Tailscale off, or access from another device, you should see the original “logged out” page.
 
 This trick is accomplished in just a handful of lines of code, and all of it is [available in a repo in our GitHub community org](https://github.com/tailscale-dev/id-headers-demo). Our example code uses [Flask](https://flask.palletsprojects.com/), a popular Python web framework, but the same principles would work with whatever stack you feel most comfortable with. The important thing is that you are able to listen for incoming requests and read their headers.
 
