@@ -1,6 +1,6 @@
 ---
-title: Tapping into Tailscale's identity headers with Serve
-date: 2023-07-19
+title: Tapping into Tailscale’s identity headers with Serve
+date: 2023-07-20
 authors: ['parker', 'sonia']
 tags:
   - serve
@@ -76,6 +76,6 @@ A few important notes:
 - For security purposes, the listening service should really only be listening on localhost. Otherwise these headers could be trivially spoofed by somebody connecting to it directly.
 - Whenever you’re handling user strings, you should make sure they’re properly escaped. In our case, that’s handled by Flask and Jinja.
 
-This example is intentionally just covering the basics, but we are excited to see more people experiment with what these kinds of identity headers make possible for apps and services inside and outside of tailnets, and we’re hoping to share some exciting applications soon.
+If you're still reading, you may be interested in our previous discussion on how to get identity information from Tailscale, using the [`tsnet` library in a Go program](https://tailscale.com/blog/tsnet-virtual-private-services/). Today's example is intentionally just covering the basics, but we are excited to see more people experiment with what these kinds of identity headers make possible for apps and services inside and outside of tailnets, and we’re hoping to share some exciting applications soon.
 
 How are you using Tailscale’s identity headers? Let us know on [Twitter](https://twitter.com/tailscale), [Reddit](https://www.reddit.com/r/Tailscale/), or [in the fediverse](https://hachyderm.io/@tailscale)!
