@@ -1,0 +1,81 @@
+---
+title: Tapping into Tailscale’s identity headers with Serve
+date: 2023-07-20
+authors: ['parker', 'sonia']
+tags:
+  - serve
+  - headers
+  - python
+  - flask
+  - funnel
+summary: When you use Tailscale serve to proxy requests, you can use its identity headers to change what content you serve.
+images: ['/images/id-headers-tailscale-serve-flask/social.png']
+---
+
+If you want to share an application with the whole internet, chances are you'll have to implement some kind of login system. But login systems are fraught with peril, and are one of the most complicated things that we programmers have to implement over and over and over again. And it's frustrating when you don't actually need to expose the application to the whole internet—say, a service you only want to share with friends or co-workers.
+
+You may have heard about [Funnel](https://tailscale.com/kb/1247/funnel-serve-use-cases/), a secure tunnel that lets you share local services over the internet. Did you know Tailscale can also help you share those services privately? [Tailscale Serve](https://tailscale.com/kb/1242/tailscale-serve/) exposes local services to your tailnet (and behind the scenes, it's what powers Funnel connections). Serve and Funnel work together to serve private traffic to your tailnet and public traffic to the internet.
+
+Even better, for traffic that's served with Tailscale Serve, you've got all the parts you need to skip the hard work of login. Traffic is connected through Tailscale, which means it is an authenticated WireGuard connection with a known user. The Tailscale software on your computer knows who it's talking to—now you just need to get that info up to your application.
+
+Since version 1.44, the Tailscale Serve process fills identity information into headers while proxying requests back to your service. Today we're going to be talking about how you can use Tailscale as your authentication system for internal services with the magic of HTTP headers.
+
+Want to see these headers in action? We’ve set up a live demo at [https://id-headers-demo.pango-lin.ts.net](https://id-headers-demo.pango-lin.ts.net), served over Tailscale Funnel and `serve`. When you first access this page, you’ll be connecting over the public internet (using Funnel!), and the app won’t know who you are. The page should look something like this:
+
+<Figure
+  src="/images/id-headers-tailscale-serve-flask/funnel-view.png"
+  width={872}
+  height={443}
+  alt={`A friendly emoji cowboy greets the unknown browser.`}
+/>
+
+You can see that page lists an invite to add that machine to your tailnet. If you click the link, you can accept the invitation, and you can see that the machine now appears as a “[shared node](https://tailscale.com/kb/1084/sharing/)” on your Tailscale admin console. Now, as long as Tailscale is running on your machine, you can refresh the page at [https://id-headers-demo.pango-lin.ts.net](https://id-headers-demo.pango-lin.ts.net) and it will greet you personally. (DNS caching can make this a little finicky: If it didn't work for you after a hard refresh or two, you may need to restart your browser or try in a different one.)
+
+<Figure
+  src="/images/id-headers-tailscale-serve-flask/tailnet-view.png"
+  width={880}
+  height={375}
+  alt={`A new greeting acknowledges the browser by their Tailscale log-in name.`}
+/>
+
+If you turn Tailscale off, or access from another device, you should see the original “logged out” page.
+
+This trick is accomplished in just a handful of lines of code, and all of it is [available in a repo in our GitHub community org](https://github.com/tailscale-dev/id-headers-demo). Our example code uses [Flask](https://flask.palletsprojects.com/), a popular Python web framework, but the same principles would work with whatever stack you feel most comfortable with. The important thing is that you are able to listen for incoming requests and read their headers.
+
+There’s more information in the README, but the basics are:
+
+- A very simple `listener.py` runs a Flask app that listens for requests on `127.0.0.1:5000`.
+- We use Tailscale’s `serve` command to proxy that service out to our tailnet.
+- And then Funnel to make it available on the internet. (That step is optional. If you want to try, [make sure you’ve got Funnel enabled on your tailnet](https://tailscale.com/kb/1223/tailscale-funnel/#setup).)
+
+If you’re following along with the repo, the commands for those steps are:
+
+```
+$ python listener.py &
+$ tailscale serve https / 127.0.0.1:5000
+$ tailscale funnel 443 on
+```
+
+(Depending on your set-up, those Tailscale commands may have to be run as root, using `sudo tailscale …`.)
+
+You can check that everything is working by running `tailscale serve status`, which should produce output like this:
+
+```
+$ tailscale serve status
+# Funnel on:
+# 	- https://<your-tcd-name>.ts.net
+
+https://<your-tcd-name>.ts.net (Funnel on)
+|-- / proxy http://127.0.0.1:5000
+```
+
+The Flask app listens for incoming requests coming through the `serve` process, and checks for the `Tailscale-User-Name` and `Tailscale-User-Login` headers, serving different content based on whether or not they’re present.
+
+A few important notes:
+
+- For security purposes, the listening service should really only be listening on localhost. Otherwise these headers could be trivially spoofed by somebody connecting to it directly.
+- Whenever you’re handling user strings, you should make sure they’re properly escaped. In our case, that’s handled by Flask and Jinja.
+
+If you're still reading, you may be interested in our previous discussion on how to get identity information from Tailscale, using the [`tsnet` library in a Go program](https://tailscale.com/blog/tsnet-virtual-private-services/). Today's example is intentionally just covering the basics, but we are excited to see more people experiment with what these kinds of identity headers make possible for apps and services inside and outside of tailnets, and we’re hoping to share some exciting applications soon.
+
+How are you using Tailscale’s identity headers? Let us know on [Twitter](https://twitter.com/tailscale), [Reddit](https://www.reddit.com/r/Tailscale/), or [in the fediverse](https://hachyderm.io/@tailscale)!
