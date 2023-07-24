@@ -12,6 +12,7 @@
     "precommit": "lint-staged",
     "lint": "next lint --fix",
     "prepare": "husky install",
+    "ci:indexjanitor": "node ./scripts/indexjanitor.js",
     "ci:searchindex": "ts-node ./scripts/searchindex.ts"
   },
   "dependencies": {
