@@ -1,3 +1,5 @@
+import { allSolutions } from 'contentlayer/generated';
+
 const { Client } = require('@elastic/elasticsearch');
 
 const defaultMapping = {
@@ -237,6 +239,34 @@ function getCurrentDate(): string {
         title: blog.title,
         summary: blog.summary,
         url: blog.url,
+        url_host: url.host,
+        url_path: url.pathname,
+        url_path_dir1: url.pathname.split('/')[1],
+        url_path_dir2: url.pathname.split('/')[2],
+        url_path_dir3: url.pathname.split('/')[3],
+      },
+    });
+  });
+
+  allSolutions.forEach(async (solution) => {
+    const body = solution.body.raw.replace(/<\/?[^>]+(>|$)/g, '');
+    const process = execa('pandoc', ['-f', 'markdown', '-t', 'plain', '--wrap=none']);
+    process.stdin.write(body);
+    process.stdin.end();
+    const result = await process;
+
+    const url = new URL(solution.url);
+    await client.index({
+      index,
+      id: `solutions/${solution.slug}`,
+      body: {
+        body_content: result.stdout,
+        id: solution.path,
+        published_time: solution.date,
+        tags: solution.tags,
+        title: solution.title,
+        summary: solution.summary,
+        url: solution.url,
         url_host: url.host,
         url_path: url.pathname,
         url_path_dir1: url.pathname.split('/')[1],

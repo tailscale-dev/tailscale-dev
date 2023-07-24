@@ -1,0 +1,78 @@
+---
+title: Access Crunchy Bridge privately using Tailscale
+date: 2022-12-15
+#slug: 1231/crunchy-bridge
+summary: Learn how to connect to your Crunchy Bridge database over Tailscale.
+#menu:
+#  docs:
+#    identifier: crunchy-bridge
+#    name: Crunchy Bridge
+#    parent: database
+---
+
+[Crunchy Bridge][crunchy-bridge] is a managed Postgres service run in major cloud provides such as
+Amazon Web Services, Microsoft Azure, and Google Cloud Platform. It is built by the company
+[Crunchy Data][crunchy-data]. Each Crunchy Bridge instance lives in its own virtual private cloud
+(VPC). The Tailscale integration for Crunchy Bridge allows users to connect to their Crunchy Bridge
+cluster securely for clouds where there are no VPCs, or directly where VPC peering doesn't make
+sense, for example, for testing.
+
+### Prerequisites
+
+Before you begin this guide, you’ll need a tailnet and a Crunchy Bridge account.
+
+- For information about creating a tailnet, see the [Tailscale quickstart][tailscale-quickstart].
+
+- For information about creating a Crunchy Bridge account, see [Crunchy Bridge][crunchy-bridge].
+
+### Integration
+
+See the full instructions in Crunchy Data's [blog post][crunchy-blog-post] for setting up an
+integration with Tailscale.
+
+To use Crunchy Bridge with Tailscale, you'll need to:
+
+1. Create an [auth key][auth-key]. You need to be an
+   [Owner, Admin, or Network Admin][roles] of a tailnet in order to create an auth key.
+   To create the key, open the [**Keys**][keys-page] page in the Tailscale admin console. We
+   recommend using a tagged reusable pre-authorized key for this purpose. A [tagged][tagged] key
+   restricts the Crunchy Bridge device’s permissions based on the [access control list][acls] rules
+   for the tag that will apply as soon as the device is provisioned. A reusable key is useful in
+   retry connection logic, and pre-authorized so that every new instance doesn't need to be authorized.
+
+<Note>
+  **Be very careful with reusable keys!** These can be very dangerous if stolen. They're best kept
+  in a key vault product specially designed for the purpose.
+</Note>
+
+1. In the Crunchy Bridge dashboard for managing your cluster, click **Networking** and then click
+   **Tailscale**. For **Auth Key**, paste in the auth key that you previously created.
+
+1. Click **Connect Tailscale**.
+
+1. Open the [**Machines**][machines] page of the Tailscale admin console. After the connection
+   initializes, you should see the Crunchy Bridge cluster device in your tailnet. Copy the
+   Tailscale IP address, which is in the form [`100.x.y.x` format][ip-address].
+
+1. Use the Tailscale IP address when you connect to your Crunchy Bridge cluster. For example, if the
+   Tailscale IP address is the `100.101.102.103` and you're using port `5432`:
+
+   ```
+   psql postgres://application:<your-application-id>@100.101.102.103:5432/postgres
+   ```
+
+### Limitations
+
+- Auth keys expire after 90 days.
+
+[acls]: /kb/1018/acls/
+[auth-key]: /kb/1085/auth-keys/
+[crunchy-blog-post]: https://www.crunchydata.com/blog/crunchy-bridge-with-tailscale
+[crunchy-bridge]: https://www.crunchydata.com/products/crunchy-bridge
+[crunchy-data]: https://www.crunchydata.com/
+[ip-address]: /kb/1155/terminology-and-concepts/#tailscale-ip-address
+[keys-page]: https://login.tailscale.com/admin/settings/keys
+[machines]: https://login.tailscale.com/admin/machines
+[roles]: /kb/1138/user-roles/
+[tagged]: /kb/1068/acl-tags
+[tailscale-quickstart]: /kb/1017/install/

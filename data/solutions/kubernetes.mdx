@@ -1,0 +1,228 @@
+---
+title: Tailscale on Kubernetes
+date: 2022-02-03
+#slug: 1185/kubernetes
+summary: Learn how to connect Kubernetes and Tailscale together.
+tags:
+  - containers
+  - kubernetes
+#menu:
+#  docs:
+#    identifier: kubernetes
+#    name: Kubernetes
+#    parent: serverless
+---
+
+Kubernetes is a popular method for deploying, scaling, and managing containerized
+applications. There are many ways you can run Tailscale in inside a Kubernetes Cluster,
+e.g., as a sidecar, as a proxy, or as a subnet router. This doc shows several common ways.
+
+### Tailscale's managed Docker image
+
+Tailscale has a published Docker image that Tailscale manages and builds from source. It's available in [Docker Hub](https://hub.docker.com/r/tailscale/tailscale) and [GitHub Packages](https://github.com/orgs/tailscale/packages/container/package/tailscale), just run:
+
+```bash
+docker pull tailscale/tailscale:latest
+```
+
+or
+
+```bash
+docker pull ghcr.io/tailscale/tailscale:latest
+```
+
+The current version of the `Makefile` required for the examples in this doc is in the [tailscale repo](https://github.com/tailscale/tailscale/blob/main/docs/k8s/Makefile).
+
+### Prerequisites
+
+You can follow the examples in this doc by cloning from GitHub. For example:
+
+```bash
+gh repo clone tailscale/tailscale
+cd tailscale/docs/k8s
+```
+
+### Setup
+
+1. (Optional) You can choose to use an [auth key][auth keys] to automate your container logging in
+   to your tailnet. Create an auth key in the [**Keys**][auth keys page] page of the admin console.
+   We recommend using an [ephemeral key][ephemeral node] for this purpose, since it will
+   automatically clean up devices after they shut down. We also recommend using a
+   [reusable key][reusable key] so when containers are stopped and started they can still connect to
+   your tailnet.
+
+<br />
+<Image
+  alt="Tailscale's auth key generation page"
+  className="bordered"
+  width={800}
+  height={1156}
+  src="/images/solutions/kubernetes/ephemeral-keys.png"
+/>
+
+If you don't provide the key, you can still authenticate by logging in at the URL provided in logs when using the container image below.
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tailscale-auth
+stringData:
+  TS_AUTHKEY: tskey-0123456789abcdef
+```
+
+1. Build and push the container
+
+   ```bash
+   export IMAGE_TAG=tailscale-k8s:latest
+   make push
+   ```
+
+1. Tailscale (v1.16 or later) supports storing state inside a
+   [Kubernetes Secret](https://kubernetes.io/docs/concepts/configuration/secret/).
+
+   Configure role-based access control (RBAC) to allow the Tailscale pod to read/write the `tailscale` secret.
+
+   ```bash
+   export SA_NAME=tailscale
+   export TS_KUBE_SECRET=tailscale-auth
+   make rbac
+   ```
+
+### Sample Sidecar
+
+Running as a sidecar allows you to directly expose a Kubernetes pod over Tailscale. This is particularly useful if you do not wish to expose a service on the public internet. This method allows bi-directional connectivity between the pod and other devices on the tailnet. You can use [ACLs][acls] to control traffic flow.
+
+1. Create and login to the sample nginx pod with a Tailscale sidecar:
+
+   ```bash
+   make sidecar
+   # If not using an auth key, authenticate by grabbing the Login URL here:
+   kubectl logs nginx ts-sidecar
+   ```
+
+1. Check if you can connect to nginx over Tailscale:
+
+   ```bash
+   curl http://nginx
+   ```
+
+   Or, if you have [MagicDNS][magicdns] disabled:
+
+   ```bash
+   curl "http://$(tailscale ip -4 nginx)"
+   ```
+
+### Userspace Sidecar
+
+You can also run the sidecar in [userspace networking mode][userspace]. The obvious benefit is reducing the amount of permissions Tailscale needs to run. The downside is that for outbound connectivity from the pod to the tailnet you would need to use either the [SOCKS5 proxy or HTTP proxy][socks5 vs http].
+
+1. Create and login to the sample nginx pod with a Tailscale sidecar:
+
+   ```bash
+   make userspace-sidecar
+   # If not using an auth key, authenticate by grabbing the Login URL here:
+   kubectl logs nginx ts-sidecar
+   ```
+
+1. Check if you can connect to nginx over Tailscale:
+
+   ```bash
+   curl http://nginx
+   ```
+
+   Or, if you have [MagicDNS][magicdns] disabled:
+
+   ```bash
+   curl "http://$(tailscale ip -4 nginx)"
+   ```
+
+### Sample Proxy
+
+Running a Tailscale proxy allows you to provide inbound connectivity to a Kubernetes Service.
+
+1. Provide the `ClusterIP` of the service you want to reach by either:
+
+   **Creating a new deployment**
+
+   ```bash
+   kubectl create deployment nginx --image nginx
+   kubectl expose deployment nginx --port 80
+   export TS_DEST_IP="$(kubectl get svc nginx -o=jsonpath='{.spec.clusterIP}')"
+   ```
+
+   **Using an existing service**
+
+   ```bash
+   export TS_DEST_IP="$(kubectl get svc <SVC_NAME> -o=jsonpath='{.spec.clusterIP}')"
+   ```
+
+1. Deploy the proxy pod:
+
+   ```bash
+   make proxy
+   # If not using an auth key, authenticate by grabbing the Login URL here:
+   kubectl logs proxy
+   ```
+
+1. Check if you can connect to nginx over Tailscale:
+
+   ```bash
+   curl http://proxy
+   ```
+
+   Or, if you have [MagicDNS][magicdns] disabled:
+
+   ```bash
+   curl "http://$(tailscale ip -4 proxy)"
+   ```
+
+### Subnet Router
+
+Running a Tailscale [subnet router][subnets] allows you to access the entire Kubernetes cluster network (assuming NetworkPolicies allow) over Tailscale.
+
+1. Identify the Pod/Service CIDRs that cover your Kubernetes cluster. These will vary depending on [which CNI](https://kubernetes.io/docs/concepts/cluster-administration/networking/) you are using and on the Cloud Provider you are using. Add these to the `TS_ROUTES` variable as comma-separated values.
+
+   ```bash
+   SERVICE_CIDR=10.20.0.0/16
+   POD_CIDR=10.42.0.0/15
+   export TS_ROUTES=$SERVICE_CIDR,$POD_CIDR
+   ```
+
+1. Deploy the subnet-router pod.
+
+   ```bash
+   make subnet-router
+   # If not using an auth key, authenticate by grabbing the Login URL here:
+   kubectl logs subnet-router
+   ```
+
+1. In the [**Machines**][machines page] page of the admin console, ensure that the routes for the subnet-router are enabled.
+
+1. Make sure that any client you want to connect from has `--accept-routes` enabled.
+
+1. Check if you can connect to a `ClusterIP` or a `PodIP` over Tailscale:
+
+   ```bash
+   # Get the Service IP
+   INTERNAL_IP="$(kubectl get svc <SVC_NAME> -o=jsonpath='{.spec.clusterIP}')"
+   # or, the Pod IP
+   # INTERNAL_IP="$(kubectl get po <POD_NAME> -o=jsonpath='{.status.podIP}')"
+   INTERNAL_PORT=8080
+   curl http://$INTERNAL_IP:$INTERNAL_PORT
+   ```
+
+### Optional: Add DNS information
+
+By default, we do not set DNS for containers. To enable [MagicDNS][magicdns] for a Kubernetes container, you will need to export `TS_ACCEPT_DNS=true` in the environment.
+
+[acls]: /kb/1018/acls/
+[auth keys]: /kb/1085/auth-keys/
+[auth keys page]: https://login.tailscale.com/admin/settings/keys
+[ephemeral node]: /kb/1111/ephemeral-nodes
+[machines page]: https://login.tailscale.com/admin/machines
+[magicdns]: /kb/1081/magicdns/
+[reusable key]: /kb/1085/auth-keys/#types-of-auth-keys
+[socks5 vs http]: /kb/1112/userspace-networking/#socks5-vs-http
+[subnets]: /kb/1019/subnets/
+[userspace]: /kb/1112/userspace-networking/
