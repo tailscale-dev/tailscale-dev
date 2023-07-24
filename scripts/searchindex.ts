@@ -1,5 +1,3 @@
-import { allSolutions } from 'contentlayer/generated';
-
 const { Client } = require('@elastic/elasticsearch');
 
 const defaultMapping = {
@@ -201,7 +199,7 @@ function getCurrentDate(): string {
 }
 
 (async () => {
-  const { allBlogs } = await import('../.contentlayer/generated/index.mjs');
+  const { allBlogs, allSolutions } = await import('../.contentlayer/generated/index.mjs');
   const { execa } = await import('execa');
 
   const index = `site-search-dev-blog-${getCurrentDate()}-${
