@@ -56,41 +56,67 @@ export default async function handler(req, resp) {
     const results = await client.search({
       index: 'site-search-dev-blog',
       from: 0,
-      size: 10,
+      size: 20,
       highlight: {
-        pre_tags: ['<em>'],
-        post_tags: ['</em>'],
+        fragment_size: 300,
+        number_of_fragments: 1,
+        type: 'plain',
+        highlight_query: {
+          multi_match: {
+            query: q,
+            fields: [
+              'body_content.prefix^1.0',
+              'body_content.stem^1.0',
+              'title.prefix^1.0',
+              'title.stem^1.0',
+              'summary.prefix^1.0',
+              'summary.stem^1.0',
+            ],
+          },
+        },
+        order: 'score',
         require_field_match: false,
         fields: {
-          body_content: {
-            fragment_size: 200,
-            number_of_fragments: 1,
+          'body_content.prefix': {
+            fragment_size: 150,
+            no_match_size: 150,
+          },
+          'title.prefix': {
+            fragment_size: 150,
+            no_match_size: 150,
+          },
+          'summary.prefix': {
+            fragment_size: 150,
+            no_match_size: 150,
           },
         },
       },
       fields: ['title', 'url', 'tags', 'body_content'],
       query: {
         bool: {
-          should: [
+          must: [
             {
-              match: {
-                title: {
-                  query: q,
-                  boost: 2,
-                },
-              },
-            },
-            {
-              match: {
-                body_content: {
-                  query: q,
-                  boost: 1,
-                },
-              },
-            },
-            {
-              match: {
-                tags: q,
+              multi_match: {
+                query: q,
+                fields: [
+                  'title^1.0',
+                  'title.delimiter^0.4',
+                  'title.joined^0.75',
+                  'title.prefix^0.1',
+                  'title.stem^0.95',
+                  'body_content^1.0',
+                  'body_content.delimiter^0.4',
+                  'body_content.joined^0.75',
+                  'body_content.prefix^0.1',
+                  'body_content.stem^0.95',
+                  'summary^1.0',
+                  'summary.delimiter^0.4',
+                  'summary.joined^0.75',
+                  'summary.prefix^0.1',
+                  'summary.stem^0.95',
+                ],
+                type: 'cross_fields',
+                minimum_should_match: '1<-1 3<49%',
               },
             },
           ],
