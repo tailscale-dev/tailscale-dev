@@ -109,6 +109,13 @@ export default async function handler(req, resp) {
       })();
 
       const post = idToPost(hit._id);
+      if (post === null) {
+        // XXX(Xe): This should never happen, but sometimes it can when you have an old tree
+        // checked out locally. We should probably do something better here, but this will
+        // work for now.
+        return;
+      }
+
       const authors = post?.authors
         ? post?.authors.map((a) => authorFromHandle(a))
         : [authorFromHandle('default')];

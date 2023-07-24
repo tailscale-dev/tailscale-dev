@@ -4,11 +4,13 @@ import { PageSEO } from '@/components/seo';
 import { useEffect, useState } from 'react';
 import { SearchResponse, SearchResult } from './api/search';
 import NoSSRWrapper from '@/components/no-ssr-wrapper';
+import Tag from '@/components/tag';
+import { DateDisplay } from '@/components/date-display';
 
-const SearchResult = (item: SearchResult) => {
+const SearchHit = (item: SearchResult) => {
   const names = item.authors.map((author) => author.name).join(' and ');
   return (
-    <div className="my-4 flex space-x-4 rounded-md border border-solid border-gray-200 bg-gray-100 p-3 dark:border-gray-700  dark:bg-gray-800">
+    <div className="mx-auto my-4 max-w-lg flex space-x-4 rounded-md border border-solid border-gray-200 bg-gray-100 p-3 dark:border-gray-700  dark:bg-gray-800">
       <div className="flex h-16 w-16 shrink-0 items-center justify-center self-center overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-700">
         {item.authors.map((author) => (
           <Image
@@ -21,12 +23,21 @@ const SearchResult = (item: SearchResult) => {
         ))}
       </div>
       <div className="conversation-chat min-w-0 self-center">
-        <Link className="text-blue-600 dark:text-blue-300 text-lg" href={item.permalink}>
+        <Link
+          className="text-blue-600 dark:text-blue-300 text-xl font-bold leading-8 tracking-tight hover:underline hover:text-blue-500 dark:hover:text-blue-400 dark:hover:text-blue-500 dark:hover:underline dark:hover:bg-gray-700 dark:hover:bg-opacity-10 rounded-"
+          href={item.permalink}
+        >
           {item.title}
         </Link>
         <br />
-        <span className="text-gray-500 dark:text-gray-400">
-          by {names} on {item.date}
+        <span>
+          by {names} on <DateDisplay dateString={item.date} />
+        </span>
+        <br />
+        <span className="uppercase font-mono">
+          {item.tags.map((tag) => (
+            <Tag key={tag} text={tag} />
+          ))}
         </span>
         <br />
         <span>{item.summary}</span>
@@ -58,7 +69,7 @@ const getBrowserQuery = () => {
   return url.searchParams.get('q') || '';
 };
 
-const Spinner = () => (
+export const Spinner = () => (
   <>
     <div className="flex my-4 items-center justify-center w-full h-56 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
       <div role="status">
@@ -123,8 +134,9 @@ export default function Search() {
       <header className="bg-gray-900 py-20 text-center text-gray-100">
         <h1 className="mb-4 text-4xl font-medium tracking-tight">Search</h1>
       </header>
+      <noscript>Sorry, this needs JavaScript enabled to work!</noscript>
       <NoSSRWrapper>
-        <div className="max-w-lg mx-auto">
+        <div className="max-w-2xl mx-auto">
           <div className="space-x-2 pt-6 pb-8 md:space-y-5">
             <input
               className="border border-gray-300 rounded-md px-4 py-2 w-full"
@@ -142,10 +154,25 @@ export default function Search() {
           )}
           <p>
             {searchTerm === '' && <span>Enter some terms to search!</span>}
-            {searchResults.length === 0 && searchTerm !== '' && !loading && (
+            {searchResults && searchResults.length === 0 && searchTerm !== '' && !loading && (
               <span>No results found for {searchTerm}</span>
             )}
-            <ul>{searchResults.map((item) => SearchResult(item))}</ul>
+            <ul>
+              {searchResults &&
+                searchResults.map((item) => (
+                  <>
+                    {SearchHit(item)}
+                    {/* {ListItem({
+                    slug: item.id,
+                    path: item.permalink,
+                    title: item.title,
+                    date: item.date,
+                    summary: item.description || item.summary,
+                    tags: item.tags,
+                  })} */}
+                  </>
+                ))}
+            </ul>
           </p>
         </div>
       </NoSSRWrapper>
