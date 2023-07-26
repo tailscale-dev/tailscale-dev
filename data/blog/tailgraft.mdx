@@ -1,0 +1,179 @@
+---
+title: Grafting Tailscale onto the Pi
+date: 2023-07-14
+authors: ['xe']
+summary: Skip all the overhead and get to using your Raspberry Pi ASAP with Tailscale.
+tags:
+  - Raspberry Pi
+  - Ubuntu
+  - cloud-init
+images: ['/images/tailgraft/social.jpg']
+---
+
+Imagine this scenario: you're setting up that Raspberry Pi you were
+finally able to get your hands on after years of them being literal
+unobtanium, you look at the device, and then at your cables in pure
+despair. The Raspberry Pi 4 has two HDMI ports, but they're not normal
+HDMI. They're micro-HDMI and you don't have adaptors. Oh, you can
+figure out the IP address in your DHCP table, and then you could go
+through and connect over SSH, get told you need to change your
+password, get kicked out, and then reconnect. Then you can get around
+to installing Tailscale or whatever.
+
+This does work, but it is insufficiently magic for our needs. What if
+you could just turn your Pi on and have it magically appear on your
+tailnet? Keep reading, because that's exactly what we're gonna cover
+today: grafting Tailscale into your Raspberry Pi with the magic of the
+cloud.
+
+<HeroImage
+  src="/images/tailgraft/hero.png"
+  desc="A green-haired chibi character in the style of Animal Crossing wearing a hoodie and sitting on a log in an idyllic forest with a blue sky during summer."
+  width={1024}
+  height={512}
+  generator="Anything v3+Tanuki"
+/>
+
+## Setup
+
+So let's put all this together. First you need to download a few
+things:
+
+- Ubuntu Server for the Raspberry Pi:
+  https://ubuntu.com/download/raspberry-pi
+- Etcher to burn the image to your SD card: https://etcher.balena.io/
+
+Then open Etcher and load the Ubuntu image. Select your SD card as the
+target and then hit the "Flash!" button. After entering your sudo
+password, let it cook. It may take up to 15 minutes depending on the
+grade of flash in your card, how your SD card reader connects to your
+computer, and the current phase of the moon.
+
+Once that's done, eject the SD card and plug it back in. In Finder,
+you should see a volume called `system-boot` that has a file named
+`user-data` in it. Now download the `tailgraft.py` script [from
+GitHub](https://github.com/tailscale-dev/tailgraft) and put it in your
+Downloads folder. Then open a terminal window and run `tailgraft.py`
+as root:
+
+```
+sudo python3 tailgraft.py
+```
+
+<details>
+  <summary>Windows users</summary>
+
+If you're running this on Windows, your best bet is going to be
+
+</details>
+
+It'll ask you a few questions, but be sure to give it an
+[authkey](https://login.tailscale.com/admin/settings/keys) so that
+your Pi can join your tailnet on boot. This is a place where having
+[ACL tags](https://tailscale.com/kb/1068/acl-tags/) can be useful,
+especially if you tag it with something like `tag:exit` so that you
+can limit access to it.
+
+When it's done, eject your SD card and plug your Pi into ethernet and
+power. It will take a while to boot and converge (usually 15 minutes
+at most), but when it's done it will show up in your tailnet.
+
+Now for the real magic, you can directly SSH into it without a
+password using [Tailscale SSH](https://tailscale.com/tailscale-ssh/).
+If your Pi is named `mincemeat`, you can run this command:
+
+```
+ssh ubuntu@mincemeat
+```
+
+No passwords or keys required! You can do whatever you like from here
+from setting up [Tailscale
+Serve](https://tailscale.com/kb/1242/tailscale-serve/) to point to a
+local [Gitea](https://gitea.io) install, setting up an internal wiki,
+or anything you can imagine. You can even expose things to the public
+internet with [Funnel](https://tailscale.dev/blog/funnel-101).
+
+<ConvSnippet authors={props.authorDetails} name="Xe Iaso">
+  If you chose to make your Pi an exit node, you will need to [confirm that in the admin
+  console](https://tailscale.com/kb/1103/exit-nodes/#step-2-allow-the-exit-node-from-the-admin-console).
+  Once you've done that, you can enable the exit node in the Tailscale menulet, system tray icon, or
+  in the app.
+</ConvSnippet>
+
+## How it works
+
+Now that you have your Pi set up, let's take a moment to learn how
+this all works and why I said it's using the magic of the cloud.
+
+When you set up an instance in AWS or a droplet in Digital Ocean, you
+don't usually just get dumped a username and password and told "good
+luck". There's ways to pre-load SSH keys and other configuration via
+the "user data" field. This allows you to use everyone's favorite
+configuration language to tell the platform how it should mangle the
+base image to your needs: YAML. This is powered by
+[cloud-init](https://cloud-init.io/), a tragically under-documented
+critical part of the modern internet.
+
+Now you may be wondering something like:
+
+<XesiteConv name="Aoi" mood="wut">
+  Okay, wait. You just said that we're going to be using Ubuntu on a Raspberry Pi in order to do
+  this. How is the cloud relevant?
+</XesiteConv>
+
+It's relevant beacuse the Ubuntu Raspberry Pi images ships with
+cloud-init! This lets you steal the YAML fire from the cloud gods so
+that you can assimilate your pi into your tailnet. Not to mention,
+it's actually possible to buy Raspberry Pi boards without having to
+sign over your kidneys or hunting them out from scalpers like we did
+with PS5s.
+
+> And when Prometheus stole the YAML from the gods, they cried out
+> "NO!". But Prometheus did not understand, for all he heard was
+> "false".
+
+### cloud-init installs Tailscale
+
+One of the things cloud-init offers is the `runcmd` block. This allows
+you to make a list of arbitrary shell commands that are run as root
+some time after boot. Here's an example `runcmd` block that the shell
+script makes:
+
+```yaml
+runcmd:
+  - ['sh', '-c', 'curl -fsSL https://tailscale.com/install.sh | sh']
+  - [
+      'sh',
+      '-c',
+      "echo 'net.ipv4.ip_forward = 1' | sudo tee -a /etc/sysctl.d/99-tailscale.conf && echo 'net.ipv6.conf.all.forwarding = 1' | sudo tee -a /etc/sysctl.d/99-tailscale.conf && sudo sysctl -p /etc/sysctl.d/99-tailscale.conf",
+    ]
+  - ['tailscale', 'up', '--ssh', '--advertise-exit-node', '--authkey=changeme', '--hostname=ubuntu']
+  - ['sh', '-c', 'sudo hostnamectl hostname ubuntu']
+```
+
+This automatically installs Tailscale, enables the [sysctl settings
+for IP forwarding on
+Linux](https://tailscale.com/kb/1103/exit-nodes/#step-1-advertise-a-device-as-an-exit-node),
+authenticates you to Tailscale, and sets the hostname using
+[`hostnamectl`](https://man7.org/linux/man-pages/man1/hostnamectl.1.html).
+When your Pi boots, it will run all of these commands and this should
+result in Tailscale activating on boot.
+
+<ConvSnippet authors={props.authorDetails} name="Xe Iaso">
+You can use the same basic user data commands for spinning up new Digital Ocean droplets or Google Cloud instances. cloud-init has [a lot of other functionality](https://cloudinit.readthedocs.io/en/latest/reference/examples.html) including:
+
+- Pulling an Ansible playbook and running it on boot
+- Installing arbitrary packages
+- Creating user accounts for other people in your tailnet
+- Importing SSH public keys from GitHub
+- Writing arbitrary files to the disk
+
+and even more! Feel free to experiment with this, you'll probably find something you'll love in the process.
+
+</ConvSnippet>
+
+Let us know what you do with your Pi by mentioning us
+[@tailscale@hachyderm.io](https://hachyderm.io/@tailscale) on the
+Fediverse, [@tailscale](https://twitter.com) on Twitter, or
+[@tailscale.com](https://bsky.app/profile/tailscale.com) on Bluesky!
+We'd love to hear about the fun you get up to.
