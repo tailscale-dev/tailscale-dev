@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@code-hike/mdx": "^0.8.0",
-    "@elastic/elasticsearch": "^8.8.0",
+    "@elastic/elasticsearch": "^8.9.0",
     "@next/bundle-analyzer": "13.0.2",
     "@next/font": "13.0.2",
     "autoprefixer": "^10.4.14",
