@@ -1,6 +1,6 @@
 ---
 title: Grafting Tailscale onto the Pi
-date: 2023-07-14
+date: 2023-07-27
 authors: ['xe']
 summary: Skip all the overhead and get to using your Raspberry Pi ASAP with Tailscale.
 tags:
@@ -60,13 +60,6 @@ as root:
 sudo python3 tailgraft.py
 ```
 
-<details>
-  <summary>Windows users</summary>
-
-If you're running this on Windows, your best bet is going to be
-
-</details>
-
 It'll ask you a few questions, but be sure to give it an
 [authkey](https://login.tailscale.com/admin/settings/keys) so that
 your Pi can join your tailnet on boot. This is a place where having
@@ -99,6 +92,17 @@ internet with [Funnel](https://tailscale.dev/blog/funnel-101).
   Once you've done that, you can enable the exit node in the Tailscale menulet, system tray icon, or
   in the app.
 </ConvSnippet>
+
+<span id="howitworks"></span>
+
+<details>
+  <summary>Windows users</summary>
+
+If you're running this on Windows, your best bet is going to be
+manually editing the `user-data` file as specified in the [how this
+works](#howitworks) section of the article. Sorry!
+
+</details>
 
 ## How it works
 
@@ -150,6 +154,10 @@ runcmd:
   - ['tailscale', 'up', '--ssh', '--advertise-exit-node', '--authkey=changeme', '--hostname=ubuntu']
   - ['sh', '-c', 'sudo hostnamectl hostname ubuntu']
 ```
+
+<ConvSnippet authors={props.authorDetails} name="Xe Iaso">
+  If you're using Windows, this is the key thing to copy into the `user-data` file.
+</ConvSnippet>
 
 This automatically installs Tailscale, enables the [sysctl settings
 for IP forwarding on
