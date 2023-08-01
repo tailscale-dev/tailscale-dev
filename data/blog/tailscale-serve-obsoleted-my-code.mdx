@@ -1,0 +1,217 @@
+---
+title: 'Tailscale Serve obsoleted my code'
+date: 2023-08-04
+authors: ['xe']
+summary: "The new HTTP headers in Tailscale Serve are great and they made a bunch of Xe's code irrelevant. Here's how."
+tags:
+  - tsnet
+  - Tailscale Serve
+  - Grafana
+images: ['/images/tailscale-serve-obsoleted-my-code/social.jpg']
+---
+
+You can simplify the entire philosophical field of
+[metaphysics](https://en.wikipedia.org/wiki/Metaphysics) (the kind
+where you study the fundamental natures of reality, not the kind with
+The Spoop™️) to answering the following two questions in as much detail
+as possible:
+
+- What is there?
+- What is it like?
+
+There's many conflicting theories as to how you do this and overall
+every major group has their own views as to how to answer these two
+questions using complicated concepts like "postulate" and
+"invalidate".
+
+In the same way, you can simplify the entire process of authentication
+(the kind where you study the fundamental natures of who is on the
+other side of the connection, not the kind with acronym soup and
+buzzwords) to the following two questions:
+
+- Where is the user coming from?
+- Is the user the same person as the last time?
+
+There's many conflicting theories as to how you do this and overall
+every major group has their own views as to how to answer these
+questions using complicated concepts like "cryptographic signatures"
+and "identity management".
+
+<HeroImage
+  src="/images/tailscale-serve-obsoleted-my-code/hero.jpg"
+  desc="A grassy trail in Berlin with a lovely summer vibe, there is some tasteful graffiti to help color the fence on the left side. Photo by Xe Iaso, 2023."
+  width={1024}
+  height={512}
+/>
+
+There has to be an easier way, right? What if it was just as easy as
+reading HTTP headers?
+
+## Identity over Tailscale: the classic approach
+
+However, with Tailscale's authenticated and identity validated peer to
+peer WireGuard mesh network we can throw all that out and replace the
+authentication process with these simple steps:
+
+- Have your application listen over Tailscale
+- Do a [WhoIs localapi
+  lookup](https://pkg.go.dev/tailscale.com@v1.46.1/client/tailscale#LocalClient.WhoIs)
+  on every incoming request
+- Annotate requests with that and use it to derive permissions, audit
+  log entries, or whatever
+
+In essence, the native Tailscale way to do authentication is to use
+Tailscale as an authentication service. This is fine, and it works
+well enough that we use it in production for internal dashboards,
+audit log entries, and other fun things like that.
+
+<Warning>
+  This does not include authorization logic. That should always be a separate step done by other
+  two-factor auth challenges.
+</Warning>
+
+The key takeaway here is that using the Tailscale Serve identity
+headers is infinitely more easy than poking the WhoIs localapi route
+directly. I have a few things on my home network that do
+authentication "the old way" that I am going to need to adapt to this
+brave new Tailscale future. Now if only I had the time to do this.
+
+However, it's very easy to mess things up by forgetting to make the
+WhoIs request. This also means that if your service needs to pass
+authentication credentials down the line for some reason, you need to
+remember to annotate the requests with Tailscale information, and
+overall it's kind of a mess that's easy to screw up.
+
+<span className="p-2"></span>
+<div className="border-l-2 border-gray-300 text-xl font-semibold bg-gray-200 pb-[1.5ex] pt-0.5 px-4 text-gray-900 dark:bg-gray-800 dark:text-gray-50 md:max-w-lg">
+  Code you don't write is code you can't forget to write.
+</div>
+
+Not to mention the WhoIs API call is presented as a HTTP server
+listening to a UNIX socket. UNIX sockets are like normal network
+sockets, but instead of Internet Protocol addresses as targets, they
+use special entries in the filesystem called sockets. In order to make
+that WhoIs call, your language of choice has to have an HTTP client
+that is able to connect to UNIX sockets. This works fine in Go
+(because the standard library HTTP client is basically infinitely
+hackable due to some clever API design), but not out of the box in
+Ruby, Node, Deno, Python, and Rust.
+
+So this does work, but it's language-dependent and if you get unlucky
+you get to pull in all of libcurl to make a single HTTP request to a
+single UNIX socket and then have to live with having multiple HTTP
+clients linked into your app.
+
+## Tailscale as a middleware
+
+At the moment you probably view Tailscale as a networking layer for
+your applications because it is a networking product. Let's think
+about it another way. Let's think about Tailscale as a middleware for
+your applications that decorates requests with identity information so
+that you can protect your internal tooling. This is a very subtle
+change, but fully grokking this has fundamentally changed the way I
+look at Tailscale.
+
+<span className="p-2"></span>
+<div className="border-l-2 border-gray-300 text-xl font-semibold bg-gray-200 pb-[1.5ex] pt-0.5 px-4 text-gray-900 dark:bg-gray-800 dark:text-gray-50 md:max-w-lg">
+  Any language with an HTTP server can read information out of HTTP headers. Not every language with
+  an HTTP client can connect to a UNIX socket.
+</div>
+
+When Tailscale added [HTTP identity
+headers](https://tailscale.dev/blog/id-headers-tailscale-serve-flask)
+recently, this means that Tailscale can be your _middleware_. This
+makes it impossible to forget or mess up. This obsoleted a bunch of my
+public and private code. However, the biggest one was a tool
+imaginatively called `proxy-to-grafana`.
+
+## proxy-to-grafana
+
+Last year Will and I collaborated on a tool called
+`proxy-to-grafana`, it lets you have Grafana use Tailscale as
+its authentication mechanism. This was originally intended to be one
+of the first examples of how tsnet could be used in new and
+interesting ways: to let you make services [_part of your
+tailnet_](https://tailscale.dev/blog/tsup-tsnet) instead of just things
+that live adjacent to it. It was effectively an adaptor between tsnet,
+Go's standard library HTTP server, Tailscale identity data, and Go's
+standard library HTTP reverse proxy along with instructions on how to
+use this with Grafana.
+
+Here's how to obviate `proxy-to-grafana` with Tailscale Serve:
+
+First, install Grafana [like
+normal](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-grafana-on-ubuntu-20-04),
+and then edit the `/etc/grafana/grafana.ini` with the following block
+of data:
+
+```ini
+[auth.proxy]
+enabled = true
+header_name = Tailscale-User-Login
+header_property = username
+auto_sign_up = true
+sync_ttl = 60
+whitelist = 127.0.0.1
+headers = Email:Tailscale-User-Login, Name:Tailscale-User-Name
+enable_login_token = true
+```
+
+Then enable Tailscale serve with this command:
+
+```
+tailscale serve https:443 / http://127.0.0.1:3000
+```
+
+After doing that and restarting Grafana, follow the rest of the steps
+[in the original
+article](https://tailscale.com/blog/grafana-auth/#locking-down-grafana)
+to lock down and harden Grafana. Please note that you will want to
+access your Grafana installation over Tailscale Serve at least once
+and then promote that user to admin via the raw HTTP port before you
+fully lock down Grafana. You may want to do the following pivot
+process:
+
+- Enable auth proxy support in Grafana
+- Restart Grafana
+- Access Grafana over Tailscale Serve
+- Disable auth proxy support in Grafana
+- Log in as admin
+- Promote your other user to admin
+- Enable auth proxy support in Grafana
+- Restart Grafana
+
+If you don't do this, you have a good chance of accidentally locking
+yourself out of your Grafana server. This may not be convenient in
+many configurations and can be annoying to recover from. It will
+require some SQLite hacking and overall it's just easier to do it the
+way I spelled out.
+
+<XesiteConv name="Aoi" mood="wut">
+  Okay, you've sold me. What's the catch though? This sounds a bit too good to be true. Surely
+  there's some things that still need you to do authentication the old way.
+</XesiteConv>
+
+<ConvSnippet authors={props.authorDetails} name="Xe Iaso">
+  Yep, if you use a tsnet app, you'll need to do things the "old way". I'm sure that it could be
+  done as a middleware at the tsnet level, but for right now the main way you can read this is to
+  use the `tailscale serve` command, which also currently limits you to a single HTTPS service on
+  port 443. You can listen on other ports though, it just becomes increasingly less magic as you do
+  this. This is a known issue across Tailscale and something that we really need to fix for once and
+  for all.
+</ConvSnippet>
+
+With all this in mind, let's go back to those questions I asked at the
+beginning of the article.
+
+- **Where is the user coming from?**<br />The user is coming from your
+  tailnet because Tailscale uses a peer-to-peer WireGuard mesh.
+- **How do you know it's the same user as last time?**<br />Tailscale
+  tells you who that user is because Tailscale already knows who you
+  are.
+
+Let us know what you do with the Tailscale Serve headers by mentioning
+us [@tailscale@hachyderm.io](https://hachyderm.io/@tailscale) on the
+Fediverse, [@tailscale](https://twitter.com) on Twitter, or
+[@tailscale.com](https://bsky.app/profile/tailscale.com) on Bluesky!
+We'd love to hear about the fun you get up to.
