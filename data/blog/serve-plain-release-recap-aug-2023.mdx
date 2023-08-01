@@ -1,0 +1,59 @@
+---
+title: 'Serving it plain: Release Recap August 2023'
+date: 2023-08-01
+authors: ['parker']
+tags:
+  - release recap
+  - serve
+  - headers
+  - iOS
+summary: Tailscale Serve over plain HTTP, identity headers, and an iOS redesign in this month's Release Recap.
+images: ['/images/serve-plain-release-recap-aug-2023/social.png']
+---
+
+We’re always shipping new features and fixes at Tailscale — so much so that sometimes [the changelog](https://tailscale.com/changelog/) can get a little overwhelming! This blog post is the first entry in a new series called Release Recap that aims to grab a handful of updates from the last month or so and highlight what they actually mean for developers.
+
+This month’s updates are all written by me, Parker, but we’re keeping the blurbs signed and you might get more perspectives from different teams here in coming months. And if you’d like to share how you’re using a newly released Tailscale feature, get in touch at devrel@tailscale.com, on [Twitter](https://twitter.com/tailscale), or on the [fediverse](https://hachyderm.io/@tailscale), and we may include your story in a future post.
+
+### Serve to your tailnet over plain HTTP with Tailscale Serve
+
+**Parker**: Most of the time when you’re running an HTTP server, you want to serve over HTTPS — especially with Tailscale making Let’s Encrypt certificates easy and automatic. But there are times you want plain unencrypted HTTP, and now that’s possible within your tailnet. For example, the following [Tailscale Serve](https://tailscale.com/kb/1242/tailscale-serve/) command:
+
+```
+tailscale serve http / text:"serving over HTTP!"
+```
+
+will serve that text to your tailnet from the machine you run it on.
+
+But why plain HTTP when it's so easy to set up HTTPS? A big reason is that you can use the device’s machine name to access it from other devices, either in your browser’s address bar or with tools like curl. It’s nifty to be able to make the outputs of scripts or personal dashboards accessible at a memorable location like `pi`.
+
+Plus, the traffic is still encrypted, because Tailscale traffic is made up of WireGuard connections under the hood. Your application just doesn't know about the encryption because it's done a layer below the connection. Some applications really do care though, and that's why we have HTTPS and TLS support just a few keyboard clicks away.
+
+### Read identity info from Tailscale Serve connections
+
+**Parker**: Tailscale Serve is the easiest way to proxy a service available on localhost out to your tailnet. And since connections within a tailnet are authenticated WireGuard sessions, Tailscale already knows who’s accessing it. Wouldn’t it be great if you could tap into that identity information — to make your applications part of your tailnet instead of just being applications that just so happen to be accessed through your tailnet?
+
+Have I got news for you! In Tailscale 1.44 and later, [identity information is populated into HTTP headers](https://tailscale.com/kb/1247/funnel-serve-use-cases/#use-serve-as-an-identity-proxy) that are included with requests proxied from Tailscale Serve. If your service or web app looks for those headers, it can piggyback on Tailscale’s identity layer without any additional plug-ins or anything. And since this identity layer is tied to the underlying Tailscale user, it works between different browser sessions, operating systems, and even devices.
+
+We built a [small demo to show this feature in action](https://tailscale.dev/blog/id-headers-tailscale-serve-flask): It’s a simple web app that you can first access over the internet with Funnel, and then add to your tailnet to see how it can use the headers.
+
+In case some of this sounds familiar, we’ve written before about [using Tailscale as an auth proxy](https://tailscale.com/blog/tsnet-virtual-private-services/). But that required using the tsnet library or otherwise accessing Tailscale’s whois service. Now that it’s in the HTTP request itself, developers have easier access to our identity info than ever before. Any web framework can read HTTP headers.
+
+### Easy ping and exit node access from the new iOS app
+
+**Parker**: If you use the Tailscale app for iOS, you’ve probably already noticed that [it got a major redesign](https://tailscale.com/blog/reimagining-tailscale-for-ios/) with version 1.46. If you use an iOS device but haven’t yet installed Tailscale on it, now’s the time.
+
+<figure>
+  <video playsInline muted loop autoPlay>
+    <source
+      type="video/mp4"
+      src="https://stream.mux.com/0200EeDFFyn47n2IvYN1AnlmSWP8nOUFLd/high.mp4"
+    />
+  </video>
+</figure>
+
+There are visual changes that make the app nicer to use, and a couple of workflow changes to make commonly used features more prominent. Of interest to developers will be the easier access to exit node management and the simple toggle for your most recently accessed node. Connect a few exit nodes in different countries or continents and you’re just a few clicks from being able to test your mobile web app from around the world.
+
+Plus, you can now ping machines right from the main panel, which will make debugging network connections for remote devices that much simpler.
+
+Thanks for reading our inaugural Release Recap. Did we miss a new Tailscale feature you’d like to hear more about? Hit us up on [Twitter](https://twitter.com/tailscale) or the [fediverse](https://hachyderm.io/@tailscale) with your feedback!
