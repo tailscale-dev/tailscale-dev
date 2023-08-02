@@ -2,7 +2,7 @@ import Link from 'next/link';
 import React from 'react';
 import { useRouter } from 'next/router';
 
-export default function Breadcrumbs({ titleMap = {} }) {
+export default function Breadcrumbs({ titleMap = {}, includeThisPage = true }) {
   const router = useRouter();
 
   function generateBreadcrumbs() {
@@ -20,14 +20,17 @@ export default function Breadcrumbs({ titleMap = {} }) {
   }
 
   const breadcrumbs = generateBreadcrumbs();
+  if (!includeThisPage) {
+    breadcrumbs.pop();
+  }
 
   return (
-    <nav className="container px-5 py-3" aria-label="Breadcrumb">
+    <div className="container px-5 py-3 border-none" aria-label="Breadcrumb">
       <ol aria-label="breadcrumb" className="inline-flex items-center space-x-1 md:space-x-3">
         <li className="inline-flex items-center">
           <Link
             href="/"
-            className="inline-flex items-center text-sm font-medium  hover:text-blue-600 dark:hover:text-white"
+            className="inline-flex items-center text-md font-medium  hover:text-blue-600 dark:hover:text-white"
           >
             <svg
               aria-hidden="true"
@@ -45,7 +48,7 @@ export default function Breadcrumbs({ titleMap = {} }) {
           <Crumb {...crumb} key={idx} last={idx === breadcrumbs.length - 1} />
         ))}
       </ol>
-    </nav>
+    </div>
   );
 }
 

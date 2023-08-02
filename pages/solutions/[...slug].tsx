@@ -6,7 +6,7 @@ import { InferGetStaticPropsType } from 'next';
 import { allAuthors, allSolutions } from 'contentlayer/generated';
 import type { Solution } from 'contentlayer/generated';
 
-const DEFAULT_LAYOUT = 'post-layout';
+const DEFAULT_LAYOUT = 'solution-layout';
 
 export async function getStaticPaths() {
   return {
