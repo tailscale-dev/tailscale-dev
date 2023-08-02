@@ -49,9 +49,9 @@ reading HTTP headers?
 
 ## Identity over Tailscale: the classic approach
 
-However, with Tailscale's authenticated and identity validated peer to
-peer WireGuard mesh network we can throw all that out and replace the
-authentication process with these simple steps:
+However, with Tailscale's authenticated and identity validated
+peer-to-peer WireGuard mesh network we can throw all that out and
+replace the authentication process with these simple steps:
 
 - Have your application listen over Tailscale
 - Do a [WhoIs localapi
@@ -87,15 +87,18 @@ overall it's kind of a mess that's easy to screw up.
   Code you don't write is code you can't forget to write.
 </div>
 
-Not to mention the WhoIs API call is presented as a HTTP server
-listening to a UNIX socket. UNIX sockets are like normal network
-sockets, but instead of Internet Protocol addresses as targets, they
-use special entries in the filesystem called sockets. In order to make
-that WhoIs call, your language of choice has to have an HTTP client
-that is able to connect to UNIX sockets. This works fine in Go
-(because the standard library HTTP client is basically infinitely
-hackable due to some clever API design), but not out of the box in
-Ruby, Node, Deno, Python, and Rust.
+Not to mention the fact that localapi (the service that backs those
+WhoIs requests) is an HTTP server that listens on a UNIX socket. This
+means that you need to have an HTTP client that can connect to UNIX
+sockets. This is not a problem in Go, but it is a problem in other
+languages. UNIX sockets are like normal network sockets, but instead
+of Internet Protocol addresses as targets, they use special entries
+in the filesystem called sockets. In order to make that WhoIs call,
+your language of choice has to have an HTTP client that is able to
+connect to UNIX sockets. This works fine in Go (because the standard
+library HTTP client is basically infinitely hackable due to some
+clever API design), but not out of the box in Ruby, Node, Deno,
+Python, and Rust.
 
 So this does work, but it's language-dependent and if you get unlucky
 you get to pull in all of libcurl to make a single HTTP request to a
