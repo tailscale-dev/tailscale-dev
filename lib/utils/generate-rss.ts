@@ -4,6 +4,7 @@ import GithubSlugger from 'github-slugger';
 import { escape } from './html-escaper';
 import type { MDXAuthor, MDXBlog } from './contentlayer';
 import { getAllTags } from './contentlayer';
+import { convertDateTimezone } from './date';
 
 interface CoreConfig {
   title: string;
@@ -31,8 +32,9 @@ const generateRss = (
   allAuthors: MDXAuthor[],
   posts: MDXBlog[],
   page = 'feed.xml'
-) =>
-  `<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+) => {
+  const now = convertDateTimezone(new Date(), 'America/New_York');
+  return `<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
       <title>${escape(config.title)}</title>
       <link>${config.siteUrl}/blog</link>
@@ -41,7 +43,7 @@ const generateRss = (
       <lastBuildDate>${new Date(posts[0].date).toUTCString()}</lastBuildDate>
       <atom:link href="${config.siteUrl}/${page}" rel="self" type="application/rss+xml"/>
       ${posts
-        .filter((post) => new Date(post.date) <= new Date())
+        .filter((post) => new Date(post.date) <= now)
         .map((post) => {
           const authorList = post.authors || ['default'];
           const authorDetails = authorList.map((author) => {
@@ -54,6 +56,7 @@ const generateRss = (
     </channel>
   </rss>
 `;
+};
 
 export async function generateRSS(
   config: CoreConfig,
