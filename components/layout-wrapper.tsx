@@ -7,6 +7,8 @@ import ThemeSwitch from './theme-switch';
 import { ReactNode } from 'react';
 import { TailscaleLogo } from '@/components/tailscale-logo';
 import MobileNav from './mobile-nav';
+import { useRouter } from 'next/router';
+import SearchBar from './search-bar';
 
 interface Props {
   children: ReactNode;
@@ -18,7 +20,14 @@ const inter = Inter({
   variable: '--font-inter',
 });
 
+// When these pages are loaded, we want to hide the search bar.
+const searchBarForbiddenPaths = ['/search', '/blog', '/solutions', '/tags/[tag]'];
+
 const LayoutWrapper = ({ children }: Props) => {
+  const router = useRouter();
+
+  const noSearch = searchBarForbiddenPaths.includes(router.pathname);
+
   return (
     <div className={`${inter.variable} font-sans`}>
       <nav className="SiteNavigation bg-gray-900 text-gray-100">
@@ -36,7 +45,7 @@ const LayoutWrapper = ({ children }: Props) => {
                   <Link
                     key={link.title}
                     href={link.href}
-                    className="px-3 font-medium  transition-colors duration-200 hover:text-gray-600"
+                    className="px-3 font-medium transition-colors duration-200 hover:text-gray-600"
                   >
                     <span>{link.title}</span>
                     {link.href.startsWith('http') && (
@@ -46,6 +55,16 @@ const LayoutWrapper = ({ children }: Props) => {
                 </li>
               ))}
             </ul>
+            {noSearch ? (
+              <></>
+            ) : (
+              <div className="px-3 pt-8 w-sm sm:invisible md:visible">
+                <SearchBar />
+              </div>
+            )}
+            <div className="px-3 pt-8 sm:visible md:invisible">
+              <Link href="/search">Search</Link>
+            </div>
           </div>
           <div className="ml-auto hidden pt-8 md:block">
             <ul className="flex items-center">
