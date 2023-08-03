@@ -157,22 +157,7 @@ export default function Search() {
             {searchResults && searchResults.length === 0 && searchTerm !== '' && !loading && (
               <span>No results found for {searchTerm}</span>
             )}
-            <ul>
-              {searchResults &&
-                searchResults.map((item) => (
-                  <>
-                    {SearchHit(item)}
-                    {/* {ListItem({
-                    slug: item.id,
-                    path: item.permalink,
-                    title: item.title,
-                    date: item.date,
-                    summary: item.description || item.summary,
-                    tags: item.tags,
-                  })} */}
-                  </>
-                ))}
-            </ul>
+            <ul>{searchResults && searchResults.map((item) => <>{SearchHit(item)}</>)}</ul>
           </p>
         </div>
       </NoSSRWrapper>
