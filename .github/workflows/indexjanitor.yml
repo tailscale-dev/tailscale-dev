@@ -1,0 +1,24 @@
+name: 'Clean up old ElasticSearch indices'
+on:
+  schedule:
+    - cron: '42 0 * * *'
+jobs:
+  cleanup:
+    name: 'Do the cleanup'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Run cleanup
+        run: yarn ci:indexjanitor
+        env:
+          DRY_RUN: 'false'
+          ELASTIC_URL: ${{ secrets.ELASTICSEARCH_URL }}
+          ELASTIC_USERNAME: ${{ secrets.ELASTICSEARCH_USERNAME }}
+          ELASTIC_PASSWORD: ${{ secrets.ELASTICSEARCH_PASSWORD }}

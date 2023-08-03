@@ -110,6 +110,33 @@ export const PronounSet = defineNestedType(() => ({
   },
 }));
 
+export const Solutions = defineDocumentType(() => ({
+  name: 'Solution',
+  filePathPattern: 'solutions/**/*.mdx',
+  contentType: 'mdx',
+  fields: {
+    title: { type: 'string', required: true },
+    tags: { type: 'list', of: { type: 'string' }, default: [] },
+    date: { type: 'date', required: true },
+    summary: { type: 'string', required: true },
+    authors: { type: 'list', of: { type: 'string' } },
+    draft: { type: 'boolean' },
+    layout: { type: 'string' },
+  },
+  computedFields: {
+    ...computedFields,
+    url: {
+      type: 'string',
+      resolve: (doc) => `${siteMetadata.siteUrl}/${doc._raw.flattenedPath}`,
+    },
+    displayDate: {
+      type: 'string',
+      resolve: (doc) => (doc.displayDate ? doc.displayDate : doc.date),
+    },
+    readingTime: { type: 'json', resolve: (doc) => readingTime(doc.body.raw) },
+  },
+}));
+
 export const Authors = defineDocumentType(() => ({
   name: 'Authors',
   filePathPattern: 'authors/**/*.mdx',
@@ -138,7 +165,7 @@ export const Authors = defineDocumentType(() => ({
 
 export default makeSource({
   contentDirPath: 'data',
-  documentTypes: [Blog, Authors, Events],
+  documentTypes: [Blog, Authors, Events, Solutions],
   mdx: {
     cwd: process.cwd(),
     remarkPlugins: [

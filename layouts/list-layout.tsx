@@ -5,6 +5,7 @@ import type { Blog } from 'contentlayer/generated';
 import Link from 'next/link';
 import { ListItem } from '@/components/list-item';
 import SearchBar from '@/components/search-bar';
+import { convertDateTimezone } from '@/lib/utils/date';
 
 interface PaginationProps {
   totalPages: number;
@@ -63,6 +64,10 @@ export default function ListLayout({
   initialDisplayPosts = [],
   pagination,
 }: ListLayoutProps) {
+  const now = convertDateTimezone(new Date(), 'America/New_York');
+
+  initialDisplayPosts = initialDisplayPosts.filter((post) => new Date(post.date) <= now);
+
   // If initialDisplayPosts exist, display it if no searchValue is specified
   const displayPosts = posts || initialDisplayPosts;
 

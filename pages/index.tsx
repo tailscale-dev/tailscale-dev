@@ -2,11 +2,12 @@ import React from 'react';
 import Link from 'next/link';
 import { PageSEO } from '@/components/seo';
 import { siteMetadata } from '@/data/site-metadata';
-import { sortedBlogPost, allCoreContent, sortedFutureEventPosts } from '@/lib/utils/contentlayer';
+import { allCoreContent, sortedBlogPost, sortedFutureEventPosts } from '@/lib/utils/contentlayer';
 import { InferGetStaticPropsType } from 'next';
 import { allBlogs, allEvents } from 'contentlayer/generated';
 import type { Blog, Events } from 'contentlayer/generated';
 import { ListItem } from '@/components/list-item';
+import { convertDateTimezone } from '@/lib/utils/date';
 
 const MAX_EVENTS_DISPLAY = 3;
 const MAX_POSTS_DISPLAY = 5;
@@ -21,6 +22,7 @@ export const getStaticProps = async () => {
 };
 
 export default function Home({ posts, events }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const now = convertDateTimezone(new Date(), 'America/New_York');
   return (
     <>
       <PageSEO title={siteMetadata.title} description={siteMetadata.description} />
@@ -41,17 +43,20 @@ export default function Home({ posts, events }: InferGetStaticPropsType<typeof g
             <h2 className="pt-6 pb-4 text-3xl font-bold leading-8 tracking-tight">Latest Posts</h2>
             <ul>
               {!posts.length && 'No posts found.'}
-              {posts.slice(0, MAX_POSTS_DISPLAY).map((post) => (
-                <ListItem
-                  key={post.slug}
-                  title={post.title}
-                  slug={post.slug}
-                  path={post.path}
-                  tags={post.tags}
-                  summary={post.summary}
-                  date={post.date}
-                />
-              ))}
+              {posts
+                .slice(0, MAX_POSTS_DISPLAY)
+                .filter((post) => new Date(post.date) <= now)
+                .map((post) => (
+                  <ListItem
+                    key={post.slug}
+                    title={post.title}
+                    slug={post.slug}
+                    path={post.path}
+                    tags={post.tags}
+                    summary={post.summary}
+                    date={post.date}
+                  />
+                ))}
             </ul>
           </div>
           <div className="flex justify-end text-base font-medium leading-6">
