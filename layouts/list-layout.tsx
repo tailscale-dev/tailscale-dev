@@ -4,6 +4,7 @@ import { CoreContent } from '@/lib/utils/contentlayer';
 import type { Blog } from 'contentlayer/generated';
 import Link from 'next/link';
 import { ListItem } from '@/components/list-item';
+import { convertDateTimezone } from '@/lib/utils/date';
 
 interface PaginationProps {
   totalPages: number;
@@ -67,6 +68,10 @@ export default function ListLayout({
     const searchContent = post.title + post.summary + post.tags.join(' ');
     return searchContent.toLowerCase().includes(searchValue.toLowerCase());
   });
+
+  const now = convertDateTimezone(new Date(), 'America/New_York');
+
+  initialDisplayPosts = initialDisplayPosts.filter((post) => new Date(post.date) <= now);
 
   // If initialDisplayPosts exist, display it if no searchValue is specified
   const displayPosts =
