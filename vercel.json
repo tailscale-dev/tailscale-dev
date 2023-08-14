@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/.well-known/webfinger",
-      "destination": "https://dev-oidc.tailc88a7.ts.net/.well-known/webfinger"
+      "destination": "https://dev-oidc.tailscale-dev.ts.net/.well-known/webfinger"
     }
   ]
 }
