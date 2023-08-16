@@ -1,7 +1,7 @@
 import { Client as ESClient } from '@elastic/elasticsearch';
 import { allAuthors, allBlogs, Authors } from 'contentlayer/generated';
 
-const idToPost = (id: string) => allBlogs.find((p) => p.slug === id) || null;
+const idToPost = (id: string) => allBlogs.find((p) => p.path === id) || null;
 
 const authorFromHandle = (handle: string) => allAuthors.find((a) => a.slug === handle) || null;
 
