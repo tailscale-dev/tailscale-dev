@@ -18,7 +18,7 @@ const MobileNav = () => {
   };
 
   return (
-    <div className="sm:hidden">
+    <div className="md:hidden">
       <button
         className="ml-1 mr-1 h-8 w-8 rounded py-1"
         aria-label="Toggle Menu"
@@ -74,6 +74,15 @@ const MobileNav = () => {
               </Link>
             </div>
           ))}
+          <div className="px-12 py-4">
+            <Link
+              href="/search"
+              className="text-2xl font-bold tracking-widest text-gray-100"
+              onClick={onToggleNav}
+            >
+              Search
+            </Link>
+          </div>
           {rightHeaderNavLinks.map((link) => (
             <div key={link.title} className="px-12 py-4">
               <Link
