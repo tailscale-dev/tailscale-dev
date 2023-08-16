@@ -76,7 +76,7 @@ export default function ListLayout({
       <header className="bg-gray-900 py-20 text-center text-gray-100">
         <h1 className="text-4xl font-medium leading-tight tracking-tight">{title}</h1>
         <div className="flex justify-center mt-6">
-          <div className="px-3 pt-8 max-w-md items-center sm:invisible md:visible">
+          <div className="px-3 pt-8 max-w-md items-center">
             <SearchBar />
           </div>
         </div>
