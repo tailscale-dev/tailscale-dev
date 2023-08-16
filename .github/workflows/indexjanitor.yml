@@ -2,6 +2,7 @@ name: 'Clean up old ElasticSearch indices'
 on:
   schedule:
     - cron: '42 0 * * *'
+  workflow_dispatch:
 jobs:
   cleanup:
     name: 'Do the cleanup'
