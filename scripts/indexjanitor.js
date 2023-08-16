@@ -15,8 +15,10 @@
 
   const aliasesToCareAbout = ['site-search-kb', 'site-search-dev-blog', 'site-search-xe-test'];
 
-  const dryRun = process.env.DRY_RUN ? process.env.DRY_RUN === 'false' : true;
-  console.log({ dryRun });
+  const actuallyCloseThings = process.env.ACTUALLY_CLOSE_THINGS
+    ? process.env.ACTUALLY_CLOSE_THINGS == 'true'
+    : false;
+  console.log({ actuallyCloseThings });
 
   const indices = await client.indices.get({ index: 'site-search-*' });
   const indicesToClose = [];
@@ -36,7 +38,7 @@
 
   console.log(`Found ${indicesToClose.length} indices to close`);
 
-  if (dryRun) {
+  if (!actuallyCloseThings) {
     console.log('\nWould have closed:');
     indicesToClose.forEach((index) => console.log(`- ${index}`));
     console.log('\nDry run, not closing anything');
