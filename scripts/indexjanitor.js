@@ -15,7 +15,7 @@
 
   const aliasesToCareAbout = ['site-search-kb', 'site-search-dev-blog', 'site-search-xe-test'];
 
-  const dryRun = process.env.DRY_RUN ? process.env.DRY_RUN === 'false' : true;
+  const dryRun = process.env.DRY_RUN ? process.env.DRY_RUN != 'true' : true;
   console.log({ dryRun });
 
   const indices = await client.indices.get({ index: 'site-search-*' });
