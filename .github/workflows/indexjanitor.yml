@@ -19,7 +19,7 @@ jobs:
       - name: Run cleanup
         run: yarn ci:indexjanitor
         env:
-          DRY_RUN: 'false'
+          ACTUALLY_CLOSE_THINGS: 'true'
           ELASTIC_URL: ${{ secrets.ELASTICSEARCH_URL }}
           ELASTIC_USERNAME: ${{ secrets.ELASTICSEARCH_USERNAME }}
           ELASTIC_PASSWORD: ${{ secrets.ELASTICSEARCH_PASSWORD }}
