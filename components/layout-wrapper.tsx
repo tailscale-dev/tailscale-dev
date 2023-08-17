@@ -91,7 +91,7 @@ const LayoutWrapper = ({ children }: Props) => {
                     </Link>
                   </div>
 
-                  <div className="px-3 pt-8 w-sm hidden lg:block">
+                  <div className="px-3 w-sm hidden lg:block">
                     <SearchBar />
                   </div>
                 </>
