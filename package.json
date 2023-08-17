@@ -42,7 +42,7 @@
     "unist-util-visit": "^4.1.2"
   },
   "devDependencies": {
-    "@svgr/webpack": "^8.0.1",
+    "@svgr/webpack": "^8.1.0",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@types/mdx": "^2.0.3",
     "@types/react": "^18.0.18",
