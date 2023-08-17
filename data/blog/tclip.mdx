@@ -1,6 +1,6 @@
 ---
 title: 'tclip: A pastebin for your tailnet'
-date: 2023-08-11
+date: 2023-08-17
 summary: Sometimes you need to paste text between your machines or coworkers. tclip is a Tailscale-powered pastebin that lets you do just that.
 authors: ['xe']
 tags:
@@ -9,7 +9,7 @@ tags:
 images: ['/images/tclip/social.jpg']
 ---
 
-As a developer, there are many times when you need to share little snippets of text with your friends or team. The tool I used the most for this is GitHub [gists](https://gist.github.com). This lets you upload little snippets of text, and it a publicly shareable link to it.
+As a developer, there are many times when you need to share little snippets of text with your friends or team. The tool I used the most for this is GitHub [gists](https://gist.github.com). This lets you upload little snippets of text, and get a publicly shareable link to it.
 
 While I was playing around with tsnet, I got the idea to make a little pastebin clone using it. And then Funnel was announced. The hacker gear started turning, and I did a little exploration of the problem space and came up with tclip. I wanted to make a tool that I would feel comfortable with using every day, if I got to bring in a bunch of other cool technology into it as well, that would be even more cool.
 
@@ -20,12 +20,12 @@ So I ended up with tclip.
   src="/images/tclip/frontpage.png"
   width={1804}
   height={870}
-  alt="The homescreen of tea clip, showing a textbox labeled 'create new paste'"
+  alt="The homescreen of tclip, showing a textbox labeled 'create new paste'"
 />
 
 The core of the entire program can be summarized in this entire image. It is a box that you can type text in, and submit it to the server. Then you get a link that you can use to share with your friends and coworkers. That's it. That's the entire program.
 
-If you put code in the box and then name the file appropriately, your file will be syntax highlighted. There's a commandline tool that you can use to pipe the output of commands or upload files directly to your tclip server so you can share them with your team and friends.
+If you put code in the box and then name the file appropriately, your file will be syntax highlighted. There's a command line tool that you can use to pipe the output of commands or upload files directly to your tclip server so you can share them with your team and friends.
 
 If you click on the `List` link in the top, you can see a list of all the pastes that have been created recently, but the main screen will show the last 5 pastes just so you can get to the one you want to see a little bit quicker. If you put [markdown](https://en.wikipedia.org/wiki/Markdown) in the box and end your filename in `.md`, it'll be rendered as HTML for you. We've hidden a few other things to spark joy like this, like an [Emacs package](https://github.com/tailscale-dev/tclip/blob/main/contrib/tclip.el) and the ability to run as a [systemd portable service](https://systemd.io/PORTABLE_SERVICES/).
 
@@ -38,11 +38,13 @@ If you click on the `List` link in the top, you can see a list of all the pastes
 
 ## Installation
 
-The easiest way to use tclip is and to install it on fly.io. You can do that by doing the following:
+The easiest way to use tclip is to install it on fly.io.
 
-First, get an authkey from [the admin panel](https://login.tailscale.com/admin/settings/keys). It is a good idea to associate this with the tag `tag:service` or its own `tag:tclip`. Please also do not set the `ephemeral` tag as that will destroy the node when the service shuts down.
+First, get an authkey from the [**Keys**](https://login.tailscale.com/admin/settings/keys) page of the admin console. It is a good idea to associate this with the tag `tag:service` or its own `tag:tclip`. Do not set the `ephemeral` flag as that will destroy the node when the service shuts down. This almost certaintly is not what you want.
 
-Make sure you have MagicDNS enabled [in the admin panel](https://login.tailscale.com/admin/dns), see [here](https://tailscale.com/kb/1081/magicdns/) for more information. This is required for most of the defaults for the `tclip` command and the Emacs package to work.
+Make sure you have MagicDNS enabled from the [**DNS**](https://login.tailscale.com/admin/dns) page of the admin console, see [the MagicDNS KB article](https://tailscale.com/kb/1081/magicdns/) for more information about how MagicDNS works.
+
+Enabling MagicDNS is required for most of the defaults for the `tclip` command and the Emacs package to work.
 
 You will need to have a [fly.io account](https://fly.io/) (this application is designed to fit within their free tier).
 
@@ -95,7 +97,7 @@ All pastes are automatically attributed to the person that posted them, thanks t
 
 ## The Tailscale magic: Funnel integration
 
-However, it doesn't stop there. The real magic comes when we integrate this with [Funnel](https://tailscale.dev/blog/embedded-funnel) so that you can share your pastes publicly. If you enable Funnel egress with the `USE_FUNNEL=true` environment variable (or the `--use-funnel` flag), tclip will register itself publicly with funnel to allow people to view only the following:
+However, it doesn't stop there. The real magic comes when we integrate this with [Funnel](/blog/embedded-funnel) so that you can share your pastes publicly. If you enable Funnel egress with the `USE_FUNNEL=true` environment variable (or the `--use-funnel` flag), tclip will register itself publicly with funnel to allow people to view only the following:
 
 - An index page that explains what the tclip server is and what it is used for
 - _Individual paste pages_ without a list of all of them
@@ -134,4 +136,4 @@ The `tailnetMux` contains routes that are exposed to your tailnet and the `funne
 
 We hope you enjoy using tclip! We've been working hard on it to make it a tool that you can rely on, as well as a way to explain advanced ways of using Tailscale.
 
-If you run into any issues, please open an issue on our GitHub page [tailscale-dev/tclip](https://github.com/tailscale-dev/tclip). We're more than happy to help you.
+If you run into any issues, open an issue on our GitHub page [tailscale-dev/tclip](https://github.com/tailscale-dev/tclip). We're more than happy to help you.
