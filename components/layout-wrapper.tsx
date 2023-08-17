@@ -54,22 +54,20 @@ const LayoutWrapper = ({ children }: Props) => {
                 <span className="pr-2 text-gray-700">~$</span>community
               </span>
             </Link>
-            <ul className="relative hidden pt-8 md:flex items-center flex">
+            <ul className="relative pt-8 md:flex items-center flex">
               {leftHeaderNavLinks.map((link) => (
-                <>
-                  <li key={link.title}>
-                    <Link
-                      key={link.title}
-                      href={link.href}
-                      className="px-1.5 lg:px-2 xl:px-3 font-medium transition-colors duration-200 hover:text-gray-600"
-                    >
-                      <span>{link.title}</span>
-                      {link.href.startsWith('http') && (
-                        <span className="pl-0.5 text-gray-300">&#8599;</span>
-                      )}
-                    </Link>
-                  </li>
-                </>
+                <li key={link.title}>
+                  <Link
+                    key={link.title}
+                    href={link.href}
+                    className="px-1.5 lg:px-2 xl:px-3 font-medium transition-colors duration-200 hover:text-gray-600"
+                  >
+                    <span>{link.title}</span>
+                    {link.href.startsWith('http') && (
+                      <span className="pl-0.5 text-gray-300">&#8599;</span>
+                    )}
+                  </Link>
+                </li>
               ))}
               {noSearch ? (
                 <li className="px-1.5 lg:px-2 xl:px-3 font-medium transition-colors duration-200 hover:text-gray-600">
@@ -82,18 +80,14 @@ const LayoutWrapper = ({ children }: Props) => {
                 </li>
               ) : (
                 <>
-                  <div className="px-1.25 lg:px-2 xl:px-3 pt-8 hidden md:block lg:hidden">
-                    <Link
-                      className="font-medium transition-colors duration-200 hover:text-gray-600"
-                      href="/search"
-                    >
+                  <li className="px-1.5 lg:px-2 xl:px-3 font-medium hover:text-gray-600 hidden md:block lg:hidden">
+                    <Link href="/search">
                       <SearchIcon />
                     </Link>
-                  </div>
-
-                  <div className="px-3 w-sm hidden lg:block">
+                  </li>
+                  <li className="px-1.5 lg:px-2 xl:px-3 font-medium hover:text-gray-600 w-sm hidden lg:block">
                     <SearchBar />
-                  </div>
+                  </li>
                 </>
               )}
             </ul>
