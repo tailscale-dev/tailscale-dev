@@ -1,7 +1,6 @@
 export const leftHeaderNavLinks = [
   { href: '/events', title: 'Events' },
   { href: '/blog', title: 'Blog' },
-  { href: '/up', title: 'Up' },
 ];
 
 export const rightHeaderNavLinks = [
