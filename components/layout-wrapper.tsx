@@ -46,21 +46,21 @@ const LayoutWrapper = ({ children }: Props) => {
   return (
     <div className={`${inter.variable} font-sans`}>
       <nav className="SiteNavigation bg-gray-900 text-gray-100">
-        <div className="container flex items-center justify-between py-4 md:pt-0">
+        <div className="container flex items-center justify-between py-4 pt-0">
           <div className="flex items-center">
-            <Link className="mr-5 block md:pt-7" href="/" aria-label="Tailscale">
+            <Link className="mr-5 block pt-7" href="/" aria-label="Tailscale">
               <TailscaleLogo />
               <span className="pl-2 font-mono tracking-wider">
                 <span className="pr-2 text-gray-700">~$</span>community
               </span>
             </Link>
-            <ul className="relative pt-8 md:flex items-center flex">
+            <ul className="relative pt-8 items-center flex">
               {leftHeaderNavLinks.map((link) => (
                 <li key={link.title}>
                   <Link
                     key={link.title}
                     href={link.href}
-                    className="px-1.5 lg:px-2 xl:px-3 font-medium transition-colors duration-200 hover:text-gray-600"
+                    className="px-2 xl:px-3 text-lg font-medium transition-colors duration-200 hover:text-gray-600"
                   >
                     <span>{link.title}</span>
                     {link.href.startsWith('http') && (
@@ -70,7 +70,7 @@ const LayoutWrapper = ({ children }: Props) => {
                 </li>
               ))}
               {noSearch ? (
-                <li className="px-1.5 lg:px-2 xl:px-3 font-medium transition-colors duration-200 hover:text-gray-600">
+                <li className="px-2 xl:px-3 font-medium transition-colors duration-200 hover:text-gray-600">
                   <Link href="/search">
                     <span className="hidden md:block lg:hidden">
                       <SearchIcon />
@@ -80,12 +80,12 @@ const LayoutWrapper = ({ children }: Props) => {
                 </li>
               ) : (
                 <>
-                  <li className="px-1.5 lg:px-2 xl:px-3 font-medium hover:text-gray-600 hidden md:block lg:hidden">
+                  <li className="px-2 xl:px-3 font-medium hover:text-gray-600 hidden md:block lg:hidden">
                     <Link href="/search">
                       <SearchIcon />
                     </Link>
                   </li>
-                  <li className="px-1.5 lg:px-2 xl:px-3 font-medium hover:text-gray-600 w-sm hidden lg:block">
+                  <li className="px-2 xl:px-3 font-medium hover:text-gray-600 w-sm hidden lg:block">
                     <SearchBar />
                   </li>
                 </>
