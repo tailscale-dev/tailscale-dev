@@ -1,0 +1,55 @@
+---
+title: 'Remote control with Code: Release Recap September 2023'
+date: 2023-09-01
+authors: ['parker']
+tags:
+  - release recap
+  - serve
+  - funnel
+  - tailnet lock
+  - vs code
+summary: Remote editing with our VS Code extension, smoother onramps to Serve and Funnel, and tailnet lock in beta in this month's Release Recap.
+images: ['/images/remote-control-vscode-release-recap-sept-2023/social.png']
+---
+
+We’re always shipping new features and fixes at Tailscale — so much so that sometimes [the changelog](https://tailscale.com/changelog/) can get a little overwhelming! This blog post is part of a new series called Release Recap that aims to grab a handful of updates from the last month or so and highlight what they actually mean for developers.
+
+This month’s updates are all written by me, Parker, but we’re keeping the blurbs signed and you might get more perspectives from different teams here in coming months. And if you’d like to share how you’re using a newly released Tailscale feature, get in touch at devrel\@tailscale.com, on [Twitter](https://twitter.com/tailscale), or on the [fediverse](https://hachyderm.io/@tailscale), and we may include your story in a future post.
+
+### Use VS Code to edit files on any machine on your tailnet
+
+**Parker**: For many developers, the text editor is a comfortable home base, and it’s often appropriately customized to suit one’s needs exactly. But then you log into a remote machine, and that all goes out the window as you have to use whatever is available. That often means no syntax highlighting, no autocomplete from file contents, and even copy-and-paste can be a headache.
+
+If you’re a VS Code user, the [latest release of the Tailscale extension](https://tailscale.com/blog/machine-explorer-vscode-extension/) solves all those problems. The extension now ships with a Machine Explorer that allows you to browse, move, and edit files on any machine you can reach over Tailscale SSH. That means you can bring the power of VS Code to your whole tailnet, while leaving the hassle of SSH key management and all that behind.
+
+For more, check out our video demo:
+
+<figure>
+  <iframe
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/ASZm_HyrHIc?si=bStK4K3J-Qclj59E"
+    title="YouTube video player"
+    frameBorder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen
+  ></iframe>
+</figure>
+
+### Funnel and Serve web flows to get you started
+
+**Parker**: It’s no secret that we here love [Funnel](https://tailscale.com/kb/1223/tailscale-funnel/) (the Tailscale tool that lets you share a port on your localhost with the whole internet) and [Serve](https://tailscale.com/kb/1242/tailscale-serve/) (the super-simple server that powers Funnel and also lets you share privately with just your tailnet). But not everyone has had a chance to get acquainted with these features, and the first time activating them may require some [adjustments to your settings or your ACLs](https://tailscale.com/kb/1223/tailscale-funnel/#tailnet-policy-file-requirement).
+
+For folks who try to use Serve or Funnel without all the right configuration in place, we’ve added [a web-based guide](https://tailscale.com/kb/1223/tailscale-funnel/#setup) to take you through these steps right when you need it. True story: I hit this flow organically the other day when trying to use Serve from a tagged device for the first time — and it solved my problem in seconds. So whether you’re a first-timer or literally a Tailscale employee, we’re hoping this new system will help you spend less time reading error messages and more time sharing with your tailnet or the world.
+
+### Tailnet lock now in beta
+
+**Parker**: Tailscale is always thinking about your [security and privacy](https://tailscale.com/security/), and you can see it in the way we’ve designed our software. We use end-to-end WireGuard encryption for every tailnet connection, so we can never see your data. And we’ve given administrators a [device approval](https://tailscale.com/kb/1099/device-approval/) option, to review any new node that tries to log in to the network, which provides a level of security and convenience that works for most users.
+
+But for the most sensitive use cases, even that may not be enough. For these users, we provide tailnet lock—[now in beta](https://tailscale.com/blog/tailnet-lock-beta/)!—which requires that new node keys be verified by existing trusted nodes before other devices trust them. To be clear, this is a level of security above device approval, and even we don’t have access to those signing keys, so you have to handle how they’re stored and managed.
+
+Coming out of alpha, we’ve added some new features on that front. The beta now offers web configuration options, the ability to use an iOS device as a signing key, and a mechanism to recover tailnet control in case of a key compromise. For infosec-oriented users who are professionally paranoid—and we salute you—this is a feature you’ll want to check out.
+
+—
+
+Thanks for reading this month's Release Recap. Did we miss a new Tailscale feature you’d like to hear more about? Hit us up on [Twitter](https://twitter.com/tailscale) or the [fediverse](https://hachyderm.io/@tailscale) with your feedback!
