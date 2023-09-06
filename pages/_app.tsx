@@ -1,6 +1,7 @@
 import React from 'react';
 import '@/css/tailwind.css';
 import '@code-hike/mdx/dist/index.css';
+import { Analytics } from '@vercel/analytics/react';
 
 import { ThemeProvider } from 'next-themes';
 import type { AppProps } from 'next/app';
@@ -17,6 +18,7 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
       <LayoutWrapper>
         <Component {...pageProps} />
+        <Analytics />
       </LayoutWrapper>
     </ThemeProvider>
   );
