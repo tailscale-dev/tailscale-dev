@@ -1,0 +1,129 @@
+---
+title: tclip just got clippier
+date: 2023-09-19
+authors: ['xe']
+tags:
+  - tclip
+  - tsnet
+summary: 'tclip now has a new theme, org-mode rendering, and runs without CGo.'
+images: ['/images/tclip-updates-092023/social.png']
+---
+
+Last month we launched [tclip](https://github.com/tailscale-dev/tclip), an add-on service for [Tailscale](https://tailscale.com) that gives everyone in your tailnet a place to share small snippets of text and code. We've been hacking on it since then with help from the Tailscale community and we've got some updates to share with you.
+
+As it turns out, people seem to like the way it gives you the experience of [GitHub Gists](https://docs.github.com/en/get-started/writing-on-github/editing-and-sharing-content-with-gists/creating-gists) but private on your tailnet. We've gotten a lot of feedback from people who are using it to share code snippets, log messages, and other things with their team. We've even gotten a few great community contributions. We're excited to share these updates, and we owe special thanks to:
+
+- [@gmemstr](https://github.com/gmemstr)
+- [@imeyer](https://github.com/imeyer)
+- [@jolheiser](https://github.com/jolheiser)
+
+Today we're going to show off some of the new features and changes that we've made to tclip. We also hope that these will give you inspiration and a few pointers if you want to make your own tailnet add-ons.
+
+You can read more about tclip and how to install it on GitHub at [tailscale-dev/tclip](https://github.com/tailscale-dev/tclip).
+
+<HeroImage
+  src="/images/tclip-updates-092023/contrails.jpg"
+  desc="A photo of the Berlin TV tower with contrails in the sky. Shot on a Nikon D3300 with a 35mm f/1.8 lens by Xe Iaso."
+  width={2000}
+  height={850}
+/>
+
+## New theme
+
+When I initially made tclip, I had hacked up the web UI with my own custom CSS library named [Xess](https://github.com/Xe/Xess) (Xe's CSS). This did work and it helped us get off the ground, but it was not a good long-term solution. It was not very accessible, it was not very pretty, and it was not very easy to maintain.
+
+In addition, using Xess meant that the design between tclip and other services like [golink](https://github.com/tailscale/golink) was very different, leading them to look like completely separate things made by completely separate developers. There wasn't a cohesive _design_ at play, there was just a few things that individual people made up because they thought it would look nice.
+
+To fix this, we've made a new theme for tclip that is based on the design of golink. This means that the design is now consistent between the two services, and it means that we can use the same CSS library for both of them, Tailwind. This means that we can make changes to the CSS library and have them apply to both services, which is a huge win for us.
+
+![Screenshot of the new tclip theme](/images/tclip-updates-092023/new-ui.png)
+
+I've published more notes about the design at the [tailscale-dev/service-design](https://github.com/tailscale-dev/service-design) repository. If you want to make your own addon tools, you can use this as a template to get started. Just please be sure to remove the "made by the nerds at Tailscale" bit if you aren't one of the nerds at Tailscale.
+
+## Org mode rendering
+
+The biggest feature we added is support for markup formatted with the Emacs package [Org mode](https://orgmode.org/). Org mode is a package that's been in active use for over 20 years by Emacs users to organize everything from meeting notes, contact databases, TODO lists, presentations, screenwriting, [literate documentation of infrastructure setup](https://howardism.org/Technical/Emacs/literate-devops.html), and just about anything you can imagine. I switched over to Emacs [because of Org mode](https://xeiaso.net/blog/org-mode-flow-2020-09-08) and have been using it off and for nearly my entire career.
+
+Org mode is a markup language that's similar to Markdown, but it has a few key differences:
+
+- There's explicit metadata for things like TODO status, tags, and priorities.
+- There's different formatting for things than Markdown (for example, code literals `=look like this=` instead of backticks).
+- There's a first-class concept of a "block" so that you can do [literate programming](https://www.offerzen.com/blog/literate-programming-empower-your-writing-with-emacs-org-mode).
+
+I'd personally say that Org mode is the killer app of Emacs. It's a very powerful tool that I think everyone should try out at least once.
+
+With the updates made by [@gmemstr](https://github.com/gmemstr), you can now submit Org mode documents to tclip and they will be rendered to beautiful HTML. Here's an example of what it looks like:
+
+```
+:PROPERTIES:
+:ID:       93af6ddd-0851-43c0-ab28-c2fcb9cdad4b
+:END:
+#+title: I deleted my access to production
+
+- Limiting access to things is a good security technique
+  - Nobody really wants to take the first step on their own
+  - I want to help create a culture of security at work
+- I deleted my access to production
+  - I don't use it now that I do developer relations
+  - People are more likely to follow with a culture when someone leads by
+    example, so I decided to lead by removing my own access that I didn't use
+- What access do you have that you don't need? What can you do to get rid of it?
+```
+
+Results in:
+
+![Screenshot of a random org-mode document](/images/tclip-updates-092023/org-mode-doc.png)
+
+And of course, it works with the "fancy" UI mode:
+
+![Screenshot of the same org mode document but in fancy mode](/images/tclip-updates-092023/org-mode-fancy.png)
+
+We hope this will enable you to share your daily notes with your team more easily!
+
+If you want to see what it looks like in practice, check out [this example paste](https://paste.shark-harmonic.ts.net/paste/696b9b02-90ac-4adc-a33d-d749bb6f460f). It's a C program that prints out variants of the classic "I'd just like to interject for a moment" copypasta.
+
+## No more CGo
+
+In the Go world, nearly everything is written in Go. This allows you to take advantage of a lot of the toolchain conveniences, including but not limited to the following:
+
+- Easy cross-compilation (build a Linux binary on a macbook by running `GOOS=linux GOARCH=amd64 go build`)
+- Static binaries (no need to worry about shared libraries or Linux's version of DLL hell)
+
+However there is an escape hatch for when you really need to interface with external C libraries called [Cgo](https://pkg.go.dev/cmd/cgo). Cgo allows you to write C code that gets compiled in your Go binary. This makes cross-compilation difficult unless you just happen to have a working C toolchain laying around. Given that popular compilers force you to have a completely separate toolchain per OS and architecture combination, it's no wonder most people don't have toolchains for every platform and OS under the sun around.
+
+This means that if you have a Go program (like tclip) and you want to run it on a Linux machine such as a Raspberry Pi, you need to compile tclip on the pi in question. This does work, but may have logistical implications depending on what model of Pi you have and how much spare CPU time you have laying around on it.
+
+tclip uses [SQLite](https://sqlite.org) as its primary datastore. This is a C library that is very popular and is used in a lot of places. It's also very small and easy to use. However, it does mean that tclip needs to use Cgo to interface with it.
+
+However, there is a pure Go version of SQLite at [modernc.org/sqlite](https://pkg.go.dev/modernc.org/sqlite). It works by compiling the C SQLite code to Go and then using that to run on any machine that Go targets. This means that we can get rid of Cgo and have a pure Go binary that can run anywhere that Go can run.
+
+<XesiteConv name="Aoi" mood="wut">
+  Wait, they compiled C to Go? How does that work?
+</XesiteConv>
+
+<XesiteConv name="Mara" mood="hacker">
+  Surprisingly well. Many hard-core UNIX enthusiasts hate being reminded of this, but C actually
+  targets a virtual machine that implements the semantics of the [PDP-11
+  minicomputer](https://en.wikipedia.org/wiki/PDP-11). As long as you can create something that
+  emulates those semantics, you can easily port C to anything, be it JVM bytecode, Go, or whatever
+  your heart desires. I'm not sure if this is a work of genius, insanity, or both; but you can't
+  argue with the results!
+</XesiteConv>
+
+## Updates
+
+All dependencies have been updated to their newest versions. tclip now uses Go 1.21 and is based on Tailscale version 1.48.2. This shouldn't affect any practical usage of tclip.
+
+I also took the time to update all of the tools in the Nix development environment to be built on Go 1.21.x. This will mean that your first invocation of `nix develop` will be a bit slow, but once it's done you will have a fully working development environment that you can use to build tclip and other tools.
+
+## cmd/web renamed to cmd/tclipd
+
+In Go, the name of the folder a program is in becomes the name of the compiled binary. When I was initially hacking up tclip, I named that binary `web` because it was what served the web interface. However, this is a bit confusing because it doesn't really tell you what it does. It's just a generic name that doesn't really mean anything.
+
+To fix this, we've renamed the binary to `tclipd`, which is short for "tclip daemon". This should make it more clear what the binary is for and what it does.
+
+This change shouldn't affect you unless you are compiling tclipd yourself or using it in an environment that would make the name of the binary matter.
+
+---
+
+We hope you enjoy using tclip! If you have any questions, comments, or concerns, please feel free to [open an issue on GitHub](https://github.com/tailscale-dev/tclip) or mention us on the Fediverse at [@tailscale@hachyderm.io](https://hachyderm.io/@tailscale).
