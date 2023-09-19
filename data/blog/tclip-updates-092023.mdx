@@ -9,19 +9,19 @@ summary: 'tclip now has a new theme, org-mode rendering, and runs without CGo.'
 images: ['/images/tclip-updates-092023/social.png']
 ---
 
-Hey everyone! We've made a bunch of updates to tclip, and we're excited to share them with you. We hope this will help you get the most out of tclip and give you inspiration to make your own addon tools to do whatever it is you want.
+Hey everyone! We've been hacking on [tclip](https://github.com/tailscale-dev/tclip), the add-on service that gives everyone in your tailnet a place to share small snippets of text and code since we [launched it last month](/blog/tclip).
 
-[tclip](https://github.com/tailscale-dev/tclip) is a little addon service that gives everyone on your tailnet a place to share small snippets of text, code, log messages, or anything that can fit into a text box. It's like [GitHub Gists](https://docs.github.com/en/get-started/writing-on-github/editing-and-sharing-content-with-gists/creating-gists) but private on your tailnet.
+As it turns out, people seem to like the way it gives you the experience of [GitHub Gists](https://docs.github.com/en/get-started/writing-on-github/editing-and-sharing-content-with-gists/creating-gists) but private on your tailnet. We've gotten a lot of feedback from people who are using it to share code snippets, log messages, and other things with their team. We've even gotten a few great community contributions that we're excited to share with you.
 
-You can read more about tclip and how to install it on GitHub at [tailscale-dev/tclip](https://github.com/tailscale-dev/tclip). I also wrote more about tclip in [the previous tclip article](/blog/tclip).
-
-This release has a few features and changes that were contributed by the community. Thank you all for helping us!
-
-With huge thanks to:
+We're excited to share these updates, and we owe special thanks to:
 
 - [@gmemstr](https://github.com/gmemstr)
 - [@imeyer](https://github.com/imeyer)
 - [@jolheiser](https://github.com/jolheiser)
+
+Thanks so much for helping us make tclip better!
+
+You can read more about tclip and how to install it on GitHub at [tailscale-dev/tclip](https://github.com/tailscale-dev/tclip).
 
 <HeroImage
   src="/images/tclip-updates-092023/contrails.jpg"
@@ -81,6 +81,8 @@ And of course, it works with the "fancy" UI mode:
 ![Screenshot of the same org mode document but in fancy mode](/images/tclip-updates-092023/org-mode-fancy.png)
 
 We hope this will enable you to share your daily notes with your team more easily!
+
+If you want to see what it looks like in practice, check out [this example paste](https://paste.shark-harmonic.ts.net/paste/696b9b02-90ac-4adc-a33d-d749bb6f460f). It's a C program that prints out variants of the classic "I'd just like to interject for a moment" copypasta.
 
 ## No more CGo
 
