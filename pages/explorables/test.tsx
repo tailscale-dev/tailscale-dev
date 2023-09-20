@@ -6,6 +6,7 @@ export default function ExplorablesTestPage() {
       </header>
       <main className="container max-w-4xl">
         <h1>Foo</h1>
+        <h1>Bar</h1>
       </main>
     </>
   );
