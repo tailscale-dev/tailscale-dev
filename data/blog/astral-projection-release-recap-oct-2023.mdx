@@ -1,0 +1,38 @@
+---
+title: 'A lot like astral projection: Release Recap October 2023'
+date: 2023-10-02
+summary: 'A lot like astral projection: Release Recap October 2023'
+tags:
+  - Release Recap
+  - Mullvad
+  - Apple TV
+images: ['/images/astral-projection-release-recap-oct-2023/social.png']
+---
+
+We’re always shipping new features and fixes at Tailscale — so much so that sometimes [the changelog](https://tailscale.com/changelog/) can get a little overwhelming! This blog post is part of a new series called Release Recap that aims to grab a handful of updates from the last month or so and highlight what they actually mean for developers.
+
+This month’s updates are all written by me, Parker, but we’re keeping the blurbs signed and you might get more perspectives from different teams here in coming months. And if you’d like to share how you’re using a newly released Tailscale feature, get in touch at devrel\@tailscale.com, on [Twitter](https://twitter.com/tailscale), or on the [fediverse](https://hachyderm.io/@tailscale), and we may include your story in a future post.
+
+### Browse from your home network while you're anywhere in the world...
+
+**Parker**: Apple's newly released tvOS 17 introduced support for VPNs, and we hustled to make sure Tailscale was available on that platform as soon as it was possible. In case you missed the [launch announcement](https://tailscale.com/blog/apple-tv/), we laid out some of the use cases we're most excited about, but we wanted to highlight one in particular here: install Tailscale on your Apple TV and you can use it as a low-power always-on exit node to route traffic through your home network from any of your devices.
+
+We even made a video to demo this particular use case:
+
+This gives you the benefits of a "privacy VPN," but at no additional cost and with basically zero configuration. Set up the Apple TV, approve its request to be an exit node from your admin console, and then access the internet from your phone, laptop, or even another Apple TV like you're sitting in your living room—no matter where you are.
+
+For many developers, it's not too much of a headache to spin up an inexpensive VPS through a cloud provider and use that as an exit node. We've heard about that workflow from lots of developers who need to access geo-restricted content or who are wrestling with sketchy local networks. (For example, you can read [my colleague Claire's report](https://tailscale.dev/blog/on-the-node-while-on-the-road) about bypassing some SSH shenanigans on hotel Wi-Fi.) One downside of this approach is that your connection will come from a commercial data center, and may be blocked, throttled, or subject to bot checks.
+
+Exiting from a residential network is more flexible, easier, and a little cheaper to boot. We're excited to see this released!
+
+### ...or browse from anywhere in the world while you're sitting at home
+
+**Parker**: In a fun bit of symmetry, the other big feature release this last month was [our integration with Mullvad](https://tailscale.com/blog/mullvad-integration/), now in beta. Mullvad is a privacy VPN that takes privacy seriously—and operates a huge fleet of high-speed exit nodes all around the globe. Starting this month, you can add a Mullvad subscription to your Tailscale account and get access to those nodes, making it a simple operation to route your traffic through basically anywhere in the world.
+
+That brings benefits in two major ways. If you don't already have a machine running as an exit node in your tailnet, this is an easy way to get one. You can select a nearby Mullvad node, count on a fast connection, and all of your traffic will get tunneled through WireGuard® encryption between you and that node. But you can also pick a faraway node, and see the internet as if you were browsing from there. That may be useful for checking on CDN distribution, for localization workflows, for debugging geo-targeting, you name it.
+
+This feature came about in part because we've heard from lots of people who love Tailscale and love Mullvad, but don't love the hassle of trying to run two VPNs at the same time. If you think you might be interested in our Mullvad integration, check out [our docs](https://tailscale.com/kb/1258/mullvad-exit-nodes/).
+
+—
+
+Thanks for reading this month's edition of Release Recap. Did we miss a new Tailscale feature you’d like to hear more about? Hit us up on [Twitter](https://twitter.com/tailscale) or the [fediverse](https://hachyderm.io/@tailscale) with your feedback!
