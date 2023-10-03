@@ -1,7 +1,7 @@
 import React from 'react';
 import { MDXLayoutRenderer } from '@/components/mdx';
 import { MDXComponents } from '@/components/mdx-components';
-import { coreContent, sortedBlogPost } from '@/lib/utils/contentlayer';
+import { coreContent, sortedBlogPost, getSideNavData } from '@/lib/utils/contentlayer';
 import { InferGetStaticPropsType } from 'next';
 import { allAuthors, allSolutions } from 'contentlayer/generated';
 import type { Solution } from 'contentlayer/generated';
@@ -36,6 +36,7 @@ export const getStaticProps = async ({ params }) => {
       authorDetails,
       prev,
       next,
+      sideNavData: getSideNavData(allSolutions),
     },
   };
 };
@@ -45,6 +46,7 @@ export default function SolutionPage({
   authorDetails,
   prev,
   next,
+  sideNavData,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <MDXLayoutRenderer
@@ -55,6 +57,7 @@ export default function SolutionPage({
       authorDetails={authorDetails}
       prev={prev}
       next={next}
+      sideNavData={sideNavData}
     />
   );
 }

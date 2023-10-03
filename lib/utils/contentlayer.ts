@@ -1,6 +1,6 @@
 import GithubSlugger from 'github-slugger';
 import type { Document, MDX } from 'contentlayer/core';
-import type { Events } from 'contentlayer/generated';
+import type { Events, Solution } from 'contentlayer/generated';
 
 export type MDXDocument = Document & { body: MDX };
 export type MDXDocumentDate = MDXDocument & {
@@ -25,6 +25,10 @@ export function sortedFutureEventPosts(allEvents: Events[]) {
 
 export function sortedEventPosts(allEvents: Events[]) {
   return allEvents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+}
+
+export function sortedSolutionPosts(allSolutions: Solution[]) {
+  return allSolutions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
 type ConvertUndefined<T> = OrNull<{
@@ -99,4 +103,31 @@ export async function getAllTags(allBlogs: MDXBlog[]) {
   });
 
   return tagCount;
+}
+
+export function getSideNavData(content: Solution[]) {
+  const groups = {};
+  const sideNavData = [];
+  content.forEach((solution) => {
+    if (!solution.group) {
+      sideNavData.push({ label: solution.title, link: solution.path });
+      return;
+    } else {
+      if (groups[solution.group]) {
+        groups[solution.group].push({ label: solution.title, link: solution.path });
+      } else {
+        groups[solution.group] = [{ label: solution.title, link: solution.path }];
+      }
+    }
+  });
+  Object.keys(groups).forEach((group) => {
+    sideNavData.unshift({ label: group, children: groups[group] });
+  });
+  return [
+    {
+      label: 'Solutions',
+      link: 'solutions',
+      children: sideNavData,
+    },
+  ];
 }

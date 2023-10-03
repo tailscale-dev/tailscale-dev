@@ -10,6 +10,7 @@ import { siteMetadata } from '@/data/site-metadata';
 import ScrollTop from '@/components/scroll-top';
 import ExternalLink from '@/components/external-link';
 import { DateDisplay } from '@/components/date-display';
+import SideNav from '@/components/side-nav';
 
 const editUrl = (path) => `${siteMetadata.siteRepo}/blob/master/data/${path}`;
 
@@ -19,6 +20,7 @@ interface LayoutProps {
   next?: { path: string; title: string };
   prev?: { path: string; title: string };
   children: ReactNode;
+  sideNavData: any;
 }
 
 interface ShareLinkButtonProps {
@@ -72,10 +74,16 @@ const ShareLinkButton = ({ children, iconName, href = '#', onClick }: ShareLinkB
   );
 };
 
-export default function PostLayout({ content, authorDetails, next, prev, children }: LayoutProps) {
+export default function PostLayout({
+  content,
+  authorDetails,
+  next,
+  prev,
+  children,
+  sideNavData,
+}: LayoutProps) {
   const { filePath, path, date, title, tags, url } = content;
   const basePath = path.split('/')[0];
-
   return (
     <>
       <BlogSEO url={`${siteMetadata.siteUrl}/${path}`} authorDetails={authorDetails} {...content} />
@@ -144,27 +152,31 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
           </div>
         </div>
       </header>
-      <main className="container grid grid-cols-3 py-12 md:gap-16">
-        <div className="col-span-3 divide-y lg:col-span-2">
-          <article className="Markdown BlogMarkdown">
-            {tags.includes('community-made') && (
-              <div className="note">
-                This article is contributed by a member of the Tailscale community, not a Tailscale
-                employee. If you have an interesting story to share about how you use Tailscale,
-                reach out to <a href="mailto:devrel@tailscale.com">devrel@tailscale.com</a>.
-              </div>
-            )}
+      <main>
+        <div className="grid grid-cols-5 md:gap-16">
+          <SideNav items={sideNavData} />
+          <div className="col-span-4 pt-6">
+            <article className="Markdown BlogMarkdown">
+              {tags.includes('community-made') && (
+                <div className="note">
+                  This article is contributed by a member of the Tailscale community, not a
+                  Tailscale employee. If you have an interesting story to share about how you use
+                  Tailscale, reach out to{' '}
+                  <a href="mailto:devrel@tailscale.com">devrel@tailscale.com</a>.
+                </div>
+              )}
 
-            {children}
+              {children}
 
-            {tags.includes('community-made') && (
-              <div className="note">
-                As always, make sure to review any code before running it on your computer.
-              </div>
-            )}
-          </article>
+              {tags.includes('community-made') && (
+                <div className="note">
+                  As always, make sure to review any code before running it on your computer.
+                </div>
+              )}
+            </article>
+          </div>
         </div>
-        <div className="sticky top-0 hidden self-start lg:block">
+        <div>
           <div className="row-start-2 divide-y divide-gray-200 text-sm font-medium leading-5 dark:divide-gray-700">
             {tags && (
               <div className="pb-8">

@@ -44,6 +44,5 @@ export const MDXLayoutRenderer = ({
 }: MDXLayoutRendererProps) => {
   const MDXLayout = useMDXComponent(content.body.code);
   const mainContent = coreContent(content);
-
   return <MDXLayout layout={layout} content={mainContent} components={MDXComponents} {...rest} />;
 };

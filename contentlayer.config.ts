@@ -116,6 +116,7 @@ export const Solutions = defineDocumentType(() => ({
   contentType: 'mdx',
   fields: {
     title: { type: 'string', required: true },
+    group: { type: 'string' },
     tags: { type: 'list', of: { type: 'string' }, default: [] },
     date: { type: 'date', required: true },
     summary: { type: 'string', required: true },
