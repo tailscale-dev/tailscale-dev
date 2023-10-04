@@ -108,26 +108,48 @@ export async function getAllTags(allBlogs: MDXBlog[]) {
 export function getSideNavData(content: Solution[]) {
   const groups = {};
   const sideNavData = [];
+  const groupData = [];
   content.forEach((solution) => {
     if (!solution.group) {
       sideNavData.push({ label: solution.title, link: solution.path });
       return;
     } else {
       if (groups[solution.group]) {
-        groups[solution.group].push({ label: solution.title, link: solution.path });
+        groups[solution.group].push({
+          label: solution.title,
+          link: solution.path,
+        });
       } else {
-        groups[solution.group] = [{ label: solution.title, link: solution.path }];
+        groups[solution.group] = [
+          {
+            label: solution.title,
+            link: solution.path,
+          },
+        ];
       }
     }
   });
   Object.keys(groups).forEach((group) => {
-    sideNavData.unshift({ label: group, children: groups[group] });
+    const children = groups[group];
+    children.sort((a, b) => {
+      return a.label.localeCompare(b.label);
+    });
+    groupData.unshift({ label: group, children });
   });
+
+  groupData.sort((a, b) => {
+    return a.label.localeCompare(b.label);
+  });
+
+  sideNavData.sort((a, b) => {
+    return a.label.localeCompare(b.label);
+  });
+
   return [
     {
       label: 'Solutions',
       link: 'solutions',
-      children: sideNavData,
+      children: [...groupData, ...sideNavData],
     },
   ];
 }
