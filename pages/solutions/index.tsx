@@ -1,9 +1,9 @@
 import { siteMetadata } from '@/data/site-metadata';
 import { PageSEO } from '@/components/seo';
 import SideNav from '@/components/side-nav';
-import { sortedSolutionPosts, allCoreContent, getSideNavData } from '@/lib/utils/contentlayer';
+import { allCoreContent, getSideNavData, sortedSolutionPosts } from '@/lib/utils/contentlayer';
 import { InferGetStaticPropsType } from 'next';
-import { allSolutions } from 'contentlayer/generated';
+import { allEvents, allSolutions } from 'contentlayer/generated';
 import type { Solution } from 'contentlayer/generated';
 import { ListItem } from '@/components/list-item';
 
@@ -22,7 +22,7 @@ export const getStaticProps = async () => {
       initialDisplayPosts: allCoreContent(initialDisplayPosts),
       solutions: allCoreContent(solutions),
       pagination,
-      sideNavData: getSideNavData(solutions),
+      sideNavData: getSideNavData(solutions, allEvents),
     },
   };
 };

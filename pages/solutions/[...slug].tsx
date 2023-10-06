@@ -1,9 +1,9 @@
 import React from 'react';
 import { MDXLayoutRenderer } from '@/components/mdx';
 import { MDXComponents } from '@/components/mdx-components';
-import { coreContent, sortedBlogPost, getSideNavData } from '@/lib/utils/contentlayer';
+import { coreContent, getSideNavData, sortedBlogPost } from '@/lib/utils/contentlayer';
 import { InferGetStaticPropsType } from 'next';
-import { allAuthors, allSolutions } from 'contentlayer/generated';
+import { allAuthors, allEvents, allSolutions } from 'contentlayer/generated';
 import type { Solution } from 'contentlayer/generated';
 
 const DEFAULT_LAYOUT = 'post-layout';
@@ -36,7 +36,7 @@ export const getStaticProps = async ({ params }) => {
       authorDetails,
       prev,
       next,
-      sideNavData: getSideNavData(allSolutions),
+      sideNavData: getSideNavData(allSolutions, allEvents),
     },
   };
 };

@@ -1,6 +1,6 @@
 import GithubSlugger from 'github-slugger';
 import type { Document, MDX } from 'contentlayer/core';
-import { allEvents, type Events, type Solution } from 'contentlayer/generated';
+import { type Events, type Solution } from 'contentlayer/generated';
 
 export type MDXDocument = Document & { body: MDX };
 export type MDXDocumentDate = MDXDocument & {
@@ -105,7 +105,7 @@ export async function getAllTags(allBlogs: MDXBlog[]) {
   return tagCount;
 }
 
-export function getSideNavData(content: Solution[]) {
+export function getSideNavData(content: Solution[], events: Events[]) {
   const groups = {};
   const sideNavData = [];
   const groupData = [];
@@ -116,13 +116,13 @@ export function getSideNavData(content: Solution[]) {
     } else {
       if (groups[solution.group]) {
         groups[solution.group].push({
-          label: solution.title,
+          label: solution.shortTitle || solution.title,
           link: solution.path,
         });
       } else {
         groups[solution.group] = [
           {
-            label: solution.title,
+            label: solution.shortTitle || solution.title,
             link: solution.path,
           },
         ];
@@ -145,21 +145,24 @@ export function getSideNavData(content: Solution[]) {
     return a.label.localeCompare(b.label);
   });
 
-  const events = [];
+  const eventList = [];
   const now = new Date();
-  allEvents
+  events
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     .filter((e) => new Date(e.date) > now)
     .forEach((event) => {
-      events.push({
+      eventList.push({
         label: `${event.shortDisplayDate}: ${event.title}`,
         link: event.path,
       });
     });
 
-  groupData.unshift({ label: 'Events', children: events });
-
   return [
+    {
+      label: 'Events',
+      link: 'events',
+      children: eventList,
+    },
     {
       label: 'Solutions',
       link: 'solutions',
