@@ -1,6 +1,6 @@
 import GithubSlugger from 'github-slugger';
 import type { Document, MDX } from 'contentlayer/core';
-import type { Events, Solution } from 'contentlayer/generated';
+import { allEvents, type Events, type Solution } from 'contentlayer/generated';
 
 export type MDXDocument = Document & { body: MDX };
 export type MDXDocumentDate = MDXDocument & {
@@ -144,6 +144,20 @@ export function getSideNavData(content: Solution[]) {
   sideNavData.sort((a, b) => {
     return a.label.localeCompare(b.label);
   });
+
+  const events = [];
+  const now = new Date();
+  allEvents
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    .filter((e) => new Date(e.date) > now)
+    .forEach((event) => {
+      events.push({
+        label: `${event.shortDisplayDate}: ${event.title}`,
+        link: event.path,
+      });
+    });
+
+  groupData.unshift({ label: 'Events', children: events });
 
   return [
     {

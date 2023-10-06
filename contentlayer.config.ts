@@ -79,6 +79,7 @@ export const Events = defineDocumentType(() => ({
     summary: { type: 'string', required: true },
     endsDate: { type: 'date' },
     displayDate: { type: 'string' },
+    shortDisplayDate: { type: 'string' },
     displayTime: { type: 'string' },
     draft: { type: 'boolean' },
     link: { type: 'string' },
