@@ -1,7 +1,7 @@
 import React, { MouseEventHandler, ReactNode } from 'react';
 import Link from 'next/link';
 import type { LinkProps } from 'next/link';
-import type { Blog, Authors } from 'contentlayer/generated';
+import type { Authors, Blog } from 'contentlayer/generated';
 import { CoreContent } from '@/lib/utils/contentlayer';
 import { BlogSEO } from '@/components/seo';
 import Image from '@/components/image';
@@ -88,74 +88,78 @@ export default function PostLayout({
     <>
       <BlogSEO url={`${siteMetadata.siteUrl}/${path}`} authorDetails={authorDetails} {...content} />
       <ScrollTop />
-      <header className="bg-gray-900 py-20 text-center text-gray-100">
-        <h1 className="text-4xl font-medium leading-tight tracking-tight">{title}</h1>
-
-        <div className="mt-6">
-          <div className="flex justify-center md:justify-center">
-            <div className="items-center justify-center leading-tight md:flex">
-              <div className="md:text-leftleading-snug order-2 md:ml-2">
-                <ul className="sentanceCase inline-block">
-                  {authorDetails.map((author) => (
-                    <li key={author.path} className="inline-block pl-1">
-                      <a
-                        className="whitespace-nowrap text-blue-300 transition-colors hover:text-blue-700"
-                        href={author.website}
-                        rel="noreferer noopener noreferrer"
-                        target="_blank"
-                      >
-                        {author.name}{' '}
-                      </a>
-                      {author.pronouns != undefined && (
-                        <>
-                          (
-                          <a
-                            className="whitespace-nowrap text-blue-300 transition-colors hover:text-blue-700"
-                            href={author.pronouns.link}
-                            rel="noreferer noopener noreferrer"
-                            target="_blank"
-                          >
-                            {author.pronouns.display}
-                          </a>
-                          )
-                        </>
-                      )}
-                      {author.tailscalar && (
-                        <span className="mx-1 rounded-md bg-[#496495] p-1 text-sm font-medium">
-                          Tailscalar
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-                <span className="px-1">on</span>
-                <DateDisplay dateString={date} />
-              </div>
-
-              <div className="mt-3 flex justify-center md:mt-0 md:justify-center">
-                {authorDetails.map((author) => (
-                  <div
-                    key={author.path}
-                    className="block h-8 max-h-8 w-8 flex-shrink-0 overflow-hidden rounded-full bg-gray-100 bg-cover bg-center bg-no-repeat"
-                  >
-                    <Image
-                      src={author.avatar}
-                      width={32}
-                      height={32}
-                      alt={`Photo of ${author.name}`}
-                      className="rounded-full"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
       <main>
-        <div className="grid grid-cols-5 md:gap-16">
-          <SideNav items={sideNavData} />
+        <div className="grid grid-cols-7">
+          {sideNavData && (
+            <div className="mt-4 col-span-1">
+              <SideNav items={sideNavData} />
+            </div>
+          )}
           <div className="col-span-4 pt-6">
+            <header className="py-10 text-center">
+              <h1 className="text-4xl font-medium leading-tight tracking-tight">{title}</h1>
+
+              <div className="mt-6">
+                <div className="flex justify-center md:justify-center">
+                  <div className="items-center justify-center leading-tight md:flex">
+                    <div className="md:text-leftleading-snug order-2 md:ml-2">
+                      <ul className="sentenceCase inline-block">
+                        {authorDetails.map((author) => (
+                          <li key={author.path} className="inline-block pl-1">
+                            <a
+                              className="whitespace-nowrap text-blue-700 transition-colors hover:text-blue-300"
+                              href={author.website}
+                              rel="noreferer noopener noreferrer"
+                              target="_blank"
+                            >
+                              {author.name}{' '}
+                            </a>
+                            {author.pronouns != undefined && (
+                              <>
+                                (
+                                <a
+                                  className="whitespace-nowrap text-blue-700 transition-colors hover:text-blue-300"
+                                  href={author.pronouns.link}
+                                  rel="noreferer noopener noreferrer"
+                                  target="_blank"
+                                >
+                                  {author.pronouns.display}
+                                </a>
+                                )
+                              </>
+                            )}
+                            {author.tailscalar && (
+                              <span className="mx-1 rounded-md bg-[#496495] p-1 text-sm font-medium text-white">
+                                Tailscalar
+                              </span>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                      <span className="px-1">on</span>
+                      <DateDisplay dateString={date} />
+                    </div>
+
+                    <div className="mt-3 flex justify-center md:mt-0 md:justify-center">
+                      {authorDetails.map((author) => (
+                        <div
+                          key={author.path}
+                          className="block h-8 max-h-8 w-8 flex-shrink-0 overflow-hidden rounded-full bg-gray-100 bg-cover bg-center bg-no-repeat"
+                        >
+                          <Image
+                            src={author.avatar}
+                            width={32}
+                            height={32}
+                            alt={`Photo of ${author.name}`}
+                            className="rounded-full"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </header>
             <article className="Markdown BlogMarkdown">
               {tags.includes('community-made') && (
                 <div className="note">
@@ -175,121 +179,121 @@ export default function PostLayout({
               )}
             </article>
           </div>
-        </div>
-        <div>
-          <div className="row-start-2 divide-y divide-gray-200 text-sm font-medium leading-5 dark:divide-gray-700">
-            {tags && (
-              <div className="pb-8">
-                <h2 className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                  Tags
-                </h2>
-                <div className="flex flex-wrap">
-                  {tags.map((tag) => (
-                    <Tag key={tag} text={tag} />
-                  ))}
+          <div className="col-span-2">
+            <div className="row-start-2 mt-8 divide-y divide-gray-200 text-sm font-medium leading-5 dark:divide-gray-700">
+              {tags && (
+                <div className="pb-8">
+                  <h2 className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                    Tags
+                  </h2>
+                  <div className="flex flex-wrap">
+                    {tags.map((tag) => (
+                      <Tag key={tag} text={tag} />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
-            {(next || prev) && (
-              <div className="justify-between space-y-8 py-8">
-                {prev && (
-                  <div>
-                    <h2 className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                      Previous Article
-                    </h2>
-                    <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
-                      <Link href={`/${prev.path}`}>{prev.title}</Link>
+              )}
+              {(next || prev) && (
+                <div className="justify-between space-y-8 py-8">
+                  {prev && (
+                    <div>
+                      <h2 className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                        Previous Article
+                      </h2>
+                      <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+                        <Link href={`/${prev.path}`}>{prev.title}</Link>
+                      </div>
                     </div>
-                  </div>
-                )}
-                {next && (
-                  <div>
-                    <h2 className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                      Next Article
-                    </h2>
-                    <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
-                      <Link href={`/${next.path}`}>{next.title}</Link>
+                  )}
+                  {next && (
+                    <div>
+                      <h2 className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                        Next Article
+                      </h2>
+                      <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+                        <Link href={`/${next.path}`}>{next.title}</Link>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-          <div className="pt-8">
-            <Link
-              href={`/${basePath}`}
-              className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-              aria-label="Back to the blog"
-            >
-              &larr; Back to the blog
-            </Link>
-          </div>
+                  )}
+                </div>
+              )}
+            </div>
+            <div className="pt-8">
+              <Link
+                href={`/${basePath}`}
+                className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                aria-label="Back to the blog"
+              >
+                &larr; Back to the blog
+              </Link>
+            </div>
 
-          <div className="flex flex-wrap items-start break-all pt-8">
-            <ShareLinkButton href="/feed.xml" iconName="rss" onClick={() => {}}>
-              RSS
-            </ShareLinkButton>
-            <ShareLinkButton
-              iconName="share"
-              onClick={() => {
-                const data = {
-                  title: content.title,
-                  text: content.summary,
-                  url,
-                };
-                if (navigator.share) {
-                  navigator.share(data);
-                } else {
-                  alert(
-                    'Only available in browsers that support the Navigator.share() method of the Web Share API.'
-                  );
-                }
-              }}
-            >
-              Share
-            </ShareLinkButton>
-            <ShareLinkButton
-              iconName="twitter"
-              href={{
-                protocol: 'https',
-                hostname: 'twitter.com',
-                pathname: 'intent/tweet',
-                query: { via: 'tailscale', text: `${content.title}`, url },
-              }}
-            >
-              Tweet
-            </ShareLinkButton>
-            <ShareLinkButton
-              iconName="linkedin"
-              href={{
-                protocol: 'https',
-                hostname: 'www.linkedin.com',
-                pathname: 'shareArticle',
-                query: { url, title: content.title },
-              }}
-            >
-              LinkedIn
-            </ShareLinkButton>
-            <ShareLinkButton
-              iconName="hachyderm"
-              href={{
-                protocol: 'https',
-                hostname: 'hachyderm.io',
-                pathname: 'share',
-                query: {
-                  text: `${content.title}\n\n${url} - by ${
-                    authorDetails[0].fediverse ? authorDetails[0].fediverse : '@tailscale'
-                  }`,
-                  visibility: 'public',
-                },
-              }}
-            >
-              Hachyderm
-            </ShareLinkButton>
-          </div>
+            <div className="flex flex-wrap items-start break-all pt-8">
+              <ShareLinkButton href="/feed.xml" iconName="rss" onClick={() => {}}>
+                RSS
+              </ShareLinkButton>
+              <ShareLinkButton
+                iconName="share"
+                onClick={() => {
+                  const data = {
+                    title: content.title,
+                    text: content.summary,
+                    url,
+                  };
+                  if (navigator.share) {
+                    navigator.share(data);
+                  } else {
+                    alert(
+                      'Only available in browsers that support the Navigator.share() method of the Web Share API.'
+                    );
+                  }
+                }}
+              >
+                Share
+              </ShareLinkButton>
+              <ShareLinkButton
+                iconName="twitter"
+                href={{
+                  protocol: 'https',
+                  hostname: 'twitter.com',
+                  pathname: 'intent/tweet',
+                  query: { via: 'tailscale', text: `${content.title}`, url },
+                }}
+              >
+                Tweet
+              </ShareLinkButton>
+              <ShareLinkButton
+                iconName="linkedin"
+                href={{
+                  protocol: 'https',
+                  hostname: 'www.linkedin.com',
+                  pathname: 'shareArticle',
+                  query: { url, title: content.title },
+                }}
+              >
+                LinkedIn
+              </ShareLinkButton>
+              <ShareLinkButton
+                iconName="hachyderm"
+                href={{
+                  protocol: 'https',
+                  hostname: 'hachyderm.io',
+                  pathname: 'share',
+                  query: {
+                    text: `${content.title}\n\n${url} - by ${
+                      authorDetails[0].fediverse ? authorDetails[0].fediverse : '@tailscale'
+                    }`,
+                    visibility: 'public',
+                  },
+                }}
+              >
+                Hachyderm
+              </ShareLinkButton>
+            </div>
 
-          <div className="pt-6 pb-6">
-            <ExternalLink href={editUrl(filePath)}>Improve this page</ExternalLink>
+            <div className="pt-6 pb-6">
+              <ExternalLink href={editUrl(filePath)}>Improve this page</ExternalLink>
+            </div>
           </div>
         </div>
       </main>
