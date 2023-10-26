@@ -1,0 +1,34 @@
+---
+title: 'A Homelabbers Networking Playground using VLANs'
+date: 2023-10-26
+authors: ['Alexktz']
+summary: 'A Homelabbers Networking Playground using VLANs'
+tags:
+  - Homelab
+  - Networking
+images: ['/images/astral-projection-release-recap-oct-2023/social.png']
+---
+
+It's OK to break stuff, that's how we learn. But all too often it's impossible to find a safe space to do so. In this video, Alex breaks down how to create a segmented network zone for learning purposes using Proxmox to virtualize Opnsense.
+
+Imagine you'd like to test out a new way of working with DHCP - the technology responsible for managing IP addresses within a network. A service like this is absolutely critical to the basic functionality of your network. This often means your window to tinker with different options is often limited to minutes. When you take something as core to a networks function, like DHCP, and break it, it means everything from your laptop to your [robot vacuum](https://tailscale.dev/blog/tailscale-sucks) breaks too.
+
+<figure>
+  <iframe
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/XXx7NDgDaRU?si=HvmriqEvH0GKAsJL"
+    title="YouTube video player"
+    frameBorder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+  ></iframe>
+</figure>
+
+Using virtualization and VLANs to our advantage we can create a completely segregated network zone to play around in. If you'd like to create a temporary DHCP server, do so using a NIC tagged with the correct VLAN tag and there'll be no conflict. You can spend as long as you like learning the intricacies without having to rush to deploy it in the real world.
+
+Naturally, we can shoehorn Tailscale into this solution too. By installing Tailscale on Opnsense, and turning that firewall appliance into a subnet router, you're able to interact with entities in that safe network zone from your "real" network as if you were in that zone too. We've really only scratched the surface of what you can do in this video and we'd love to hear what you're doing with it. Let us know in the YouTube comment section.
+
+—
+
+Did we miss a new Tailscale feature you’d like to hear more about? Hit us up on [Twitter](https://twitter.com/tailscale) or the [fediverse](https://hachyderm.io/@tailscale) with your feedback!
