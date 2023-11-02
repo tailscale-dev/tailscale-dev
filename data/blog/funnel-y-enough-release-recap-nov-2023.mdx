@@ -1,0 +1,45 @@
+---
+title: 'Funnel-y enough: Release Recap November 2023'
+date: 2023-11-02
+authors: ['parker']
+summary: 'Big updates to Serve and Funnel, Taildrop, and auto-updates in the latest Tailscale release.'
+tags:
+  - Release Recap
+  - Serve
+  - Funnel
+  - Taildrop
+images: ['/images/funnel-y-enough-release-recap-nov-2023/social.png']
+---
+
+We’re always shipping new features and fixes at Tailscale — so much so that sometimes [the changelog](https://tailscale.com/changelog/) can get a little overwhelming. That’s especially true this month, with the recent release of 1.52 bringing all sorts of improvements.
+
+This edition of Release Recap digs into three features that are either new or improved in that latest version. Make sure you’re running 1.52 or later if you want to follow along!
+
+If you’d like to share how you’re using a newly released Tailscale feature, get in touch at devrel[]()@tailscale.com, on [Twitter](https://twitter.com/tailscale), or on the [fediverse](https://hachyderm.io/@tailscale), and we may include your story in a future post.
+
+### More fun with Funnel and Serve
+
+If you’ve got a service, a file, or a port that you want to share with the world—or just with other devices on your tailnet—[Funnel](https://tailscale.com/kb/13https://tailscale.com/kb/1223/funnel/11/tailscale-funnel/) and [Serve](https://tailscale.com/kb/1312/serve/) are the tools for you. They’re not brand new, so maybe you already know these tools from the alpha and beta launches; but this week we rolled out a [completely redesigned command-line interface for them](https://tailscale.com/kb/1311/tailscale-funnel/).
+
+We based this new interface on real-world experience from people who have incorporated Funnel and Serve into their workflows, simplifying the most common use cases down into shorter and more straightforward commands. We’ve also made it easier to monitor how your Serve servers or Funnel tunnels are being accessed in real-time, bringing their default operation to the terminal foreground.
+
+We’ve got more information on the inspiration and the changes in [our announcement blog post](https://tailscale.com/blog/reintroducing-serve-funnel/). As we say there: we love building on feedback, so please continue sharing it with us as you switch over to the new syntax—or start using these tools for the first time!
+
+### Taildrop everything
+
+When we talk to active users of [Taildrop](https://tailscale.com/kb/1106/taildrop/)—our tool for sending files from one machine to another in your tailnet—one thing they always mention is its simplicity. You get a direct route between the two devices, end-to-end encrypted, with no need to fuss with third-party servers or confusing tools.
+
+So we’re not messing with that simplicity! But we can still find ways to make it easier and more powerful. In Tailscale 1.52 and later, we’ve added some duplicate detection to avoid redundant files or transfers, and we can now resume file transfers that were interrupted before completion. And if you’re sending from a Linux device, you now get a nice progress meter as your file sends.
+
+### Keep me updated
+
+The best version of software is the one that has all the latest bug fixes and security improvements. And the best version of software updates is the one that you don’t have to remember to do yourself—especially when you’re running copies of it on many machines, as is the case for many of our users.
+
+On some platforms, updates are handled for you automatically. On others, it can be a little dicier. To make sure that users who want automatic updates can get them, we built it right into Tailscale, and [it’s now available as a beta feature](https://tailscale.com/blog/auto-update-beta/).
+
+If you want to turn on auto-updates, and you’re not yet on Tailscale 1.52 or later, take a moment and savor your final manual update. Then [follow the auto-updates documentation](https://tailscale.com/kb/1067/update/#auto-updates) and get ready to embrace the automatic.
+
+—
+
+\
+Thanks for reading this month’s Release Recap. Did we miss a new Tailscale feature you’d like to hear more about? Hit us up on [Twitter](https://twitter.com/tailscale) or the [fediverse](https://hachyderm.io/@tailscale) with your feedback!
