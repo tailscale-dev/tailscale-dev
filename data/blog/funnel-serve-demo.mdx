@@ -1,0 +1,37 @@
+---
+title: 'Funnel and Serve: Tailscale Explained'
+date: 2023-11-09
+authors: ['alexktz']
+summary: 'Accessing your local services over your tailnet or the public internet is one command away, as Alex demonstrates in a new demo video.'
+tags:
+  - Funnel
+  - Serve
+  - VS Code
+images: ['/images/funnel-serve-video/social.jpg']
+---
+
+Weren't computer networks supposed to make it easy to share files, folders, and services between machines? Too often we're stuck doing the awkward dance of zipping up archives to send to each other, or sharing screens in a video call when what we really want, is to let a client or collaborator click around for themselves.
+
+[Tailscale Serve](https://tailscale.com/kb/1312/serve/) and [Funnel](https://tailscale.com/kb/1223/funnel/) are two related tools that we built to help recapture some of the magic of interconnectedness. With Serve, you can share a port, a file, or a directory with any machine on _your tailnet_, with all the power and security of a direct WireGuard connection. Funnel lets you selectively open the same targets up to the _public internet_, to give the world access under your terms.
+
+Serve is local, Funnel is public. It's that simple.
+
+We [recently redesigned the interface for Serve and Funnel](https://tailscale.com/blog/reintroducing-serve-funnel/) to make them simpler to use. In this video demo, we walk through the tools and how they work.
+
+<figure>
+  <iframe
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/MpxmfpCl20c?si=MUdxowTUOJloIr9C"
+    title="YouTube video player"
+    frameBorder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+  ></iframe>
+</figure>
+
+If you use Tailscale at work, Serve is a secure and direct way to share services and files with co-workers or contractors. And if you need to reach past your tailnet to the public internet, Funnel can be your reliable one-line command to put things online for exactly as long as you want, without worrying about things like changing URLs or provisioning HTTPS certificates.
+
+—
+
+Did we miss a new Tailscale feature you’d like to hear more about? Hit us up on [Twitter](https://twitter.com/tailscale) or the [fediverse](https://hachyderm.io/@tailscale) with your feedback!
