@@ -1,21 +1,9 @@
-import { Client as ESClient } from '@elastic/elasticsearch';
+import { client } from 'lib/utils/elasticsearch';
 import { allAuthors, allBlogs, Authors } from 'contentlayer/generated';
 
 const idToPost = (id: string) => allBlogs.find((p) => p.path === id) || null;
 
 const authorFromHandle = (handle: string) => allAuthors.find((a) => a.slug === handle) || null;
-
-const client = new ESClient({
-  node: {
-    url: new URL(process.env.ELASTIC_URL),
-  },
-  auth: {
-    username: process.env.ELASTIC_USERNAME,
-    password: process.env.ELASTIC_PASSWORD,
-  },
-  maxRetries: 5,
-  requestTimeout: 60000,
-});
 
 export interface AuthorView {
   slug: string;
