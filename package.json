@@ -60,7 +60,7 @@
     "lint-staged": "^14.0.0",
     "prettier": "^2.8.8",
     "schema-dts": "^1.1.2",
-    "ts-node": "^10.9.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.1.6",
     "vfile": "^5.3.7"
   },
