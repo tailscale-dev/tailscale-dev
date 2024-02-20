@@ -20,7 +20,7 @@
     "@elastic/elasticsearch": "^8.9.0",
     "@next/bundle-analyzer": "13.0.2",
     "@next/font": "13.0.2",
-    "@vercel/analytics": "^1.0.2",
+    "@vercel/analytics": "^1.2.2",
     "autoprefixer": "^10.4.15",
     "contentlayer": "0.2.8",
     "esbuild": "^0.19.2",
