@@ -47,7 +47,7 @@
     "@tailwindcss/line-clamp": "^0.4.4",
     "@types/mdx": "^2.0.3",
     "@types/react": "^18.0.18",
-    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/eslint-plugin": "^7.1.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.23.0",
     "eslint-config-next": "13.0.2",
