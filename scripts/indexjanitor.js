@@ -13,7 +13,7 @@
     requestTimeout: 60000,
   });
 
-  const aliasesToCareAbout = ['site-search-kb', 'site-search-dev-blog', 'site-search-xe-test'];
+  const aliasesToCareAbout = ['site-search-kb', 'site-search-dev-blog'];
 
   const actuallyCloseThings = process.env.ACTUALLY_CLOSE_THINGS
     ? process.env.ACTUALLY_CLOSE_THINGS == 'true'
