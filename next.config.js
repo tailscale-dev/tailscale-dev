@@ -232,7 +232,7 @@ module.exports = () => {
         },
         {
           source: '/solutions/ondemand-indent',
-          destination: 'https://web.archive.org/web/20240518164134/https://indent.com/',
+          destination: 'https://tailscale.com/kb/1355/solutions',
           permanent: true,
         },
         {
