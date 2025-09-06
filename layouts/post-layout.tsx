@@ -1,7 +1,7 @@
 import React, { MouseEventHandler, ReactNode } from 'react';
 import Link from 'next/link';
 import type { LinkProps } from 'next/link';
-import type { Blog, Authors } from 'contentlayer/generated';
+import type { Authors, Blog } from 'contentlayer/generated';
 import { CoreContent } from '@/lib/utils/contentlayer';
 import { BlogSEO } from '@/components/seo';
 import Image from '@/components/image';
@@ -80,73 +80,73 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
     <>
       <BlogSEO url={`${siteMetadata.siteUrl}/${path}`} authorDetails={authorDetails} {...content} />
       <ScrollTop />
-      <header className="bg-gray-900 py-20 text-center text-gray-100">
-        <h1 className="text-4xl font-medium leading-tight tracking-tight">{title}</h1>
+      <main className="container grid grid-cols-3 py-12 md:gap-16">
+        <div className="col-span-3 divide-y lg:col-span-2">
+          <header className="py-10 text-center">
+            <h1 className="text-4xl font-medium leading-tight tracking-tight">{title}</h1>
 
-        <div className="mt-6">
-          <div className="flex justify-center md:justify-center">
-            <div className="items-center justify-center leading-tight md:flex">
-              <div className="md:text-leftleading-snug order-2 md:ml-2">
-                <ul className="sentanceCase inline-block">
-                  {authorDetails.map((author) => (
-                    <li key={author.path} className="inline-block pl-1">
-                      <a
-                        className="whitespace-nowrap text-blue-300 transition-colors hover:text-blue-700"
-                        href={author.website}
-                        rel="noreferer noopener noreferrer"
-                        target="_blank"
-                      >
-                        {author.name}{' '}
-                      </a>
-                      {author.pronouns != undefined && (
-                        <>
-                          (
+            <div className="mt-6">
+              <div className="flex justify-center md:justify-center">
+                <div className="items-center justify-center leading-tight md:flex">
+                  <div className="md:text-leftleading-snug order-2 md:ml-2">
+                    <ul className="sentanceCase inline-block">
+                      {authorDetails.map((author) => (
+                        <li key={author.path} className="inline-block pl-1">
                           <a
-                            className="whitespace-nowrap text-blue-300 transition-colors hover:text-blue-700"
-                            href={author.pronouns.link}
+                            className="whitespace-nowrap text-blue-700 transition-colors hover:text-blue-300"
+                            href={author.website}
                             rel="noreferer noopener noreferrer"
                             target="_blank"
                           >
-                            {author.pronouns.display}
+                            {author.name}{' '}
                           </a>
-                          )
-                        </>
-                      )}
-                      {author.tailscalar && (
-                        <span className="mx-1 rounded-md bg-[#496495] p-1 text-sm font-medium">
-                          Tailscalar
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-                <span className="px-1">on</span>
-                <DateDisplay dateString={date} />
-              </div>
-
-              <div className="mt-3 flex justify-center md:mt-0 md:justify-center">
-                {authorDetails.map((author) => (
-                  <div
-                    key={author.path}
-                    className="block h-8 max-h-8 w-8 flex-shrink-0 overflow-hidden rounded-full bg-gray-100 bg-cover bg-center bg-no-repeat"
-                  >
-                    <Image
-                      src={author.avatar}
-                      width={32}
-                      height={32}
-                      alt={`Photo of ${author.name}`}
-                      className="rounded-full"
-                    />
+                          {author.pronouns != undefined && (
+                            <>
+                              (
+                              <a
+                                className="whitespace-nowrap text-blue-700 transition-colors hover:text-blue-300"
+                                href={author.pronouns.link}
+                                rel="noreferer noopener noreferrer"
+                                target="_blank"
+                              >
+                                {author.pronouns.display}
+                              </a>
+                              )
+                            </>
+                          )}
+                          {author.tailscalar && (
+                            <span className="mx-1 rounded-md bg-[#496495] text-white p-1 text-sm font-medium">
+                              Tailscalar
+                            </span>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                    <span className="px-1">on</span>
+                    <DateDisplay dateString={date} />
                   </div>
-                ))}
+
+                  <div className="mt-3 flex justify-center md:mt-0 md:justify-center">
+                    {authorDetails.map((author) => (
+                      <div
+                        key={author.path}
+                        className="block h-8 max-h-8 w-8 flex-shrink-0 overflow-hidden rounded-full bg-gray-100 bg-cover bg-center bg-no-repeat"
+                      >
+                        <Image
+                          src={author.avatar}
+                          width={32}
+                          height={32}
+                          alt={`Photo of ${author.name}`}
+                          className="rounded-full"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </header>
-      <main className="container grid grid-cols-3 py-12 md:gap-16">
-        <div className="col-span-3 divide-y lg:col-span-2">
-          <article className="Markdown BlogMarkdown">
+          </header>
+          <article className="pt-6 Markdown BlogMarkdown">
             {tags.includes('community-made') && (
               <div className="note">
                 This article is contributed by a member of the Tailscale community, not a Tailscale
