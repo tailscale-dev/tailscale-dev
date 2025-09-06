@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { siteMetadata } from '@/data/site-metadata';
 import { CoreContent } from '@/lib/utils/contentlayer';
-import type { Blog, Authors } from 'contentlayer/generated';
+import type { Authors, Blog } from 'contentlayer/generated';
 import { tags } from '@/data/tags';
 
 import type { BlogPosting, ImageObject, Person } from 'schema-dts';

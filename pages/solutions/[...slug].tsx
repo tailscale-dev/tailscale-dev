@@ -2,20 +2,14 @@ import React from 'react';
 import { MDXLayoutRenderer } from '@/components/mdx';
 import { MDXComponents } from '@/components/mdx-components';
 import { coreContent, sortedBlogPost } from '@/lib/utils/contentlayer';
-import { InferGetStaticPropsType } from 'next';
+import { InferGetServerSidePropsType } from 'next';
 import { allAuthors, allSolutions } from 'contentlayer/generated';
 import type { Solution } from 'contentlayer/generated';
+import { relatedArticles } from '@/lib/utils/elasticsearch';
 
-const DEFAULT_LAYOUT = 'post-layout';
+const DEFAULT_LAYOUT = 'solution-layout';
 
-export async function getStaticPaths() {
-  return {
-    paths: allSolutions.map((p) => ({ params: { slug: p.slug.split('/') } })),
-    fallback: false,
-  };
-}
-
-export const getStaticProps = async ({ params }) => {
+export const getServerSideProps = async ({ params }) => {
   const slug = (params.slug as string[]).join('/');
   const sortedPosts = sortedBlogPost(allSolutions) as Solution[];
   const postIndex = sortedPosts.findIndex((p) => p.slug === slug);
@@ -30,12 +24,19 @@ export const getStaticProps = async ({ params }) => {
     return coreContent(authorResults);
   });
 
+  const related = await relatedArticles({
+    summary: post.summary,
+    tags: post.tags,
+    title: post.title,
+  });
+
   return {
     props: {
       post,
       authorDetails,
       prev,
       next,
+      relatedArticles: related,
     },
   };
 };
@@ -45,7 +46,8 @@ export default function SolutionPage({
   authorDetails,
   prev,
   next,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+  relatedArticles,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <MDXLayoutRenderer
       layout={post.layout || DEFAULT_LAYOUT}
@@ -55,6 +57,7 @@ export default function SolutionPage({
       authorDetails={authorDetails}
       prev={prev}
       next={next}
+      relatedArticles={relatedArticles}
     />
   );
 }
