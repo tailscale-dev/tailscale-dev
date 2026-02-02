@@ -70,26 +70,9 @@ module.exports = () => {
         // Singles
         { source: '/up', destination: 'https://tailscale.com/', permanent: true },
         { source: '/', destination: 'https://tailscale.com/blog/', permanent: true },
-        { source: '/events', destination: 'https://tailscale.com/blog/', permanent: true },
-
-        // Blog root + pagination
-        { source: '/blog', destination: 'https://tailscale.com/blog/', permanent: true },
-        {
-          source: '/blog/page/:path*',
-          destination: 'https://tailscale.com/blog/',
-          permanent: true,
-        },
 
         // Tags
         { source: '/tags/:path*', destination: 'https://tailscale.com/blog/', permanent: true },
-
-        // TEMPORARY 302
-        {
-          source:
-            '/blog/:slug((?:battery-life|configuring-emacs-mdx|darwin-spelunking|docker-mod-tailscale|embedded-funnel|funnel-101|headscale-funnel|id-headers-tailscale-serve-flask|libtailscale|multi-user-tailnet-github-orgs|on-the-node-while-on-the-road|strawberry-jam-steam-deck|tailgraft|tailscale-serve-obsoleted-my-code|tailscale-sucks|tclip|tclip-updates-092023|telltail-universal-clipboard-ajit-singh-interview|tevents|tsup-tsnet|vaultwarden-tailnet|weaponizing-hyperfocus|funnel-serve-demo|get-started-in-10-nov2023|homelab-networking-vlans))',
-          destination: 'https://tailscale.com/blog/',
-          permanent: false,
-        },
 
         // PERMANENT 301
         {
@@ -158,6 +141,14 @@ module.exports = () => {
           permanent: true,
         },
 
+        // Blog root + pagination
+        { source: '/blog', destination: 'https://tailscale.com/blog/', permanent: true },
+        {
+          source: '/blog/page/:path*',
+          destination: 'https://tailscale.com/blog/',
+          permanent: true,
+        },
+
         {
           source:
             '/blog/:slug((?:2020-05-in-the-wild|2020-06-in-the-wild|2020-08-in-the-wild|2020-10-in-the-wild|2021-02-in-the-wild|2021-03-in-the-wild|2021-04-in-the-wild|2021-05-in-the-wild|2021-06-in-the-wild|2021-08-in-the-wild|2021-09-in-the-wild|2021-10-in-the-wild|2021-11-in-the-wild|2021-12-in-the-wild|2022-03-in-the-wild|2022-04-in-the-wild|2022-05-in-the-wild|2022-06-in-the-wild|2022-07-in-the-wild|2022-08-in-the-wild|2022-09-in-the-wild|2022-10-in-the-wild|2022-11-in-the-wild|2022-12-in-the-wild|astral-projection-release-recap-oct-2023|funnel-y-enough-release-recap-nov-2023|remote-control-vscode-release-recap-sept-2023|serve-plain-release-recap-aug-2023))',
@@ -170,6 +161,15 @@ module.exports = () => {
           destination: 'https://tailscale.com/events-webinars',
           permanent: true,
         },
+
+        // TEMPORARY 302
+        {
+          source:
+            '/blog/:slug((?:battery-life|configuring-emacs-mdx|darwin-spelunking|docker-mod-tailscale|embedded-funnel|funnel-101|headscale-funnel|id-headers-tailscale-serve-flask|libtailscale|multi-user-tailnet-github-orgs|on-the-node-while-on-the-road|strawberry-jam-steam-deck|tailgraft|tailscale-serve-obsoleted-my-code|tailscale-sucks|tclip|tclip-updates-092023|telltail-universal-clipboard-ajit-singh-interview|tevents|tsup-tsnet|vaultwarden-tailnet|weaponizing-hyperfocus|funnel-serve-demo|get-started-in-10-nov2023|homelab-networking-vlans))',
+          destination: 'https://tailscale.com/blog/',
+          permanent: false,
+        },
+
         // TODO: migrate /events/* pages to tailscale.com
         {
           source: '/solutions/aws-rds',
