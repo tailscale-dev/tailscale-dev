@@ -93,6 +93,72 @@ module.exports = () => {
 
         // PERMANENT 301
         {
+          source: '/blog/tailscale-sucks',
+          destination: 'https://tailscale.com/blog/tailscale-sucks',
+          permanent: true,
+        },
+
+        {
+          source: '/blog/tsup-tsnet',
+          destination: 'https://tailscale.com/blog/tsup-tsnet',
+          permanent: true,
+        },
+
+        {
+          source: '/blog/headscale-funnel',
+          destination: 'https://tailscale.com/blog/headscale-funnel',
+          permanent: true,
+        },
+
+        {
+          source: '/events/',
+          destination: 'https://tailscale.com/events-webinars/',
+          permanent: true,
+        },
+
+        {
+          source: '/events/2023/tailscale-up',
+          destination: 'https://tailscale.com/events-webinars/',
+          permanent: true,
+        },
+
+        {
+          source: '/events/2023/rsa',
+          destination: 'https://tailscale.com/events-webinars/',
+          permanent: true,
+        },
+
+        {
+          source: '/events/2023/all-things-open',
+          destination: 'https://tailscale.com/events-webinars/',
+          permanent: true,
+        },
+
+        {
+          source: '/events/2023/unplanned-maintenance-may',
+          destination: 'https://tailscale.com/events-webinars/',
+          permanent: true,
+        },
+
+        {
+          source: '/events/2023/kubecon-cloudnativecon-na',
+          destination: 'https://tailscale.com/events-webinars/',
+          permanent: true,
+        },
+
+        {
+          source: '/events/2023/cloud-native-rejekts-na',
+          destination: 'https://tailscale.com/events-webinars/',
+          permanent: true,
+        },
+
+        {
+          source: '/events/code-of-conduct',
+          destination: 'https://tailscale.com/events-webinars/',
+          permanent: true,
+        },
+
+        {
           source:
             '/blog/:slug((?:2020-05-in-the-wild|2020-06-in-the-wild|2020-08-in-the-wild|2020-10-in-the-wild|2021-02-in-the-wild|2021-03-in-the-wild|2021-04-in-the-wild|2021-05-in-the-wild|2021-06-in-the-wild|2021-08-in-the-wild|2021-09-in-the-wild|2021-10-in-the-wild|2021-11-in-the-wild|2021-12-in-the-wild|2022-03-in-the-wild|2022-04-in-the-wild|2022-05-in-the-wild|2022-06-in-the-wild|2022-07-in-the-wild|2022-08-in-the-wild|2022-09-in-the-wild|2022-10-in-the-wild|2022-11-in-the-wild|2022-12-in-the-wild|astral-projection-release-recap-oct-2023|funnel-y-enough-release-recap-nov-2023|remote-control-vscode-release-recap-sept-2023|serve-plain-release-recap-aug-2023))',
           destination: 'https://tailscale.com/blog/',
