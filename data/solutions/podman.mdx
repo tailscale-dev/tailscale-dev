@@ -1,0 +1,287 @@
+---
+title: Tailscale on Podman
+date: 2025-04-14
+summary: Learn how to connect Podman and Tailscale together.
+tags:
+  - containers
+  - podman
+---
+
+Podman is a daemonless container engine for developing, managing, and running OCI containers on Linux systems. It provides a Docker-compatible command line that can run containers and build images without requiring root privileges, making it a secure alternative to Docker. This doc shows several ways to integrate Tailscale with Podman containers.
+
+### Tailscale's managed container image
+
+Tailscale has a published container image that Tailscale manages and builds from source. It's available in [Docker Hub](https://hub.docker.com/r/tailscale/tailscale) and [GitHub Packages](https://github.com/orgs/tailscale/packages/container/package/tailscale), and can be used with Podman:
+
+```bash
+podman pull tailscale/tailscale:latest
+```
+
+or
+
+```bash
+podman pull ghcr.io/tailscale/tailscale:latest
+```
+
+### Prerequisites
+
+You need:
+
+1. Podman installed on your system
+2. A Tailscale account and tailnet
+
+### Setup
+
+1. (Optional) You can choose to use an [auth key][auth keys] to automate your container logging in
+   to your tailnet. Create an auth key in the [**Keys**][auth keys page] page of the admin console.
+   We recommend using an [ephemeral key][ephemeral node] for this purpose, since it will
+   automatically clean up devices after they shut down. We also recommend using a
+   [reusable key][reusable key] so when containers are stopped and started they can still connect to
+   your tailnet.
+
+<br />
+<Image
+  alt="Tailscale's auth key generation page"
+  className="bordered"
+  width={800}
+  height={1156}
+  src="/images/solutions/kubernetes/ephemeral-keys.png"
+/>
+
+If you don't provide a key, you can still authenticate by logging in at the URL provided in logs when running the container.
+
+You can store your auth key in a file for use with Podman:
+
+```bash
+echo "tskey-0123456789abcdef" > tailscale-auth-key
+chmod 600 tailscale-auth-key
+```
+
+### Running Tailscale in a Podman container
+
+#### Basic container with Tailscale
+
+This example demonstrates how to run a basic container with Tailscale:
+
+```bash
+podman run -d --name tailscale \
+  --privileged \
+  -v tailscale-data:/var/lib/tailscale \
+  -e TS_AUTHKEY="$(cat tailscale-auth-key)" \
+  tailscale/tailscale
+```
+
+If you're not using an auth key, you can check the container logs to get the login URL:
+
+```bash
+podman logs tailscale
+```
+
+#### Sidecar container
+
+Running Tailscale as a sidecar allows you to directly expose a Podman container over Tailscale. This is particularly useful if you do not wish to expose a service on the public internet. This method allows bidirectional connectivity between the container and other devices on the tailnet.
+
+First, create a pod to hold both containers:
+
+```bash
+podman pod create --name nginx-with-tailscale
+```
+
+Next, run nginx in the pod:
+
+```bash
+podman run -d --pod=nginx-with-tailscale --name nginx nginx
+```
+
+Then, run the Tailscale container in the same pod:
+
+```bash
+podman run -d --name ts-sidecar \
+  --pod=nginx-with-tailscale \
+  --privileged \
+  -v tailscale-sidecar:/var/lib/tailscale \
+  -e TS_AUTHKEY="$(cat tailscale-auth-key)" \
+  -e TS_USERSPACE=false \
+  -e TS_SOCKET=/var/run/tailscale/tailscaled.sock \
+  tailscale/tailscale
+```
+
+Check if you can connect to nginx over Tailscale:
+
+```bash
+curl http://ts-sidecar
+```
+
+Or, if you have [MagicDNS][magicdns] disabled:
+
+```bash
+curl "http://$(tailscale ip -4 ts-sidecar)"
+```
+
+#### Userspace networking
+
+You can also run Tailscale in userspace networking mode. The benefit is reduced permissions, as Tailscale doesn't need to run in privileged mode. The downside is that for outbound connectivity from the container to the tailnet, you need to use either the [SOCKS5 proxy or HTTP proxy][socks5 vs http].
+
+```bash
+podman pod create --name nginx-userspace
+```
+
+```bash
+podman run -d --pod=nginx-userspace --name nginx nginx
+```
+
+```bash
+podman run -d --name ts-userspace \
+  --pod=nginx-userspace \
+  -v tailscale-userspace:/var/lib/tailscale \
+  -e TS_AUTHKEY="$(cat tailscale-auth-key)" \
+  -e TS_USERSPACE=true \
+  tailscale/tailscale
+```
+
+Check if you can connect to nginx over Tailscale:
+
+```bash
+curl http://ts-userspace
+```
+
+Or, if you have [MagicDNS][magicdns] disabled:
+
+```bash
+curl "http://$(tailscale ip -4 ts-userspace)"
+```
+
+#### Proxy container
+
+Running a Tailscale proxy allows you to provide inbound connectivity to a Podman container or service.
+
+Start a container you want to proxy to:
+
+```bash
+podman run -d --name nginx-backend nginx
+```
+
+Get the IP address of the container:
+
+```bash
+BACKEND_IP=$(podman inspect -f '{{.NetworkSettings.IPAddress}}' nginx-backend)
+```
+
+Deploy the proxy container:
+
+```bash
+podman run -d --name tailscale-proxy \
+  --privileged \
+  -v tailscale-proxy:/var/lib/tailscale \
+  -e TS_AUTHKEY="$(cat tailscale-auth-key)" \
+  -e TS_DEST_IP="$BACKEND_IP" \
+  -e TS_DEST_PORT="80" \
+  tailscale/tailscale
+```
+
+Check if you can connect to nginx over Tailscale:
+
+```bash
+curl http://tailscale-proxy
+```
+
+Or, if you have [MagicDNS][magicdns] disabled:
+
+```bash
+curl "http://$(tailscale ip -4 tailscale-proxy)"
+```
+
+#### Subnet router
+
+Running a Tailscale [subnet router][subnets] allows you to access your local network over Tailscale. This is useful if you want to access containers or services running on your Podman host.
+
+First, identify the network CIDR for your Podman containers. By default, Podman typically uses a subnet like 10.88.0.0/16:
+
+```bash
+podman network inspect podman | grep -A 2 subnet
+```
+
+Once you have identified the CIDR, you can deploy a subnet router:
+
+```bash
+podman run -d --name tailscale-subnet-router \
+  --privileged \
+  -v tailscale-subnet:/var/lib/tailscale \
+  -e TS_AUTHKEY="$(cat tailscale-auth-key)" \
+  -e TS_ROUTES="10.88.0.0/16" \
+  tailscale/tailscale
+```
+
+In the [**Machines**][machines page] page of the admin console, ensure that the routes for the subnet router are enabled.
+
+Make sure that any client you want to connect from has `--accept-routes` enabled.
+
+Check if you can connect to a container's IP directly over Tailscale:
+
+```bash
+# Get the container's IP
+CONTAINER_IP=$(podman inspect -f '{{.NetworkSettings.IPAddress}}' nginx-backend)
+curl http://$CONTAINER_IP:80
+```
+
+### Optional: Add DNS information
+
+By default, we do not set DNS for containers. To enable [MagicDNS][magicdns] for a Podman container, you will need to set `TS_ACCEPT_DNS=true` in the environment:
+
+```bash
+podman run -d --name tailscale \
+  --privileged \
+  -v tailscale-data:/var/lib/tailscale \
+  -e TS_AUTHKEY="$(cat tailscale-auth-key)" \
+  -e TS_ACCEPT_DNS=true \
+  tailscale/tailscale
+```
+
+### Using Podman Compose
+
+If you're using Podman Compose to manage multi-container applications, you can integrate Tailscale into your compose file. Here's an example docker-compose.yml:
+
+```yaml
+version: '3'
+services:
+  nginx:
+    image: nginx:latest
+    networks:
+      - app-network
+    
+  tailscale:
+    image: tailscale/tailscale:latest
+    privileged: true
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_DEST_IP=nginx
+      - TS_DEST_PORT=80
+    volumes:
+      - tailscale-data:/var/lib/tailscale
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  tailscale-data:
+```
+
+Run with:
+
+```bash
+TS_AUTHKEY="tskey-0123456789abcdef" podman-compose up -d
+```
+
+[acls]: /kb/1018/acls/
+[auth keys]: /kb/1085/auth-keys/
+[auth keys page]: https://login.tailscale.com/admin/settings/keys
+[ephemeral node]: /kb/1111/ephemeral-nodes
+[machines page]: https://login.tailscale.com/admin/machines
+[magicdns]: /kb/1081/magicdns/
+[reusable key]: /kb/1085/auth-keys/#types-of-auth-keys
+[socks5 vs http]: /kb/1112/userspace-networking/#socks5-vs-http
+[subnets]: /kb/1019/subnets/
+[userspace]: /kb/1112/userspace-networking/
